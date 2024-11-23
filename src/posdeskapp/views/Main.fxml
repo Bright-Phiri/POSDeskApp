@@ -211,7 +211,7 @@
                      </children>
                   </HBox>
                   <Separator prefWidth="200.0" />
-                  <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="81.0" prefWidth="1177.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Products">
                            <font>
@@ -260,7 +260,27 @@
          <bottom>
             <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <HBox alignment="CENTER_LEFT" prefHeight="88.0" prefWidth="1177.0">
+                  <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="29.0" prefWidth="1177.0">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Number of Items:">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Text>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Text>
+                     </children>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="67.0" prefWidth="1177.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Add Product">
                            <font>
