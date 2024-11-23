@@ -8,7 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="POSDeskApp.jar" size="2624" download="eager" />
+    <jar href="POSDeskApp.jar" size="6569" download="eager" />
+    <jar href="lib\commons-codec-1.11.jar" size="335042" download="eager" />
     <jar href="lib\controlsfx-8.40.12.jar" size="996389" download="eager" />
     <jar href="lib\fontawesomefx-8.9.jar" size="571068" download="eager" />
     <jar href="lib\jfoenix-8.0.7.jar" size="2631271" download="eager" />
@@ -17,6 +18,6 @@
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="POSDeskApp" >
     <param name="requiredFXVersion" value="8.0+"/>
   </applet-desc>
-  <jfx:javafx-desc  width="800" height="600" main-class="posdeskapp.POSDeskApp"  name="POSDeskApp" />
+  <jfx:javafx-desc  width="800" height="600" main-class="posdeskapp.models.POSDeskApp"  name="POSDeskApp" />
   <update check="always"/>
 </jnlp>
