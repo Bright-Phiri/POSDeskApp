@@ -7,6 +7,8 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -72,17 +74,35 @@ public class MainController implements Initializable {
     @FXML
     private Text changeLabel;
 
+  private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
+
+    static {
+        TABLE_DEFINITIONS.put("Products", "CREATE TABLE Products (ProductCode TEXT NOT NULL PRIMARY KEY, ProductName TEXT NOT NULL, Description TEXT NOT NULL, Quantity REAL NOT NULL, UnitOfMeasure TEXT, Price REAL NOT NULL, SiteId TEXT, ProductExpiryDate TEXT, MinimumStockLevel REAL, TaxRateId TEXT)");
+        TABLE_DEFINITIONS.put("LineItems", "CREATE TABLE LineItems (ID INTEGER, ProductCode TEXT, Description TEXT, UnitPrice REAL, Quantity REAL, InvoiceNumber TEXT, TaxRateID TEXT, Discount REAL, PRIMARY KEY(ID))");
+        TABLE_DEFINITIONS.put("Invoices", "CREATE TABLE Invoices (InvoiceNumber TEXT PRIMARY KEY, InvoiceDateTime DATETIME, InvoiceTotal REAL, SellerTin TEXT, BuyerTIN TEXT, TotalVat REAL, State INTEGER, PaymentId TEXT)");
+        TABLE_DEFINITIONS.put("PausedLineItems", "CREATE TABLE PausedLineItems (ID INTEGER, ProductCode TEXT, Description TEXT, UnitPrice REAL, Quantity REAL, PauseID TEXT, TaxRateID TEXT, Total REAL, TotalVAT REAL, PRIMARY KEY(ID))");
+        TABLE_DEFINITIONS.put("PausedTransactions", "CREATE TABLE PausedTransactions (PauseId INTEGER, Timestamp DATETIME, Total REAL, PRIMARY KEY(PauseId))");
+        TABLE_DEFINITIONS.put("TaxRates", "CREATE TABLE TaxRates (Id TEXT NOT NULL, Name TEXT NOT NULL, ChargeMode TEXT NOT NULL, Ordinal INTEGER NOT NULL, Rate REAL NOT NULL)");
+        TABLE_DEFINITIONS.put("TaxpayerConfiguration", "CREATE TABLE TaxpayerConfiguration (TIN TEXT NOT NULL, IsVATRegistered BOOLEAN NOT NULL, TaxOfficeCode TEXT NOT NULL, TaxOfficeName TEXT NOT NULL, VersionNo INTEGER NOT NULL)");
+        TABLE_DEFINITIONS.put("TerminalConfiguration", "CREATE TABLE TerminalConfiguration (TerminalLabel TEXT NOT NULL, EmailAddress TEXT NOT NULL, PhoneNumber TEXT NOT NULL, TradingName TEXT NOT NULL, AddressLine TEXT NOT NULL, VersionNo INTEGER NOT NULL, MaxTransactionAgeInHours INTEGER NOT NULL, MaxCummulativeAmount REAL NOT NULL, IsActivated INTEGER NOT NULL, IsActiveTerminal INTEGER NOT NULL)");
+        TABLE_DEFINITIONS.put("TerminalKeys", "CREATE TABLE TerminalKeys (TerminalId TEXT NOT NULL, TaxpayerId TEXT NOT NULL, ActivationDate DATETIME NOT NULL, JwtToken TEXT NOT NULL, SecretKey TEXT NOT NULL)");
+        TABLE_DEFINITIONS.put("TerminalSite", "CREATE TABLE TerminalSite (SiteId TEXT NOT NULL, SiteName TEXT NOT NULL)");
+        TABLE_DEFINITIONS.put("Users", "CREATE TABLE Users (UserID INT AUTO_INCREMENT PRIMARY KEY, FirstName VARCHAR(50) NOT NULL, LastName VARCHAR(50) NOT NULL, UserName VARCHAR(50) NOT NULL UNIQUE, Gender VARCHAR(25) CHECK (Gender IN ('MALE', 'FEMALE')), PhoneNumber VARCHAR(25), EmailAddress VARCHAR(100) UNIQUE, Address TEXT, Role VARCHAR(7) NOT NULL CHECK (Role IN ('ADMIN', 'CASHIER')), Password VARCHAR(255) NOT NULL)");
+        TABLE_DEFINITIONS.put("ActivationCode", "CREATE TABLE ActivationCode (ActivationCode TEXT)");
+        TABLE_DEFINITIONS.put("InvoiceTaxBreakDown", "CREATE TABLE InvoiceTaxBreakDown (InvoiceNumber TEXT, RateID TEXT, TaxableAmount REAL, TaxAmount REAL)");
+        TABLE_DEFINITIONS.put("GlobalConfiguration", "CREATE TABLE GlobalConfiguration (Id INTEGER NOT NULL, VersionNo INTEGER NOT NULL)");
+    }
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        setTables();
+        initializeDatabase();
         Platform.runLater(() -> searchProductTextField.requestFocus());
     }
 
-    public void setTables() {
-       
+    public void initializeDatabase() {
+        TABLE_DEFINITIONS.forEach(DbConnection::checkTable);
     }
 
     @FXML
