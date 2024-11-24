@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import de.jensd.fx.glyphs.octicons.OctIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Menu?>
@@ -40,7 +41,7 @@
       </MenuBar>
    </top>
    <right>
-      <VBox prefHeight="721.0" prefWidth="402.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.2, 0, 4);;" BorderPane.alignment="CENTER">
+      <VBox prefHeight="825.0" prefWidth="432.0" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0.2, 0, 4);;" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
@@ -348,15 +349,15 @@
                            </HBox.margin>
                         </JFXTextField>
                         <JFXButton buttonType="RAISED" onAction="#AddLineItem" prefHeight="80.0" prefWidth="180.0" style="-fx-background-color: blue;" text="ADD" textFill="WHITE">
-                           <graphic>
-                              <OctIconView fill="WHITE" glyphName="SEARCH" size="20" />
-                           </graphic>
                            <HBox.margin>
                               <Insets right="15.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="Calibri Bold" size="17.0" />
+                              <Font name="Calibri" size="34.0" />
                            </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="SHOPPING_CART" size="32" />
+                           </graphic>
                         </JFXButton>
                      </children>
                   </HBox>
