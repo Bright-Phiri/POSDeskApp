@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import posdeskapp.utils.DbConnection;
 
 /**
  * FXML Controller class
@@ -76,8 +77,13 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-    }    
+        setTables();
+        Platform.runLater(() -> searchProductTextField.requestFocus());
+    }
+
+    public void setTables() {
+       
+    }
 
     @FXML
     private void closeApp(ActionEvent event) {
@@ -127,5 +133,5 @@ public class MainController implements Initializable {
     @FXML
     private void suspendTransaction(ActionEvent event) {
     }
-    
+
 }

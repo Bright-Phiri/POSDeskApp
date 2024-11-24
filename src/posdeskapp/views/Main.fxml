@@ -353,7 +353,7 @@
                               <Insets right="15.0" />
                            </HBox.margin>
                            <font>
-                              <Font name="Calibri" size="34.0" />
+                              <Font name="Calibri" size="30.0" />
                            </font>
                            <graphic>
                               <FontAwesomeIconView fill="WHITE" glyphName="SHOPPING_CART" size="32" />
