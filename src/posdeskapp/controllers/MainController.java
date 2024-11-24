@@ -11,7 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
+import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
 
 /**
@@ -44,7 +50,7 @@ public class MainController implements Initializable {
     @FXML
     private JFXTextField searchProductTextField;
     @FXML
-    private TableView<?> productsTable;
+    private TableView<LineItem> productsTable;
     @FXML
     private TableColumn<?, ?> barcodeCol;
     @FXML
@@ -74,7 +80,7 @@ public class MainController implements Initializable {
     @FXML
     private Text changeLabel;
 
-  private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
+    private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
 
     static {
         TABLE_DEFINITIONS.put("Products", "CREATE TABLE Products (ProductCode TEXT NOT NULL PRIMARY KEY, ProductName TEXT NOT NULL, Description TEXT NOT NULL, Quantity REAL NOT NULL, UnitOfMeasure TEXT, Price REAL NOT NULL, SiteId TEXT, ProductExpiryDate TEXT, MinimumStockLevel REAL, TaxRateId TEXT)");
@@ -92,6 +98,10 @@ public class MainController implements Initializable {
         TABLE_DEFINITIONS.put("InvoiceTaxBreakDown", "CREATE TABLE InvoiceTaxBreakDown (InvoiceNumber TEXT, RateID TEXT, TaxableAmount REAL, TaxAmount REAL)");
         TABLE_DEFINITIONS.put("GlobalConfiguration", "CREATE TABLE GlobalConfiguration (Id INTEGER NOT NULL, VersionNo INTEGER NOT NULL)");
     }
+    ;
+
+     ObservableList<LineItem> data = FXCollections.observableArrayList();
+
     /**
      * Initializes the controller class.
      */
@@ -154,4 +164,28 @@ public class MainController implements Initializable {
     private void suspendTransaction(ActionEvent event) {
     }
 
+    @FXML
+    private void searchLineItem(KeyEvent event) {
+        FilteredList<LineItem> filteredList = new FilteredList<>(data, p -> true);
+        searchTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredList.setPredicate((Predicate<? super LineItem>) item -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterToLowerCase = newValue.toLowerCase();
+                if (item.getProductCode().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getDescription().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                productsTable.setPlaceholder(new Text("No record match your search"));
+                return false;
+            });
+
+            SortedList<LineItem> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(productsTable.comparatorProperty());
+            productsTable.setItems(sortedList);
+        }));
+    }
 }
