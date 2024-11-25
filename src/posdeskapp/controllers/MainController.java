@@ -34,6 +34,7 @@ import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
+import static posdeskapp.utils.POSHelper.parseDecimal;
 
 /**
  * FXML Controller class
@@ -92,9 +93,8 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-       
-    }
-    ;
+        
+    };
 
      ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -192,6 +192,35 @@ public class MainController implements Initializable {
         }));
     }
 
+    @FXML
+    private void updateCheckout(KeyEvent event) {
+        try {
+            double total = parseDecimal(totalLabel.getText());
+
+            // Parsing the payment amount
+            String paymentText = tenderedAmountTextField.getText();
+            double paymentAmount = 0;
+
+            if (!paymentText.isEmpty()) {
+                paymentAmount = Double.parseDouble(paymentText);
+            }
+
+            // Checking if the payment amount is valid and calculating change
+            if (total != 0) {
+                if (paymentAmount >= total) {
+                    double change = paymentAmount - total;
+                    changeLabel.setText(POSHelper.formatValue(change));
+                } else {
+                    changeLabel.setText("0.00");
+                }
+            }
+        } catch (NumberFormatException e) {
+            // In case of invalid number input
+            changeLabel.setText("0.00");
+            Notification notification = new Notification("Error", "Invalid amount", 3);
+        }
+    }
+
     private void initializeDatabase() {
         TABLE_DEFINITIONS.forEach(DbConnection::checkTable);
     }
@@ -253,6 +282,8 @@ public class MainController implements Initializable {
                 existingLineItem.setTotalVAT(lineItemVAT);
                 existingLineItem.setTotal((quantity * existingLineItem.getUnitPrice()) - existingLineItem.getDiscount());
                 productsTable.refresh(); //Update existing line item on the table
+                changeLabel.setText("0.00");
+                tenderedAmountTextField.setText(null);
             } else {
 
                 double lineItemVAT = POSHelper.isVATRegistered()
@@ -265,6 +296,8 @@ public class MainController implements Initializable {
                 // Add the new line item
                 data.add(lineItem);
                 productsTable.setItems(data);
+                changeLabel.setText("0.00");
+                tenderedAmountTextField.setText(null);
             }
 
             // Update invoice summary after adding/updating line items
@@ -275,5 +308,4 @@ public class MainController implements Initializable {
             System.err.println("Error: " + ex.getMessage());
         }
     }
-
 }

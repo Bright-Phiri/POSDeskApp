@@ -136,6 +136,19 @@ public class POSHelper {
         }
         return taxRate;
     }
+    
+    public static double parseDecimal(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
+    }
+
+    
+    public static String formatValue(double value) {
+        return String.format("%.2f", value);
+    }
 
     public static double getProductQuantity(String productCode) {
         double quantity = 0;
