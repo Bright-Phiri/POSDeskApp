@@ -1,0 +1,44 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Nov 25, 2024, 8:16:18 PM
+    Author     : biphiri
+*/
+
+.jfx-button{
+    -fx-border-color:  #B2B2B2;
+}
+.jfx-button:focused{
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+
+.jfx-button:hover{
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+
+.jfx-button:disabled, .jfx-button:default:disabled{
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+.jfx-button:default{
+    -fx-background-color:rgba(0,0,0,0.1);
+}
+.jfx-button:pressed, .jfx-button:hover:pressed{
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+
+.jfx-button:default:hover{
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+
+.table-row-cell:hover:filled {
+    -fx-background-color: rgba(0,0,0,0.1);
+    -fx-text-fill: black;          
+}
+
+
+.table-view {
+    -fx-font-size: 16px;
+}

@@ -204,7 +204,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="53.0" prefWidth="1177.0">
                      <children>
-                        <JFXButton onAction="#loadHomePage" prefHeight="37.0" prefWidth="120.0" style="-fx-border-color: #B2B2B2;" text="HOME">
+                        <JFXButton onAction="#loadHomePage" prefHeight="37.0" prefWidth="120.0" stylesheets="@../css/main.css" text="HOME">
                            <graphic>
                               <OctIconView glyphName="HOME" size="20" />
                            </graphic>
@@ -279,7 +279,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
          <center>
-            <TableView fx:id="productsTable" editable="true" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16px;" BorderPane.alignment="CENTER">
+            <TableView fx:id="productsTable" editable="true" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" stylesheets="@../css/main.css" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="barcodeCol" prefWidth="139.0" text="Barcode" />
                 <TableColumn fx:id="descriptionCol" prefWidth="89.0" text="Product Description" />
