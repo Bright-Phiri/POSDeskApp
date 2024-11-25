@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.HBox;
+import posdeskapp.utils.POSHelper;
 
 /**
  *
@@ -81,6 +82,14 @@ public class LineItem {
 
     public Double getTotalVAT() {
         return totalVAT.get();
+    }
+
+    public String getFormattedUnitPrice() {
+        return POSHelper.formatValue(getUnitPrice());
+    }
+
+    public String getFormattedTotal() {
+        return POSHelper.formatValue(getTotal());
     }
 
     // Setters

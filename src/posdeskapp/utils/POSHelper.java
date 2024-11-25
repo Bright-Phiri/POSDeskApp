@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,7 +65,24 @@ public class POSHelper {
                         lineItemVAT = extractVATAmount(price, 1, taxRate);
                     }
 
-                    LineItem lineItem = new LineItem(productCode, description, 1, price, price, 0, lineItemVAT, taxRateId, setActionButtons(productCode, data));
+                    // Format numeric values
+                    String formattedPrice = formatValue(price);
+                    String formattedLineItemVAT = formatValue(lineItemVAT);
+
+                    double formattedPriceDouble = Double.parseDouble(formattedPrice.replace(",", ""));
+                    double formattedLineItemVATDouble = Double.parseDouble(formattedLineItemVAT.replace(",", ""));
+
+                    LineItem lineItem = new LineItem(
+                            productCode,
+                            description,
+                            1,
+                            formattedPriceDouble,
+                            formattedPriceDouble,
+                            0,
+                            formattedLineItemVATDouble,
+                            taxRateId,
+                            setActionButtons(productCode, data)
+                    );
 
                     return lineItem;
                 }
@@ -137,6 +156,44 @@ public class POSHelper {
         return taxRate;
     }
 
+    public static String getTerminalLabel() {
+        String terminalLabel = null;
+        String query = "SELECT TerminalLabel FROM TerminalConfiguration";
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.Connect();
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                terminalLabel = resultSet.getString("TerminalLabel");
+            }
+
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while fetching Terminal Label: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing database resources: " + ex.getMessage());
+            }
+        }
+
+        return terminalLabel;
+    }
+
     public static double parseDecimal(String value) {
         try {
             return Double.parseDouble(value);
@@ -146,7 +203,10 @@ public class POSHelper {
     }
 
     public static String formatValue(double value) {
-        return String.format("%.2f", value);
+        NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+        formatter.setMinimumFractionDigits(2);
+        formatter.setMaximumFractionDigits(2);
+        return formatter.format(value);
     }
 
     public static double getProductQuantity(String productCode) {
@@ -216,22 +276,21 @@ public class POSHelper {
     }
 
     public static void updateInvoiceSummary(ObservableList<LineItem> data, Text invoiceTotalText, Text taxableAmountText, Text totalVATText, Text itemsCount) {
-        DecimalFormat df = new DecimalFormat("0.00");
 
         double invoiceTotal = data.stream()
                 .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
                 .sum();
-        invoiceTotalText.setText(df.format(invoiceTotal));
+        invoiceTotalText.setText(formatValue(invoiceTotal));
 
         double taxableAmount = data.stream()
                 .mapToDouble(item -> item.getTotal() - item.getTotalVAT())
                 .sum();
-        taxableAmountText.setText(df.format(taxableAmount));
+        taxableAmountText.setText(formatValue(taxableAmount));
 
         double totalVAT = data.stream()
                 .mapToDouble(LineItem::getTotalVAT)
                 .sum();
-        totalVATText.setText(df.format(totalVAT));
+        totalVATText.setText(formatValue(totalVAT));
 
         double totalQuantity = data.stream()
                 .mapToDouble(LineItem::getQuantity)

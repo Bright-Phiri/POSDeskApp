@@ -7,12 +7,15 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -26,7 +29,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
@@ -63,13 +65,13 @@ public class MainController implements Initializable {
     @FXML
     private TableColumn<LineItem, String> descriptionCol;
     @FXML
-    private TableColumn<LineItem, Double> priceCol;
+    private TableColumn<LineItem, String> priceCol;
     @FXML
     private TableColumn<LineItem, Double> quantityCol;
     @FXML
     private TableColumn<LineItem, Double> discountCol;
     @FXML
-    private TableColumn<LineItem, Double> totalCol;
+    private TableColumn<LineItem, String> totalCol;
     @FXML
     private TableColumn<LineItem, HBox> actionCol;
     @FXML
@@ -94,8 +96,9 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-        
-    };
+       
+    }
+    ;
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -106,12 +109,21 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeDatabase();
         initializeColumns();
+        
         Platform.runLater(() -> searchProductTextField.requestFocus());
+        
+        String terminalLbel = POSHelper.getTerminalLabel();
+        tillName.setText(terminalLbel);
+        
+        date.setText(getDate());
+        
         totalItemsText = totalNoOfItems;
         taxableAmountText = subTotalLabel;
         invoiceTotalText = totalLabel;
         totalVAText = vatLabel;
         
+        priceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedUnitPrice()));
+        totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTotal()));
     }
 
     @FXML
@@ -154,7 +166,9 @@ public class MainController implements Initializable {
     @FXML
     private void AddLineItem(ActionEvent event) {
         String barcode = searchProductTextField.getText().trim();
-        addProductToTable(barcode);
+        if (!barcode.isEmpty()) {
+            addProductToTable(barcode);
+        }
     }
 
     @FXML
@@ -164,11 +178,18 @@ public class MainController implements Initializable {
     @FXML
     private void voidTransaction(ActionEvent event) {
         if (data.size() > 0) {
-            data.clear();
-            POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
-            tenderedAmountTextField.clear();
-            changeLabel.setText(null);
-            Notification notification = new Notification("Information", "Transaction successfully voided.", 3);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("Void Transaction");
+            alert.setContentText("Are you sure you want to void this transaction?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+                data.clear();
+                POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+                tenderedAmountTextField.clear();
+                changeLabel.setText("0.00");
+                Notification notification = new Notification("Information", "Transaction successfully voided.", 3);
+            }
         } else {
             Notification notification = new Notification("Information", "No transaction to void.", 3);
         }
@@ -320,4 +341,9 @@ public class MainController implements Initializable {
         }
     }
 
+    public static String getDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+        return currentDate.format(formatter);
+    }
 }
