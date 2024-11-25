@@ -5,9 +5,10 @@
  */
 package posdeskapp.models;
 
-import javafx.beans.property.SimpleFloatProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.layout.HBox;
 
 /**
  *
@@ -18,23 +19,30 @@ public class LineItem {
     private final SimpleIntegerProperty id;
     private final SimpleStringProperty productCode;
     private final SimpleStringProperty description;
-    private final SimpleFloatProperty unitPrice;
-    private final SimpleFloatProperty quantity;
+    private final SimpleDoubleProperty unitPrice;
+    private final SimpleDoubleProperty quantity;
     private final SimpleStringProperty invoiceNumber;
     private final SimpleStringProperty taxRateId;
-    private final SimpleFloatProperty discount;
-    
-    public LineItem(int id, String productCode, String  description, Float unitPrice,Float quantity, String  invoiceNumber, String taxRateId, Float discount){
-      this.id = new SimpleIntegerProperty(id);
-      this.productCode = new SimpleStringProperty(productCode);
-      this.description = new SimpleStringProperty(description);
-      this.unitPrice = new SimpleFloatProperty(unitPrice);
-      this.quantity = new SimpleFloatProperty(quantity);
-      this.invoiceNumber = new SimpleStringProperty(invoiceNumber);
-      this.taxRateId = new SimpleStringProperty(taxRateId);
-      this.discount = new SimpleFloatProperty(discount);
+    private final SimpleDoubleProperty discount;
+    private final SimpleDoubleProperty total;
+    private final SimpleDoubleProperty totalVAT;
+    private final HBox controlsPane;
+
+    public LineItem(String productCode, String description, int quantity, double unitPrice, double total, double discount, double totalVAT, String taxRateId, HBox controlsPane) {
+        this.id = new SimpleIntegerProperty(0);
+        this.productCode = new SimpleStringProperty(productCode);
+        this.description = new SimpleStringProperty(description);
+        this.unitPrice = new SimpleDoubleProperty(unitPrice);
+        this.quantity = new SimpleDoubleProperty(1.0f);
+        this.invoiceNumber = new SimpleStringProperty("");
+        this.taxRateId = new SimpleStringProperty(taxRateId);
+        this.discount = new SimpleDoubleProperty(discount);
+        this.total = new SimpleDoubleProperty(total);
+        this.totalVAT = new SimpleDoubleProperty(totalVAT);
+        this.controlsPane = controlsPane;
     }
 
+    // Getters
     public int getId() {
         return id.get();
     }
@@ -47,11 +55,11 @@ public class LineItem {
         return description.get();
     }
 
-    public Float getUnitPrice() {
+    public Double getUnitPrice() {
         return unitPrice.get();
     }
 
-    public Float getQuantity() {
+    public Double getQuantity() {
         return quantity.get();
     }
 
@@ -63,7 +71,60 @@ public class LineItem {
         return taxRateId.get();
     }
 
-    public Float getDiscount() {
+    public Double getDiscount() {
         return discount.get();
+    }
+
+    public Double getTotal() {
+        return total.get();
+    }
+
+    public Double getTotalVAT() {
+        return totalVAT.get();
+    }
+
+    // Setters
+    public void setId(int id) {
+        this.id.set(id);
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode.set(productCode);
+    }
+
+    public void setDescription(String description) {
+        this.description.set(description);
+    }
+
+    public void setUnitPrice(Float unitPrice) {
+        this.unitPrice.set(unitPrice);
+    }
+
+    public void setQuantity(Float quantity) {
+        this.quantity.set(quantity);
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber.set(invoiceNumber);
+    }
+
+    public void setTaxRateId(String taxRateId) {
+        this.taxRateId.set(taxRateId);
+    }
+
+    public void setDiscount(Float discount) {
+        this.discount.set(discount);
+    }
+
+    public void setTotal(Float total) {
+        this.total.set(total);
+    }
+
+    public void setTotalVAT(Float totalVAT) {
+        this.totalVAT.set(totalVAT);
+    }
+
+    public HBox getControlsPane() {
+        return controlsPane;
     }
 }

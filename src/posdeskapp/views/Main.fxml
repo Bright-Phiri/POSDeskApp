@@ -276,7 +276,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
          <center>
-            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16;" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="barcodeCol" prefWidth="75.0" text="Barcode" />
                 <TableColumn fx:id="descriptionCol" prefWidth="75.0" text="Product Description" />

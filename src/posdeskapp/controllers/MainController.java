@@ -6,29 +6,46 @@
 package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
+import posdeskapp.utils.Notification;
+import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class
@@ -52,19 +69,19 @@ public class MainController implements Initializable {
     @FXML
     private TableView<LineItem> productsTable;
     @FXML
-    private TableColumn<?, ?> barcodeCol;
+    private TableColumn<LineItem, String> barcodeCol;
     @FXML
-    private TableColumn<?, ?> descriptionCol;
+    private TableColumn<LineItem, String> descriptionCol;
     @FXML
-    private TableColumn<?, ?> priceCol;
+    private TableColumn<LineItem, Double> priceCol;
     @FXML
-    private TableColumn<?, ?> quantityCol;
+    private TableColumn<LineItem, Double> quantityCol;
     @FXML
-    private TableColumn<?, ?> discountCol;
+    private TableColumn<LineItem, Double> discountCol;
     @FXML
-    private TableColumn<?, ?> totalCol;
+    private TableColumn<LineItem, Double> totalCol;
     @FXML
-    private TableColumn<?, ?> actionCol;
+    private TableColumn<LineItem, HBox> actionCol;
     @FXML
     private Text totalLabel;
     @FXML
@@ -82,10 +99,7 @@ public class MainController implements Initializable {
 
     private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
 
-    static {
-       
-    }
-    ;
+
 
      ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -96,6 +110,14 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeDatabase();
         Platform.runLater(() -> searchProductTextField.requestFocus());
+
+        barcodeCol.setCellValueFactory(new PropertyValueFactory<>("productCode"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        totalCol.setCellValueFactory(new PropertyValueFactory<>("total"));
+        discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
+        actionCol.setCellValueFactory(new PropertyValueFactory<>("controlsPane"));
     }
 
     public void initializeDatabase() {
@@ -133,6 +155,18 @@ public class MainController implements Initializable {
 
     @FXML
     private void fetchProduct(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            String barcode = searchProductTextField.getText().trim();
+            LineItem lineItem = POSHelper.searchProductByCode(barcode, data);
+            if (lineItem == null) {
+                searchProductTextField.clear();
+                Notification notification = new Notification("Message", "Product not found", 3);
+                return;
+            }
+            searchProductTextField.clear();
+            data.add(lineItem);
+            productsTable.setItems(data);
+        }
     }
 
     @FXML
@@ -175,4 +209,6 @@ public class MainController implements Initializable {
             productsTable.setItems(sortedList);
         }));
     }
+    
+
 }
