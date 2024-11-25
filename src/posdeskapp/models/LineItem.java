@@ -84,6 +84,10 @@ public class LineItem {
         return totalVAT.get();
     }
 
+    public HBox getControlsPane() {
+        return controlsPane;
+    }
+
     public String getFormattedUnitPrice() {
         return POSHelper.formatValue(getUnitPrice());
     }
@@ -133,7 +137,4 @@ public class LineItem {
         this.totalVAT.set(totalVAT);
     }
 
-    public HBox getControlsPane() {
-        return controlsPane;
-    }
 }

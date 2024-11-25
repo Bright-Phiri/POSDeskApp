@@ -38,7 +38,6 @@ and open the template in the editor.
     -fx-text-fill: black;          
 }
 
-
 .table-view {
-    -fx-font-size: 16px;
+   -fx-font-size: 16px;
 }
