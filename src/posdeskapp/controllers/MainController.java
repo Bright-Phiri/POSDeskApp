@@ -102,7 +102,7 @@ public class MainController implements Initializable {
     public static Text text;
 
     static {
-      
+        
     }
     ;
 

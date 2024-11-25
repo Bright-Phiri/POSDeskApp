@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="880.0" prefWidth="1624.0" style="-fx-background-color: #F9F9F9;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.MainController">
+<BorderPane prefHeight="969.0" prefWidth="1783.0" style="-fx-background-color: #F9F9F9;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.MainController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -276,7 +276,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
          <center>
-            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16;" BorderPane.alignment="CENTER">
+            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16px;" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="barcodeCol" prefWidth="75.0" text="Barcode" />
                 <TableColumn fx:id="descriptionCol" prefWidth="75.0" text="Product Description" />

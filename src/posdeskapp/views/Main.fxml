@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="880.0" prefWidth="1624.0" style="-fx-background-color: #F9F9F9;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.MainController">
+<BorderPane prefHeight="969.0" prefWidth="1783.0" style="-fx-background-color: #F9F9F9;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.MainController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -48,7 +48,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="64.0" prefWidth="362.0" style="-fx-background-color: #001F3F;">
                <children>
-                  <Text fx:id="totalLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="1,000,000" HBox.hgrow="ALWAYS">
+                  <Text fx:id="totalLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -68,7 +68,7 @@
                         <Font size="26.0" />
                      </font>
                   </Text>
-                  <Text fx:id="subTotalLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="20,000.00">
+                  <Text fx:id="subTotalLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00">
                      <font>
                         <Font size="26.0" />
                      </font>
@@ -85,7 +85,7 @@
                         <Font size="26.0" />
                      </font>
                   </Text>
-                  <Text fx:id="discountLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="20,000.00">
+                  <Text fx:id="discountLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00">
                      <font>
                         <Font size="26.0" />
                      </font>
@@ -105,7 +105,7 @@
                         <Font size="26.0" />
                      </font>
                   </Text>
-                  <Text fx:id="vatLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="20,000.00">
+                  <Text fx:id="vatLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00">
                      <font>
                         <Font size="26.0" />
                      </font>
@@ -157,7 +157,7 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="30.0" layoutY="30.0" prefHeight="64.0" prefWidth="362.0" style="-fx-background-color: #001F3F;">
                <children>
-                  <Text fx:id="changeLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="1,000,000" HBox.hgrow="ALWAYS">
+                  <Text fx:id="changeLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -276,7 +276,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
          <center>
-            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16;" BorderPane.alignment="CENTER">
+            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16px;" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="barcodeCol" prefWidth="75.0" text="Barcode" />
                 <TableColumn fx:id="descriptionCol" prefWidth="75.0" text="Product Description" />
