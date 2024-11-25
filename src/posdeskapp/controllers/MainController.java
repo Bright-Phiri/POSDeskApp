@@ -94,7 +94,8 @@ public class MainController implements Initializable {
 
     static {
         
-    };
+    }
+    ;
 
      ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -161,6 +162,15 @@ public class MainController implements Initializable {
 
     @FXML
     private void voidTransaction(ActionEvent event) {
+        if (data.size() > 0) {
+            data.clear();
+            POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+            tenderedAmountTextField.clear();
+            changeLabel.setText(null);
+            Notification notification = new Notification("Information", "Transaction successfully voided.", 3);
+        } else {
+            Notification notification = new Notification("Information", "No transaction to void.", 3);
+        }
     }
 
     @FXML
