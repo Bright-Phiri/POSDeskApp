@@ -50,7 +50,7 @@
                <children>
                   <Text fx:id="totalLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="31.0" />
+                        <Font name="System Bold" size="29.0" />
                      </font>
                   </Text>
                </children>
@@ -159,7 +159,7 @@
                <children>
                   <Text fx:id="changeLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
-                        <Font name="System Bold" size="31.0" />
+                        <Font name="System Bold" size="29.0" />
                      </font>
                   </Text>
                </children>
@@ -276,7 +276,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
          <center>
-            <TableView fx:id="productsTable" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16px;" BorderPane.alignment="CENTER">
+            <TableView fx:id="productsTable" editable="true" onKeyTyped="#searchLineItem" prefHeight="200.0" prefWidth="200.0" style="-fx-font-size: 16px;" BorderPane.alignment="CENTER">
               <columns>
                 <TableColumn fx:id="barcodeCol" prefWidth="139.0" text="Barcode" />
                 <TableColumn fx:id="descriptionCol" prefWidth="89.0" text="Product Description" />

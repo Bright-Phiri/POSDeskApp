@@ -26,8 +26,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
-import static javafx.scene.input.KeyCode.S;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -95,8 +95,7 @@ public class MainController implements Initializable {
 
     static {
         
-    }
-    ;
+    };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -112,6 +111,7 @@ public class MainController implements Initializable {
         taxableAmountText = subTotalLabel;
         invoiceTotalText = totalLabel;
         totalVAText = vatLabel;
+        
     }
 
     @FXML
