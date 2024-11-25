@@ -96,11 +96,11 @@ public class LineItem {
         this.description.set(description);
     }
 
-    public void setUnitPrice(Float unitPrice) {
+    public void setUnitPrice(Double unitPrice) {
         this.unitPrice.set(unitPrice);
     }
 
-    public void setQuantity(Float quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity.set(quantity);
     }
 
@@ -112,15 +112,15 @@ public class LineItem {
         this.taxRateId.set(taxRateId);
     }
 
-    public void setDiscount(Float discount) {
+    public void setDiscount(Double discount) {
         this.discount.set(discount);
     }
 
-    public void setTotal(Float total) {
+    public void setTotal(Double total) {
         this.total.set(total);
     }
 
-    public void setTotalVAT(Float totalVAT) {
+    public void setTotalVAT(Double totalVAT) {
         this.totalVAT.set(totalVAT);
     }
 

@@ -20,8 +20,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import posdeskapp.controllers.MainController;
-import static posdeskapp.controllers.MainController.invoiceTotalText;
-import static posdeskapp.controllers.MainController.totalVAText;
 import posdeskapp.models.LineItem;
 
 /**
@@ -97,6 +95,83 @@ public class POSHelper {
         }
 
         return null;
+    }
+
+    public static double getTaxRateById(String taxRateId) {
+        String taxRateQuery = "SELECT * FROM TaxRates WHERE ID = ?";
+        Connection connection = null;
+        PreparedStatement taxRateStmt = null;
+        ResultSet taxRateRs = null;
+        double taxRate = 0.0; // Default tax rate if not found or error occurs
+
+        try {
+            connection = DbConnection.Connect();
+            taxRateStmt = connection.prepareStatement(taxRateQuery);
+            taxRateStmt.setString(1, taxRateId); // Set the parameter for the query
+
+            // Execute the query and get the result
+            taxRateRs = taxRateStmt.executeQuery();
+            if (taxRateRs.next()) {
+                // Retrieve the tax rate from the result set
+                taxRate = taxRateRs.getDouble("Rate");
+            }
+
+        } catch (SQLException e) {
+            System.err.println(e);
+        } finally {
+            // Ensure resources are closed to avoid resource leaks
+            try {
+                if (taxRateRs != null) {
+                    taxRateRs.close();
+                }
+                if (taxRateStmt != null) {
+                    taxRateStmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex);
+            }
+        }
+        return taxRate;
+    }
+
+    public static double getProductQuantity(String productCode) {
+        double quantity = 0;
+        String query = "SELECT Quantity FROM Products WHERE ProductCode = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.Connect();
+            statement = connection.prepareStatement(query);
+            statement.setString(1, productCode);
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                quantity = resultSet.getDouble("Quantity");
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+        return quantity;
     }
 
     private static HBox setActionButtons(String productCode, ObservableList<LineItem> data) {

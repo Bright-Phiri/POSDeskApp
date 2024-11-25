@@ -92,7 +92,7 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-        
+       
     }
     ;
 
@@ -207,16 +207,73 @@ public class MainController implements Initializable {
     }
 
     private void addProductToTable(String barcode) {
-        LineItem lineItem = POSHelper.searchProductByCode(barcode, data);
-        if (lineItem == null) {
+        try {
+            LineItem lineItem = POSHelper.searchProductByCode(barcode, data);
+
+            if (lineItem == null) {
+                searchProductTextField.clear();
+                Notification notification = new Notification("Message", "Product not found", 3);
+                return;
+            }
+
+            // Calculate line item quantity already in the data list
+            double lineItemsQuantity = data.stream()
+                    .filter(item -> item.getProductCode().equals(barcode))
+                    .mapToDouble(LineItem::getQuantity)
+                    .sum();
+
+            double productQuantity = POSHelper.getProductQuantity(barcode);
+            double remainingQuantity = productQuantity - lineItemsQuantity;
+
+            if (remainingQuantity < 1) {
+                searchProductTextField.clear();
+                Notification notification = new Notification("Error", "Inventory quantity is not sufficient", 3);
+                return;
+            }
+
+            // Check if the product already exists in the list
+            LineItem existingLineItem = data.stream()
+                    .filter(item -> item.getProductCode().equals(barcode))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingLineItem != null) {
+                // If the product exists, update its quantity
+                existingLineItem.setQuantity(existingLineItem.getQuantity() + 1);
+
+                double quantity = existingLineItem.getQuantity();
+                double taxRate = POSHelper.getTaxRateById(existingLineItem.getTaxRateId());
+                boolean isVATRegistered = POSHelper.isVATRegistered();
+
+                // Calculate VAT for the line item
+                double lineItemVAT = isVATRegistered
+                        ? POSHelper.extractVATAmount(existingLineItem.getUnitPrice() - (existingLineItem.getDiscount() / quantity), quantity, taxRate)
+                        : 0;
+
+                existingLineItem.setTotalVAT(lineItemVAT);
+                existingLineItem.setTotal((quantity * existingLineItem.getUnitPrice()) - existingLineItem.getDiscount());
+                productsTable.refresh(); //Update existing line item on the table
+            } else {
+
+                double lineItemVAT = POSHelper.isVATRegistered()
+                        ? POSHelper.extractVATAmount(lineItem.getUnitPrice() - (lineItem.getDiscount() / lineItem.getQuantity()), lineItem.getQuantity(), POSHelper.getTaxRateById(lineItem.getTaxRateId()))
+                        : 0;
+
+                lineItem.setTotalVAT(lineItemVAT);
+                lineItem.setTotal((lineItem.getQuantity() * lineItem.getUnitPrice()) - lineItem.getDiscount());
+
+                // Add the new line item
+                data.add(lineItem);
+                productsTable.setItems(data);
+            }
+
+            // Update invoice summary after adding/updating line items
+            POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
             searchProductTextField.clear();
-            Notification notification = new Notification("Message", "Product not found", 3);
-            return;
+
+        } catch (Exception ex) {
+            System.err.println("Error: " + ex.getMessage());
         }
-        searchProductTextField.clear();
-        data.add(lineItem);
-        productsTable.setItems(data);
-        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
     }
 
 }
