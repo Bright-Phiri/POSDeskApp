@@ -136,7 +136,7 @@ public class POSHelper {
         }
         return taxRate;
     }
-    
+
     public static double parseDecimal(String value) {
         try {
             return Double.parseDouble(value);
@@ -145,7 +145,6 @@ public class POSHelper {
         }
     }
 
-    
     public static String formatValue(double value) {
         return String.format("%.2f", value);
     }

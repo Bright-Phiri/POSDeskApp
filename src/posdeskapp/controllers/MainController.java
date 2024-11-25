@@ -5,7 +5,6 @@
  */
 package posdeskapp.controllers;
 
-import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.util.HashMap;
@@ -98,7 +97,7 @@ public class MainController implements Initializable {
     }
     ;
 
-     ObservableList<LineItem> data = FXCollections.observableArrayList();
+   ObservableList<LineItem> data = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
