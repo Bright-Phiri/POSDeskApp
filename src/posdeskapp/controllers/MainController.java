@@ -96,9 +96,8 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-       
-    }
-    ;
+        
+    };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -109,19 +108,19 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeDatabase();
         initializeColumns();
-        
+
         Platform.runLater(() -> searchProductTextField.requestFocus());
-        
+
         String terminalLbel = POSHelper.getTerminalLabel();
         tillName.setText(terminalLbel);
-        
+
         date.setText(getDate());
-        
+
         totalItemsText = totalNoOfItems;
         taxableAmountText = subTotalLabel;
         invoiceTotalText = totalLabel;
         totalVAText = vatLabel;
-        
+
         priceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedUnitPrice()));
         totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTotal()));
     }
