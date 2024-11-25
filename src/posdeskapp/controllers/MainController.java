@@ -32,6 +32,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -98,8 +99,12 @@ public class MainController implements Initializable {
     private Text changeLabel;
 
     private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
+    public static Text text;
 
-
+    static {
+      
+    }
+    ;
 
      ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -109,19 +114,9 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeDatabase();
+        initializeColumns();
         Platform.runLater(() -> searchProductTextField.requestFocus());
-
-        barcodeCol.setCellValueFactory(new PropertyValueFactory<>("productCode"));
-        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
-        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        totalCol.setCellValueFactory(new PropertyValueFactory<>("total"));
-        discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
-        actionCol.setCellValueFactory(new PropertyValueFactory<>("controlsPane"));
-    }
-
-    public void initializeDatabase() {
-        TABLE_DEFINITIONS.forEach(DbConnection::checkTable);
+        text = totalNoOfItems;
     }
 
     @FXML
@@ -157,20 +152,14 @@ public class MainController implements Initializable {
     private void fetchProduct(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             String barcode = searchProductTextField.getText().trim();
-            LineItem lineItem = POSHelper.searchProductByCode(barcode, data);
-            if (lineItem == null) {
-                searchProductTextField.clear();
-                Notification notification = new Notification("Message", "Product not found", 3);
-                return;
-            }
-            searchProductTextField.clear();
-            data.add(lineItem);
-            productsTable.setItems(data);
+            addProductToTable(barcode);
         }
     }
 
     @FXML
     private void AddLineItem(ActionEvent event) {
+        String barcode = searchProductTextField.getText().trim();
+        addProductToTable(barcode);
     }
 
     @FXML
@@ -209,6 +198,32 @@ public class MainController implements Initializable {
             productsTable.setItems(sortedList);
         }));
     }
-    
+
+    private void initializeDatabase() {
+        TABLE_DEFINITIONS.forEach(DbConnection::checkTable);
+    }
+
+    private void initializeColumns() {
+        barcodeCol.setCellValueFactory(new PropertyValueFactory<>("productCode"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        totalCol.setCellValueFactory(new PropertyValueFactory<>("total"));
+        discountCol.setCellValueFactory(new PropertyValueFactory<>("discount"));
+        actionCol.setCellValueFactory(new PropertyValueFactory<>("controlsPane"));
+    }
+
+    private void addProductToTable(String barcode) {
+        LineItem lineItem = POSHelper.searchProductByCode(barcode, data);
+        if (lineItem == null) {
+            searchProductTextField.clear();
+            Notification notification = new Notification("Message", "Product not found", 3);
+            return;
+        }
+        searchProductTextField.clear();
+        data.add(lineItem);
+        productsTable.setItems(data);
+        POSHelper.updateTotalQuantity(data, totalNoOfItems);
+    }
 
 }

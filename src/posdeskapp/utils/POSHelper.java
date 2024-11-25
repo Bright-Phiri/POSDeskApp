@@ -17,6 +17,8 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import posdeskapp.controllers.MainController;
 import posdeskapp.models.LineItem;
 
 /**
@@ -111,6 +113,7 @@ public class POSHelper {
             for (LineItem lineItem : data) {
                 if (lineItem.getProductCode().equals(productCode)) {
                     data.remove(lineItem);
+                    updateTotalQuantity(data, MainController.text);
                     break;
                 }
             }
@@ -120,6 +123,13 @@ public class POSHelper {
         hBox.getChildren().add(icon);
 
         return hBox;
+    }
+
+    public static void updateTotalQuantity(ObservableList<LineItem> data, Text text) {
+        double totalQuantity = data.stream()
+                .mapToDouble(LineItem::getQuantity)
+                .sum();
+        text.setText(String.valueOf(totalQuantity));
     }
 
     public static boolean isVATRegistered() {

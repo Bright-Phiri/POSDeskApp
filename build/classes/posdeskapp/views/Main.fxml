@@ -259,7 +259,7 @@
                         </Text>
                         <HBox prefHeight="100.0" prefWidth="723.0" HBox.hgrow="ALWAYS" />
                         <OctIconView glyphName="SEARCH" size="30" />
-                        <TextField fx:id="searchTextField" prefHeight="44.0" prefWidth="432.0" promptText="Search Line Item" style="-fx-background-radius: 0;">
+                        <TextField fx:id="searchTextField" onKeyTyped="#searchLineItem" prefHeight="44.0" prefWidth="432.0" promptText="Search Line Item" style="-fx-background-radius: 0;">
                            <HBox.margin>
                               <Insets left="10.0" right="10.0" />
                            </HBox.margin>
