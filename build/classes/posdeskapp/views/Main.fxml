@@ -48,7 +48,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="64.0" prefWidth="362.0" style="-fx-background-color: #001F3F;">
                <children>
-                  <Text fx:id="totalLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="1,000,000" HBox.hgrow="ALWAYS">
+                  <Text fx:id="totalLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -68,7 +68,7 @@
                         <Font size="26.0" />
                      </font>
                   </Text>
-                  <Text fx:id="subTotalLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="20,000.00">
+                  <Text fx:id="subTotalLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00">
                      <font>
                         <Font size="26.0" />
                      </font>
@@ -85,7 +85,7 @@
                         <Font size="26.0" />
                      </font>
                   </Text>
-                  <Text fx:id="discountLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="20,000.00">
+                  <Text fx:id="discountLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00">
                      <font>
                         <Font size="26.0" />
                      </font>
@@ -105,7 +105,7 @@
                         <Font size="26.0" />
                      </font>
                   </Text>
-                  <Text fx:id="vatLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="20,000.00">
+                  <Text fx:id="vatLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00">
                      <font>
                         <Font size="26.0" />
                      </font>
@@ -157,7 +157,7 @@
             </HBox>
             <HBox alignment="CENTER" layoutX="30.0" layoutY="30.0" prefHeight="64.0" prefWidth="362.0" style="-fx-background-color: #001F3F;">
                <children>
-                  <Text fx:id="changeLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="1,000,000" HBox.hgrow="ALWAYS">
+                  <Text fx:id="changeLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>

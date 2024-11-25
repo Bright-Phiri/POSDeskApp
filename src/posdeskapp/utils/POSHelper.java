@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -19,6 +20,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import posdeskapp.controllers.MainController;
+import static posdeskapp.controllers.MainController.invoiceTotalText;
+import static posdeskapp.controllers.MainController.totalVAText;
 import posdeskapp.models.LineItem;
 
 /**
@@ -113,7 +116,7 @@ public class POSHelper {
             for (LineItem lineItem : data) {
                 if (lineItem.getProductCode().equals(productCode)) {
                     data.remove(lineItem);
-                    updateTotalQuantity(data, MainController.text);
+                    updateInvoiceSummary(data, MainController.invoiceTotalText, MainController.taxableAmountText, MainController.totalVAText, MainController.totalItemsText);
                     break;
                 }
             }
@@ -125,11 +128,28 @@ public class POSHelper {
         return hBox;
     }
 
-    public static void updateTotalQuantity(ObservableList<LineItem> data, Text text) {
+    public static void updateInvoiceSummary(ObservableList<LineItem> data, Text invoiceTotalText, Text taxableAmountText, Text totalVATText, Text itemsCount) {
+        DecimalFormat df = new DecimalFormat("0.00");
+
+        double invoiceTotal = data.stream()
+                .mapToDouble(item -> item.getUnitPrice() * item.getQuantity())
+                .sum();
+        invoiceTotalText.setText(df.format(invoiceTotal));
+
+        double taxableAmount = data.stream()
+                .mapToDouble(item -> item.getTotal() - item.getTotalVAT())
+                .sum();
+        taxableAmountText.setText(df.format(taxableAmount));
+
+        double totalVAT = data.stream()
+                .mapToDouble(LineItem::getTotalVAT)
+                .sum();
+        totalVATText.setText(df.format(totalVAT));
+
         double totalQuantity = data.stream()
                 .mapToDouble(LineItem::getQuantity)
                 .sum();
-        text.setText(String.valueOf(totalQuantity));
+        itemsCount.setText(String.valueOf(totalQuantity));
     }
 
     public static boolean isVATRegistered() {

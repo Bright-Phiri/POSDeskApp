@@ -6,42 +6,29 @@
 package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
@@ -99,7 +86,10 @@ public class MainController implements Initializable {
     private Text changeLabel;
 
     private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
-    public static Text text;
+    public static Text totalItemsText;
+    public static Text taxableAmountText;
+    public static Text invoiceTotalText;
+    public static Text totalVAText;
 
     static {
         
@@ -116,7 +106,10 @@ public class MainController implements Initializable {
         initializeDatabase();
         initializeColumns();
         Platform.runLater(() -> searchProductTextField.requestFocus());
-        text = totalNoOfItems;
+        totalItemsText = totalNoOfItems;
+        taxableAmountText = subTotalLabel;
+        invoiceTotalText = totalLabel;
+        totalVAText = vatLabel;
     }
 
     @FXML
@@ -223,7 +216,7 @@ public class MainController implements Initializable {
         searchProductTextField.clear();
         data.add(lineItem);
         productsTable.setItems(data);
-        POSHelper.updateTotalQuantity(data, totalNoOfItems);
+        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
     }
 
 }
