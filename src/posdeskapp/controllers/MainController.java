@@ -5,6 +5,7 @@
  */
 package posdeskapp.controllers;
 
+import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.util.HashMap;

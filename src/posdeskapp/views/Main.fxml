@@ -46,7 +46,7 @@
             <Insets bottom="15.0" right="15.0" top="15.0" />
          </BorderPane.margin>
          <children>
-            <HBox alignment="CENTER" maxWidth="394.0" prefHeight="83.0" prefWidth="394.0" style="-fx-background-color: #001F3F;">
+            <HBox alignment="CENTER" maxWidth="394.0" prefHeight="83.0" prefWidth="392.0" style="-fx-background-color: #001F3F;">
                <children>
                   <Text fx:id="totalLabel" fill="#f2f2f2" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00" HBox.hgrow="ALWAYS">
                      <font>
