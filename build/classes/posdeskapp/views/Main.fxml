@@ -284,7 +284,7 @@
                 <TableColumn fx:id="barcodeCol" prefWidth="139.0" text="Barcode" />
                 <TableColumn fx:id="descriptionCol" prefWidth="89.0" text="Product Description" />
                   <TableColumn fx:id="priceCol" prefWidth="75.0" text="Price" />
-                  <TableColumn fx:id="quantityCol" prefWidth="75.0" text="Quantity" />
+                  <TableColumn fx:id="quantityCol" onEditCommit="#onEditCommitChange" prefWidth="75.0" text="Quantity" />
                   <TableColumn fx:id="discountCol" prefWidth="75.0" text="Discount" />
                   <TableColumn fx:id="totalCol" prefWidth="75.0" text="Total" />
                   <TableColumn fx:id="actionCol" prefWidth="75.0" text="Action" />
@@ -331,7 +331,7 @@
                            </HBox.margin>
                         </Text>
                         <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <JFXButton buttonType="RAISED" onAction="#loadItemsLookupScreen" prefHeight="38.0" prefWidth="137.0" style="-fx-border-color: black; -fx-border-radius: 15; -fx-background-radius: 15;" text="Item Lookup">
+                        <JFXButton buttonType="RAISED" onAction="#loadItemsLookupScreen" prefHeight="38.0" prefWidth="137.0" style="-fx-border-color: black; -fx-border-radius: 15; -fx-background-radius: 15;" stylesheets="@../css/main.css" text="Item Lookup">
                            <graphic>
                               <OctIconView glyphName="SEARCH" size="20" />
                            </graphic>

@@ -29,10 +29,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.util.StringConverter;
 import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.Notification;
@@ -96,8 +98,9 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-       
-    };
+        
+    }
+    ;
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -123,6 +126,23 @@ public class MainController implements Initializable {
 
         priceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedUnitPrice()));
         totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTotal()));
+
+        productsTable.setEditable(true);
+        quantityCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Double>() {
+            @Override
+            public String toString(Double object) {
+                return object != null ? object.toString() : "";
+            }
+
+            @Override
+            public Double fromString(String string) {
+                try {
+                    return Double.valueOf(string);
+                } catch (NumberFormatException e) {
+                    return 0.0; // Default value in case of invalid input
+                }
+            }
+        }));
     }
 
     @FXML
@@ -344,5 +364,62 @@ public class MainController implements Initializable {
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         return currentDate.format(formatter);
+    }
+
+    @FXML
+    private void onEditCommitChange(TableColumn.CellEditEvent<LineItem, Double> event) {
+        Double newQuantity = event.getNewValue();
+
+        if (newQuantity == null || newQuantity == 0 || newQuantity.isNaN() || newQuantity.isInfinite()) {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Invalid Input", "Please enter a valid quantity.");
+            event.getTableView().refresh();
+            productsTable.requestFocus();
+            return;
+        }
+
+        LineItem lineItem = event.getRowValue();
+
+        double productQuantity = POSHelper.getProductQuantity(lineItem.getProductCode());
+
+        if (productQuantity < 0) {
+            return;
+        }
+
+        double totalLineItemsQuantity = data.stream()
+                .filter(item -> item.getProductCode().equals(lineItem.getProductCode()) && item != lineItem)
+                .mapToDouble(LineItem::getQuantity)
+                .sum();
+
+        double remainingQuantity = productQuantity - totalLineItemsQuantity;
+
+        if (newQuantity > remainingQuantity) {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Inventory Levels", "Inventory quantity is not sufficient");
+
+            // Reset the quantity value in the table
+            productsTable.getItems().get(event.getTablePosition().getRow()).setQuantity(lineItem.getQuantity());
+            event.getTableView().refresh();
+            return;
+        }
+
+        // Update line item quantity
+        lineItem.setQuantity(newQuantity);
+
+        // Update VAT and total for the line item
+        double taxRate = POSHelper.getTaxRateById(lineItem.getTaxRateId());
+        boolean isVATRegistered = POSHelper.isVATRegistered();
+
+        if (isVATRegistered) {
+            lineItem.setTotalVAT(POSHelper.extractVATAmount(lineItem.getUnitPrice(), newQuantity, taxRate));
+        }
+
+        lineItem.setTotal(newQuantity * lineItem.getUnitPrice());
+
+        Platform.runLater(() -> {
+            productsTable.refresh();
+        });
+
+        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+
+        productsTable.requestFocus();
     }
 }
