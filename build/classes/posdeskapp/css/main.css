@@ -7,30 +7,78 @@ and open the template in the editor.
     Created on : Nov 25, 2024, 8:16:18 PM
     Author     : biphiri
 */
+/* Shared styles for buttons */
 
-.jfx-button{
-    -fx-border-color:  #B2B2B2;
+#rootPahe{
+   -fx-background-color:  #F9F9F9;
 }
-.jfx-button:focused{
-    -fx-background-color: rgba(0,0,0,0.1);
-}
-
-.jfx-button:hover{
-    -fx-background-color: rgba(0,0,0,0.1);
+#homeButton, #itemLookUpButton {
+    -fx-border-color: #B2B2B2;
 }
 
-.jfx-button:disabled, .jfx-button:default:disabled{
-    -fx-background-color: rgba(0,0,0,0.1);
-}
-.jfx-button:default{
-    -fx-background-color:rgba(0,0,0,0.1);
-}
-.jfx-button:pressed, .jfx-button:hover:pressed{
-    -fx-background-color: rgba(0,0,0,0.1);
+#homeButton:focused, #itemLookUpButton:focused {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
 }
 
-.jfx-button:default:hover{
-    -fx-background-color: rgba(0,0,0,0.1);
+#homeButton:hover, #itemLookUpButton:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+#homeButton:disabled, #itemLookUpButton:disabled, 
+#homeButton:default:disabled, #itemLookUpButton:default:disabled {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+#homeButton:default, #itemLookUpButton:default {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+#homeButton:pressed, #itemLookUpButton:pressed, 
+#homeButton:hover:pressed, #itemLookUpButton:hover:pressed {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+#homeButton:default:hover, #itemLookUpButton:default:hover {
+    -fx-background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Base green color */
+#paymentButton {
+    -fx-background-color: rgba(0, 128, 0, 1); /* Solid green */
+    -fx-border-color: #B2B2B2;
+}
+
+/* Hover effect: slightly brighter green */
+#paymentButton:hover {
+    -fx-background-color: rgba(0, 200, 0, 1); /* Brighter green */
+}
+
+/* Base red color */
+#voidButton {
+    -fx-background-color: rgba(200, 0, 0, 1); /* Solid red */
+    -fx-border-color: #B2B2B2;
+}
+
+/* Hover effect: brighter red */
+#voidButton:hover {
+    -fx-background-color: rgba(255, 50, 50, 1); /* Brighter red */
+}
+
+#suspendButton {
+    -fx-background-color: rgba(255, 165, 0, 1); /* Solid orange */
+    -fx-border-color: #B2B2B2;
+}
+
+#suspendButton:hover {
+    -fx-background-color: rgba(255, 190, 50, 1); /* Brighter orange */
+}
+
+#addLineItemButton {
+   -fx-background-color: rgba(0, 0, 255, 1);
+}
+
+#addLineItemButton:hover {
+    -fx-background-color: rgba(0, 0, 255, 0.8); /* Slightly transparent */
 }
 
 .table-row-cell:hover:filled {

@@ -5,6 +5,7 @@
  */
 package posdeskapp.controllers;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -90,6 +92,20 @@ public class MainController implements Initializable {
     private TextField buyerTINTextField;
     @FXML
     private Text changeLabel;
+    @FXML
+    private BorderPane rootPahe;
+    @FXML
+    private JFXButton homeButton;
+    @FXML
+    private JFXButton itemLookUpButton;
+    @FXML
+    private JFXButton paymentButton;
+    @FXML
+    private JFXButton voidButton;
+    @FXML
+    private JFXButton suspendButton;
+    @FXML
+    private JFXButton addLineItemButton;
 
     private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
     public static Text totalItemsText;
@@ -99,8 +115,7 @@ public class MainController implements Initializable {
 
     static {
         
-    }
-    ;
+    };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -272,6 +287,63 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
+    private void updateLineItemQuantity(TableColumn.CellEditEvent<LineItem, Double> event) {
+        Double newQuantity = event.getNewValue();
+
+        if (newQuantity == null || newQuantity == 0 || newQuantity.isNaN() || newQuantity.isInfinite()) {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Invalid Input", "Please enter a valid quantity.");
+            event.getTableView().refresh();
+            productsTable.requestFocus();
+            return;
+        }
+
+        LineItem lineItem = event.getRowValue();
+
+        double productQuantity = POSHelper.getProductQuantity(lineItem.getProductCode());
+
+        if (productQuantity < 0) {
+            return;
+        }
+
+        double totalLineItemsQuantity = data.stream()
+                .filter(item -> item.getProductCode().equals(lineItem.getProductCode()) && item != lineItem)
+                .mapToDouble(LineItem::getQuantity)
+                .sum();
+
+        double remainingQuantity = productQuantity - totalLineItemsQuantity;
+
+        if (newQuantity > remainingQuantity) {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Inventory Levels", "Inventory quantity is not sufficient");
+
+            // Reset the quantity value in the table
+            productsTable.getItems().get(event.getTablePosition().getRow()).setQuantity(lineItem.getQuantity());
+            event.getTableView().refresh();
+            return;
+        }
+
+        // Update line item quantity
+        lineItem.setQuantity(newQuantity);
+
+        // Update VAT and total for the line item
+        double taxRate = POSHelper.getTaxRateById(lineItem.getTaxRateId());
+        boolean isVATRegistered = POSHelper.isVATRegistered();
+
+        if (isVATRegistered) {
+            lineItem.setTotalVAT(POSHelper.extractVATAmount(lineItem.getUnitPrice(), newQuantity, taxRate));
+        }
+
+        lineItem.setTotal(newQuantity * lineItem.getUnitPrice());
+
+        Platform.runLater(() -> {
+            productsTable.refresh();
+        });
+
+        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+
+        productsTable.requestFocus();
+    }
+
     private void initializeDatabase() {
         TABLE_DEFINITIONS.forEach(DbConnection::checkTable);
     }
@@ -364,62 +436,5 @@ public class MainController implements Initializable {
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         return currentDate.format(formatter);
-    }
-
-    @FXML
-    private void onEditCommitChange(TableColumn.CellEditEvent<LineItem, Double> event) {
-        Double newQuantity = event.getNewValue();
-
-        if (newQuantity == null || newQuantity == 0 || newQuantity.isNaN() || newQuantity.isInfinite()) {
-            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Invalid Input", "Please enter a valid quantity.");
-            event.getTableView().refresh();
-            productsTable.requestFocus();
-            return;
-        }
-
-        LineItem lineItem = event.getRowValue();
-
-        double productQuantity = POSHelper.getProductQuantity(lineItem.getProductCode());
-
-        if (productQuantity < 0) {
-            return;
-        }
-
-        double totalLineItemsQuantity = data.stream()
-                .filter(item -> item.getProductCode().equals(lineItem.getProductCode()) && item != lineItem)
-                .mapToDouble(LineItem::getQuantity)
-                .sum();
-
-        double remainingQuantity = productQuantity - totalLineItemsQuantity;
-
-        if (newQuantity > remainingQuantity) {
-            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Inventory Levels", "Inventory quantity is not sufficient");
-
-            // Reset the quantity value in the table
-            productsTable.getItems().get(event.getTablePosition().getRow()).setQuantity(lineItem.getQuantity());
-            event.getTableView().refresh();
-            return;
-        }
-
-        // Update line item quantity
-        lineItem.setQuantity(newQuantity);
-
-        // Update VAT and total for the line item
-        double taxRate = POSHelper.getTaxRateById(lineItem.getTaxRateId());
-        boolean isVATRegistered = POSHelper.isVATRegistered();
-
-        if (isVATRegistered) {
-            lineItem.setTotalVAT(POSHelper.extractVATAmount(lineItem.getUnitPrice(), newQuantity, taxRate));
-        }
-
-        lineItem.setTotal(newQuantity * lineItem.getUnitPrice());
-
-        Platform.runLater(() -> {
-            productsTable.refresh();
-        });
-
-        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
-
-        productsTable.requestFocus();
     }
 }
