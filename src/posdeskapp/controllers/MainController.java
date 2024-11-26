@@ -142,7 +142,7 @@ public class MainController implements Initializable {
         String terminalLbel = POSHelper.getTerminalLabel();
         tillName.setText(terminalLbel);
 
-        date.setText(getDate());
+        date.setText(POSHelper.getDate());
 
         totalItemsText = totalNoOfItems;
         taxableAmountText = subTotalLabel;
@@ -153,6 +153,7 @@ public class MainController implements Initializable {
         totalCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTotal()));
 
         productsTable.setEditable(true);
+
         quantityCol.setCellFactory(TextFieldTableCell.forTableColumn(new StringConverter<Double>() {
             @Override
             public String toString(Double object) {
@@ -462,11 +463,5 @@ public class MainController implements Initializable {
         } catch (Exception ex) {
             System.err.println("Error: " + ex.getMessage());
         }
-    }
-
-    public static String getDate() {
-        LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
-        return currentDate.format(formatter);
     }
 }

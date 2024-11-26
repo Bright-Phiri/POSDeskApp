@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 import javafx.collections.FXCollections;
@@ -339,6 +341,12 @@ public class POSHelper {
         hBox.getChildren().add(icon);
 
         return hBox;
+    }
+
+    public static String getDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
+        return currentDate.format(formatter);
     }
 
     public static void updateInvoiceSummary(ObservableList<LineItem> data, Text invoiceTotalText, Text taxableAmountText, Text totalVATText, Text itemsCount) {
