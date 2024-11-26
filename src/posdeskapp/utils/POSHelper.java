@@ -15,7 +15,11 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,6 +33,7 @@ import javafx.scene.text.Text;
 import posdeskapp.controllers.MainController;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
+import posdeskapp.models.TaxBreakDown;
 
 /**
  *
@@ -341,6 +346,29 @@ public class POSHelper {
         hBox.getChildren().add(icon);
 
         return hBox;
+    }
+
+    public static List<TaxBreakDown> generateTaxSummary(List<LineItem> lineItems) {
+        Map<String, TaxBreakDown> taxBreakdowns = new HashMap<>();
+
+        lineItems.forEach((item) -> {
+            double taxableAmount = item.getTotal() - item.getTotalVAT();
+            double taxAmount = item.getTotalVAT();
+
+            if (taxBreakdowns.containsKey(item.getTaxRateId())) {
+                TaxBreakDown existing = taxBreakdowns.get(item.getTaxRateId());
+                double updatedTaxableAmount = existing.getTaxableAmount() + taxableAmount;
+                double updatedTaxAmount = existing.getTaxAmount() + taxAmount;
+
+                taxBreakdowns.put(item.getTaxRateId(),
+                        new TaxBreakDown(item.getTaxRateId(), updatedTaxableAmount, updatedTaxAmount));
+            } else {
+                taxBreakdowns.put(item.getTaxRateId(),
+                        new TaxBreakDown(item.getTaxRateId(), taxableAmount, taxAmount));
+            }
+        });
+
+        return new ArrayList<>(taxBreakdowns.values());
     }
 
     public static String getDate() {
