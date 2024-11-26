@@ -120,13 +120,15 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-        
+       
     };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {

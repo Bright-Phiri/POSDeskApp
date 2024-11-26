@@ -54,6 +54,8 @@ public class ProductsLookUpController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -89,13 +91,6 @@ public class ProductsLookUpController implements Initializable {
     @FXML
     private void fetchProductDetails(MouseEvent event) {
         Product product = (Product) productsTable.getSelectionModel().getSelectedItem();
-        System.out.println(product.getDescription());
-        System.out.println(product.getProductCode());
-        System.out.println(product.getExpireDate());
-        System.out.println(product.getUnitPrice());
-        System.out.println(product.getQuantity());
-        System.out.println(product.getUnitOfMeasure());
-        System.out.println(product.getTaxRateId());
     }
 
     private void initializeColumns() {
