@@ -22,7 +22,7 @@ public class POSDeskApp extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/Main.fxml"));
         
-        Scene scene = new Scene(root, 1783, 969);
+        Scene scene = new Scene(root, 1812, 987);
         
         stage.setScene(scene);
         stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));

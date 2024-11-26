@@ -6,11 +6,6 @@
 package posdeskapp.controllers;
 
 import java.net.URL;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.collections.FXCollections;
@@ -25,9 +20,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
-import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
-import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -104,7 +97,7 @@ public class ProductsLookUpController implements Initializable {
 
     private void loadProducts() {
         data.clear();
-        data = (ObservableList<Product>) POSHelper.fetchProducts();
+        data = POSHelper.fetchProducts();
         productsTable.getItems().setAll(data);
     }
 }

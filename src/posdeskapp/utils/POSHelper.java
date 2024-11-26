@@ -16,6 +16,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -119,8 +120,8 @@ public class POSHelper {
         return null;
     }
 
-    public static List<Product> fetchProducts() {
-        List<Product> products = new ArrayList<>();
+    public static ObservableList<Product> fetchProducts() {
+        ObservableList<Product> products = FXCollections.observableArrayList();
         PreparedStatement pre = null;
         Connection conn = null;
         ResultSet rs = null;

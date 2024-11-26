@@ -7,6 +7,7 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +24,10 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
@@ -31,11 +35,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
@@ -114,7 +121,7 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-        
+       
     };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
@@ -186,7 +193,16 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void loadItemsLookupScreen(ActionEvent event) {
+    private void loadItemsLookupScreen(ActionEvent event) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/ProductsLookUp.fxml"));
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
+        stage.setTitle("POS");
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 
     @FXML
@@ -227,6 +243,7 @@ public class MainController implements Initializable {
         } else {
             Notification notification = new Notification("Information", "No transaction to void.", 3);
         }
+        searchProductTextField.requestFocus();
     }
 
     @FXML
