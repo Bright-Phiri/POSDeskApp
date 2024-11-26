@@ -250,6 +250,36 @@ public class POSHelper {
 
         return terminalLabel;
     }
+    
+    public static void markInvoiceAsProcessed(String invoiceNumber) {
+        String updateQuery = "UPDATE Invoices SET State = ? WHERE InvoiceNumber = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            statement = connection.prepareStatement(updateQuery);
+
+            statement.setString(1, invoiceNumber);
+            statement.setInt(2, 1);
+
+            statement.executeUpdate();
+
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while updating invoice state: " + ex.getMessage());
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+    }
 
     public static double parseDecimal(String value) {
         try {
