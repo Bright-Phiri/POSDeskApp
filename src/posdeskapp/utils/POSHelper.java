@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -31,6 +32,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import posdeskapp.controllers.MainController;
+import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
 import posdeskapp.models.TaxBreakDown;
@@ -310,6 +312,113 @@ public class POSHelper {
             }
         }
         return quantity;
+    }
+
+    public static boolean processTransaction (
+            InvoiceHeader invoice,
+            List<LineItem> lineItems,
+            List<TaxBreakDown> taxBreakdowns,
+            double total,
+            double totalVAT
+    ) {
+        String insertInvoiceQuery = "INSERT INTO Invoices (InvoiceNumber, InvoiceDateTime, InvoiceTotal, SellerTin, BuyerTin, TotalVAT, State) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertLineItemQuery = "INSERT INTO LineItems (ProductCode, Description, UnitPrice, Quantity, InvoiceNumber, TaxRateID, Discount) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertTaxBreakdownQuery = "INSERT INTO InvoiceTaxBreakDown (InvoiceNumber, RateID, TaxableAmount, TaxAmount) VALUES (?, ?, ?, ?)";
+        String updateProductQuery = "UPDATE Products SET Quantity = ? WHERE ProductCode = ?";
+
+        Connection connection = null;
+        PreparedStatement invoiceStmt = null;
+        PreparedStatement lineItemStmt = null;
+        PreparedStatement taxBreakdownStmt = null;
+        PreparedStatement updateProductStmt = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            connection.setAutoCommit(false);
+            Savepoint savepoint = connection.setSavepoint("SaveTransaction");
+
+            // Save the invoice
+            invoiceStmt = connection.prepareStatement(insertInvoiceQuery);
+            invoiceStmt.setString(1, invoice.getInvoiceNumber());
+            invoiceStmt.setObject(2, invoice.getInvoiceDateTime());
+            invoiceStmt.setDouble(3, total);
+            invoiceStmt.setString(4, invoice.getSellerTIN());
+            invoiceStmt.setString(5, invoice.getBuyerTIN());
+            invoiceStmt.setDouble(6, totalVAT);
+            invoiceStmt.setInt(7, 0);
+            invoiceStmt.executeUpdate();
+
+            // Save line items and update Product quantity
+            for (LineItem lineItem : lineItems) {
+                double currentQuantity = getProductQuantity(lineItem.getProductCode());
+                double newQuantity = currentQuantity - lineItem.getQuantity();
+
+                // Update product quantity
+                updateProductStmt = connection.prepareStatement(updateProductQuery);
+                updateProductStmt.setDouble(1, newQuantity);
+                updateProductStmt.setString(2, lineItem.getProductCode());
+                updateProductStmt.executeUpdate();
+
+                // Save line item
+                lineItemStmt = connection.prepareStatement(insertLineItemQuery);
+                lineItemStmt.setString(1, lineItem.getProductCode());
+                lineItemStmt.setString(2, lineItem.getDescription());
+                lineItemStmt.setDouble(3, lineItem.getUnitPrice());
+                lineItemStmt.setDouble(4, lineItem.getQuantity());
+                lineItemStmt.setString(5, invoice.getInvoiceNumber());
+                lineItemStmt.setString(6, lineItem.getTaxRateId());
+                lineItemStmt.setDouble(7, lineItem.getDiscount());
+                lineItemStmt.executeUpdate();
+            }
+
+            // Save tax breakdowns
+            for (TaxBreakDown taxBreakdown : taxBreakdowns) {
+                taxBreakdownStmt = connection.prepareStatement(insertTaxBreakdownQuery);
+                taxBreakdownStmt.setString(1, invoice.getInvoiceNumber());
+                taxBreakdownStmt.setString(2, taxBreakdown.getRateId());
+                taxBreakdownStmt.setDouble(3, taxBreakdown.getTaxableAmount());
+                taxBreakdownStmt.setDouble(4, taxBreakdown.getTaxAmount());
+                taxBreakdownStmt.executeUpdate();
+            }
+
+            connection.commit();
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error rolling back transaction: " + ex.getMessage());
+            }
+            System.err.println("Error while saving transaction: " + e.getMessage());
+            return false;
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (invoiceStmt != null) {
+                    invoiceStmt.close();
+                }
+                if (lineItemStmt != null) {
+                    lineItemStmt.close();
+                }
+                if (taxBreakdownStmt != null) {
+                    taxBreakdownStmt.close();
+                }
+                if (updateProductStmt != null) {
+                    updateProductStmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
     }
 
     private static HBox setActionButtons(String productCode, ObservableList<LineItem> data) {
