@@ -14,10 +14,12 @@ import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
+import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
@@ -317,11 +319,18 @@ public class POSHelper {
         hBox.setAlignment(Pos.CENTER);
 
         icon.setOnMouseClicked(event -> {
-            for (LineItem lineItem : data) {
-                if (lineItem.getProductCode().equals(productCode)) {
-                    data.remove(lineItem);
-                    updateInvoiceSummary(data, MainController.invoiceTotalText, MainController.taxableAmountText, MainController.totalVAText, MainController.totalItemsText);
-                    break;
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Remove line item");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to remove line item?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+                for (LineItem lineItem : data) {
+                    if (lineItem.getProductCode().equals(productCode)) {
+                        data.remove(lineItem);
+                        updateInvoiceSummary(data, MainController.invoiceTotalText, MainController.taxableAmountText, MainController.totalVAText, MainController.totalItemsText);
+                        break;
+                    }
                 }
             }
         });

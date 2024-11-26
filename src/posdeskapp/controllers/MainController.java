@@ -120,7 +120,7 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-       
+        
     };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
