@@ -46,6 +46,8 @@ and open the template in the editor.
 #paymentButton {
     -fx-background-color: rgba(0, 128, 0, 1); /* Solid green */
     -fx-border-color: #B2B2B2;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 /* Hover effect: slightly brighter green */
@@ -57,6 +59,8 @@ and open the template in the editor.
 #voidButton {
     -fx-background-color: rgba(200, 0, 0, 1); /* Solid red */
     -fx-border-color: #B2B2B2;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 /* Hover effect: brighter red */
@@ -67,6 +71,8 @@ and open the template in the editor.
 #suspendButton {
     -fx-background-color: rgba(255, 165, 0, 1); /* Solid orange */
     -fx-border-color: #B2B2B2;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 #suspendButton:hover {
