@@ -121,7 +121,7 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-       
+        
     };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
@@ -278,7 +278,7 @@ public class MainController implements Initializable {
     @FXML
     private void updateCheckout(KeyEvent event) {
         try {
-            double total = parseDecimal(totalLabel.getText());
+            double total = POSHelper.parseFormattedValue(totalLabel.getText());
 
             // Parsing the payment amount
             String paymentText = tenderedAmountTextField.getText();

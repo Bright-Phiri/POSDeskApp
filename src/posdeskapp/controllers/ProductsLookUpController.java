@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import posdeskapp.models.Product;
 import posdeskapp.utils.POSHelper;
@@ -83,6 +84,18 @@ public class ProductsLookUpController implements Initializable {
             sortedList.comparatorProperty().bind(productsTable.comparatorProperty());
             productsTable.setItems(sortedList);
         }));
+    }
+
+    @FXML
+    private void fetchProductDetails(MouseEvent event) {
+        Product product = (Product) productsTable.getSelectionModel().getSelectedItem();
+        System.out.println(product.getDescription());
+        System.out.println(product.getProductCode());
+        System.out.println(product.getExpireDate());
+        System.out.println(product.getUnitPrice());
+        System.out.println(product.getQuantity());
+        System.out.println(product.getUnitOfMeasure());
+        System.out.println(product.getTaxRateId());
     }
 
     private void initializeColumns() {

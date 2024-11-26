@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -255,6 +256,17 @@ public class POSHelper {
         formatter.setMinimumFractionDigits(2);
         formatter.setMaximumFractionDigits(2);
         return formatter.format(value);
+    }
+
+    public static double parseFormattedValue(String formattedValue) {
+        try {
+            NumberFormat formatter = NumberFormat.getNumberInstance(Locale.US);
+            Number number = formatter.parse(formattedValue);
+            return number.doubleValue();
+        } catch (ParseException e) {
+            System.err.println("Invalid formatted value: " + formattedValue);
+            return 0.0;
+        }
     }
 
     public static double getProductQuantity(String productCode) {
