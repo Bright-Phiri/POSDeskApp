@@ -29,7 +29,7 @@ public class LineItem {
     private final SimpleDoubleProperty totalVAT;
     private final HBox controlsPane;
 
-    public LineItem(String productCode, String description, int quantity, double unitPrice, double total, double discount, double totalVAT, String taxRateId, HBox controlsPane) {
+    public LineItem(String productCode, String description, double quantity, double unitPrice, double total, double discount, double totalVAT, String taxRateId, HBox controlsPane) {
         this.id = new SimpleIntegerProperty(0);
         this.productCode = new SimpleStringProperty(productCode);
         this.description = new SimpleStringProperty(description);
