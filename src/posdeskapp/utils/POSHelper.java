@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -23,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import posdeskapp.controllers.MainController;
 import posdeskapp.models.LineItem;
+import posdeskapp.models.Product;
 
 /**
  *
@@ -114,6 +117,50 @@ public class POSHelper {
         }
 
         return null;
+    }
+
+    public static List<Product> fetchProducts() {
+        List<Product> products = new ArrayList<>();
+        PreparedStatement pre = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        String query = "SELECT * FROM Products";
+
+        try {
+            conn = DbConnection.Connect();
+            pre = conn.prepareStatement(query);
+            rs = pre.executeQuery();
+
+            while (rs.next()) {
+                products.add(new Product(
+                        rs.getString(1),
+                        rs.getString(3),
+                        rs.getDouble(6),
+                        rs.getString(5),
+                        rs.getDouble(4),
+                        rs.getString(8),
+                        rs.getString(10)
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println(e);
+        } finally {
+            try {
+                if (pre != null) {
+                    pre.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println(e);
+            }
+        }
+
+        return products;
     }
 
     public static double getTaxRateById(String taxRateId) {

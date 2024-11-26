@@ -6,6 +6,11 @@
 package posdeskapp.controllers;
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
 import javafx.collections.FXCollections;
@@ -22,6 +27,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
+import posdeskapp.utils.DbConnection;
+import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class
@@ -57,6 +64,7 @@ public class ProductsLookUpController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeColumns();
+        loadProducts();
     }
 
     @FXML
@@ -92,5 +100,11 @@ public class ProductsLookUpController implements Initializable {
         unitOfMeasureCol.setCellValueFactory(new PropertyValueFactory<>("unitOfMeasure"));
         expireCol.setCellValueFactory(new PropertyValueFactory<>("expireDate"));
         taxRateCol.setCellValueFactory(new PropertyValueFactory<>("taxRateId"));
+    }
+
+    private void loadProducts() {
+        data.clear();
+        data = (ObservableList<Product>) POSHelper.fetchProducts();
+        productsTable.getItems().setAll(data);
     }
 }
