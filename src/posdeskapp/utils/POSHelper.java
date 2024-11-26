@@ -322,7 +322,7 @@ public class POSHelper {
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
             alert.setTitle("Remove line item");
             alert.setHeaderText(null);
-            alert.setContentText("Are you sure you want to remove line item?");
+            alert.setContentText("Are you sure you want to remove this line item?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
                 for (LineItem lineItem : data) {
