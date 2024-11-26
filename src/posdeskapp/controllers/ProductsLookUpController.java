@@ -7,14 +7,20 @@ package posdeskapp.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
+import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
 
 /**
@@ -44,17 +50,47 @@ public class ProductsLookUpController implements Initializable {
     private TableColumn<Product, String> taxRateCol;
 
     ObservableList<Product> data = FXCollections.observableArrayList();
- 
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        initializeColumns();
+    }
 
     @FXML
     private void searchProduct(KeyEvent event) {
+        FilteredList<Product> filteredList = new FilteredList<>(data, p -> true);
+        searchTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredList.setPredicate((Predicate<? super Product>) item -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterToLowerCase = newValue.toLowerCase();
+                if (item.getProductCode().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getDescription().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                productsTable.setPlaceholder(new Text("No record match your search"));
+                return false;
+            });
+
+            SortedList<Product> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(productsTable.comparatorProperty());
+            productsTable.setItems(sortedList);
+        }));
     }
-    
+
+    private void initializeColumns() {
+        barcodeCol.setCellValueFactory(new PropertyValueFactory<>("productCode"));
+        descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
+        priceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        unitOfMeasureCol.setCellValueFactory(new PropertyValueFactory<>("unitOfMeasure"));
+        expireCol.setCellValueFactory(new PropertyValueFactory<>("expireDate"));
+        taxRateCol.setCellValueFactory(new PropertyValueFactory<>("taxRateId"));
+    }
 }
