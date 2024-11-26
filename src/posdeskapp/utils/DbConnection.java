@@ -19,7 +19,7 @@ import org.sqlite.SQLiteConfig;
  */
 public class DbConnection {
 
-    public static Connection Connect() {
+    public static Connection createConnection() {
         try {
             Class.forName("org.sqlite.JDBC");
 
@@ -45,7 +45,7 @@ public class DbConnection {
         Statement st = null;
         Connection conn = null;
         try {
-            conn = Connect();
+            conn = createConnection();
             DatabaseMetaData metaData = conn.getMetaData();
             ResultSet rs = metaData.getTables(null, null, tableName, null);
             if (rs.next()) {

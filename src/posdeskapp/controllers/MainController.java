@@ -48,7 +48,6 @@ import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
-import static posdeskapp.utils.POSHelper.parseDecimal;
 
 /**
  * FXML Controller class
@@ -121,7 +120,7 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-       
+        
     };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();

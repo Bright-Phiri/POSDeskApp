@@ -11,11 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,7 +42,7 @@ public class POSHelper {
         ResultSet taxRateRs = null;
 
         try {
-            connection = DbConnection.Connect();
+            connection = DbConnection.createConnection();
 
             productStmt = connection.prepareStatement(query);
             productStmt.setString(1, productCode);
@@ -129,7 +126,7 @@ public class POSHelper {
         String query = "SELECT * FROM Products";
 
         try {
-            conn = DbConnection.Connect();
+            conn = DbConnection.createConnection();
             pre = conn.prepareStatement(query);
             rs = pre.executeQuery();
 
@@ -173,7 +170,7 @@ public class POSHelper {
         double taxRate = 0.0; // Default tax rate if not found or error occurs
 
         try {
-            connection = DbConnection.Connect();
+            connection = DbConnection.createConnection();
             taxRateStmt = connection.prepareStatement(taxRateQuery);
             taxRateStmt.setString(1, taxRateId); // Set the parameter for the query
 
@@ -214,7 +211,7 @@ public class POSHelper {
         ResultSet resultSet = null;
 
         try {
-            connection = DbConnection.Connect();
+            connection = DbConnection.createConnection();
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
 
@@ -277,7 +274,7 @@ public class POSHelper {
         ResultSet resultSet = null;
 
         try {
-            connection = DbConnection.Connect();
+            connection = DbConnection.createConnection();
             statement = connection.prepareStatement(query);
             statement.setString(1, productCode);
 
@@ -366,7 +363,7 @@ public class POSHelper {
         ResultSet resultSet = null;
 
         try {
-            connection = DbConnection.Connect();
+            connection = DbConnection.createConnection();
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
 
