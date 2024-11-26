@@ -45,6 +45,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import posdeskapp.models.LineItem;
+import posdeskapp.models.Product;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
@@ -127,6 +128,7 @@ public class MainController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -195,7 +197,15 @@ public class MainController implements Initializable {
 
     @FXML
     private void loadItemsLookupScreen(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/ProductsLookUp.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/ProductsLookUp.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller for the lookup screen
+        ProductsLookUpController lookupController = loader.getController();
+
+        // Pass the reference of this controller to the lookup controller
+        lookupController.setMainController(this);
+
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -360,6 +370,10 @@ public class MainController implements Initializable {
         POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
 
         productsTable.requestFocus();
+    }
+
+    public void setSelectedProduct(Product product) {
+        addProductToTable(product.getProductCode());
     }
 
     private void initializeDatabase() {

@@ -21,6 +21,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import posdeskapp.models.Product;
 import posdeskapp.utils.POSHelper;
 
@@ -51,9 +52,12 @@ public class ProductsLookUpController implements Initializable {
     private TableColumn<Product, String> taxRateCol;
 
     ObservableList<Product> data = FXCollections.observableArrayList();
+    private Product selectedProduct;
+    private MainController mainController;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -90,7 +94,18 @@ public class ProductsLookUpController implements Initializable {
 
     @FXML
     private void fetchProductDetails(MouseEvent event) {
-        Product product = (Product) productsTable.getSelectionModel().getSelectedItem();
+        selectedProduct = (Product) productsTable.getSelectionModel().getSelectedItem();
+        if (selectedProduct != null && mainController != null) {
+            mainController.setSelectedProduct(selectedProduct);
+        }
+
+        // Close the lookup panel
+        Stage stage = (Stage) productsTable.getScene().getWindow();
+        stage.close();
+    }
+
+    public void setMainController(MainController controller) {
+        this.mainController = controller;
     }
 
     private void initializeColumns() {
