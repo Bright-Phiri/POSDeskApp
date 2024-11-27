@@ -19,7 +19,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import posdeskapp.models.UserRole;
 import posdeskapp.utils.Alert;
 import posdeskapp.utils.POSHelper;
 
@@ -46,7 +45,7 @@ public class LoginFormController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Tooltip close = new Tooltip("Sign out");
+        Tooltip close = new Tooltip("Close Application");
         close.setStyle("-fx-font-size:11");
         close.setMinSize(20, 20);
         Tooltip.install(this.closeApp, close);
