@@ -19,6 +19,8 @@ import java.util.UUID;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -49,6 +51,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 import javafx.util.StringConverter;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
@@ -148,7 +151,10 @@ public class MainController implements Initializable {
         initializeDatabase();
         initializeColumns();
 
-        Platform.runLater(() -> searchProductTextField.requestFocus());
+        Platform.runLater(() -> {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> searchProductTextField.requestFocus()));
+            timeline.play();
+        });
 
         String terminalLbel = POSHelper.getTerminalLabel();
         tillName.setText(terminalLbel);
