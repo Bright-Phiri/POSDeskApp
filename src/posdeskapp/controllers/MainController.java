@@ -448,7 +448,7 @@ public class MainController implements Initializable {
 
         if (product.getQuantity() < 1) {
             Platform.runLater(() -> {
-                Notification notification = new Notification("Error", "Inventory quantity is not sufficient", 3);
+                Notification notification = new Notification("Warning", "Inventory quantity is not sufficient", 3);
             });
 
             return;
@@ -491,7 +491,7 @@ public class MainController implements Initializable {
 
             if (remainingQuantity < 1) {
                 searchProductTextField.clear();
-                Notification notification = new Notification("Error", "Inventory quantity is not sufficient", 3);
+                Notification notification = new Notification("Warning", "Inventory quantity is not sufficient", 3);
                 return;
             }
 
