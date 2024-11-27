@@ -19,6 +19,8 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import posdeskapp.models.UserRole;
+import posdeskapp.utils.Alert;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -63,12 +65,39 @@ public class LoginFormController implements Initializable {
 
     @FXML
     private void login(ActionEvent event) {
-        POSHelper helper = new POSHelper();
-        helper.showUserStage(username, "/posdeskapp/views/Main.fxml");
+        if (validateFields()) {
+            if (POSHelper.userSignIn(username.getText().trim(), POSHelper.encryptPassword(password.getText().trim()))) {
+                POSHelper helper = new POSHelper();
+                switch (POSHelper.USERTYPE) {
+                    case "ADMIN":
+                        helper.showUserStage(username, "/posdeskapp/views/Main.fxml");
+                        break;
+                    case "CASHIER":
+                        helper.showUserStage(username, "/posdeskapp/views/Main.fxml");
+                        break;
+                }
+            } else {
+                Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Login", "Invalid username or password");
+                clearFields();
+            }
+        }
     }
 
     @FXML
     private void loadForgotPasswordPanel(MouseEvent event) {
+    }
+
+    private Boolean validateFields() {
+        if (username.getText().isEmpty() || password.getText().isEmpty()) {
+            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.WARNING, "Fields validation", "Please enter in all fields");
+            return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    private void clearFields() {
+        username.clear();
+        password.clear();
     }
 
 }

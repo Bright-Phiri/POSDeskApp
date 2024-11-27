@@ -8,6 +8,7 @@ package posdeskapp.utils;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +19,7 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +55,9 @@ import posdeskapp.models.TaxBreakDown;
  * @author biphiri
  */
 public class POSHelper {
+
+    public static String USERTYPE;
+    public static String USERNAME;
 
     public static LineItem searchProductByCode(String productCode, ObservableList<LineItem> data) {
         String query = "SELECT * FROM Products WHERE ProductCode = ?";
@@ -262,6 +267,43 @@ public class POSHelper {
         return terminalLabel;
     }
 
+    public static Boolean userSignIn(String userName, String password) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        String sql = "SELECT * FROM Users WHERE UserName = ? AND Password = ? ";
+        try {
+            connection = DbConnection.createConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, password);
+            resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                USERNAME = resultSet.getString(4);
+                USERTYPE = resultSet.getString(9);
+                return Boolean.TRUE;
+            }
+        } catch (SQLException ex) {
+            System.err.println(ex.getMessage());
+            Logger.getLogger(POSHelper.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(POSHelper.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return Boolean.FALSE;
+    }
+
     public static void markInvoiceAsProcessed(String invoiceNumber) {
         String updateQuery = "UPDATE Invoices SET State = ? WHERE InvoiceNumber = ?";
         Connection connection = null;
@@ -290,6 +332,16 @@ public class POSHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
+    }
+
+    public static String encryptPassword(String password) {
+        // Convert the password to Base64 encoded string
+        return Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String decryptPassword(String cypherText) {
+        // Decode the Base64 encoded string back to plain text
+        return new String(Base64.getDecoder().decode(cypherText), StandardCharsets.UTF_8);
     }
 
     public void showUserStage(Node node, String fxmlUrl) {

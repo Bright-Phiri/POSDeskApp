@@ -154,6 +154,7 @@ public class MainController implements Initializable {
         tillName.setText(terminalLbel);
 
         date.setText(POSHelper.getDate());
+        cashierLabel.setText(POSHelper.USERNAME);
 
         totalItemsText = totalNoOfItems;
         taxableAmountText = subTotalLabel;
@@ -284,7 +285,7 @@ public class MainController implements Initializable {
             data.clear();
             POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
             productsTable.refresh();
-
+            tenderedAmountTextField.clear();
         } else {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.ERROR, "Transaction", "Failed to completed the transaction");
         }
