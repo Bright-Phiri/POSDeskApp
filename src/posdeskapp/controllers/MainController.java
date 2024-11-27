@@ -445,6 +445,14 @@ public class MainController implements Initializable {
     }
 
     public void setSelectedProduct(Product product) {
+
+        if (product.getQuantity() < 1) {
+            Platform.runLater(() -> {
+                Notification notification = new Notification("Error", "Inventory quantity is not sufficient", 3);
+            });
+
+            return;
+        }
         addProductToTable(product.getProductCode());
     }
 
