@@ -9,21 +9,25 @@ package posdeskapp.models;
  *
  * @author biphiri
  */
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 public class InvoiceHeader {
 
-    private final String invoiceNumber;
-    private final OffsetDateTime invoiceDateTime;
-    private final String sellerTIN;
-    private final String buyerTIN;
-    private final String buyerAuthorizationCode;
-    private final String siteId;
-    private final int globalConfigVersion;
-    private final int taxpayerConfigVersion;
-    private final int terminalConfigVersion;
+    private  String invoiceNumber;
+    private  LocalDateTime invoiceDateTime;
+    private  String sellerTIN;
+    private  String buyerTIN;
+    private  String buyerAuthorizationCode;
+    private  String siteId;
+    private  int globalConfigVersion;
+    private  int taxpayerConfigVersion;
+    private  int terminalConfigVersion;
 
-    public InvoiceHeader(String invoiceNumber, OffsetDateTime invoiceDateTime, String sellerTIN, String buyerTIN, String buyerAuthorizationCode, String siteId, int globalConfigVersion, int taxpayerConfigVersion, int terminalConfigVersion) {
+    public InvoiceHeader() {
+    }
+
+    
+    public InvoiceHeader(String invoiceNumber, LocalDateTime invoiceDateTime, String sellerTIN, String buyerTIN, String buyerAuthorizationCode, String siteId, int globalConfigVersion, int taxpayerConfigVersion, int terminalConfigVersion) {
         this.invoiceNumber = invoiceNumber;
         this.invoiceDateTime = invoiceDateTime;
         this.sellerTIN = sellerTIN;
@@ -39,7 +43,7 @@ public class InvoiceHeader {
         return invoiceNumber;
     }
 
-    public OffsetDateTime getInvoiceDateTime() {
+    public LocalDateTime getInvoiceDateTime() {
         return invoiceDateTime;
     }
 
@@ -70,5 +74,43 @@ public class InvoiceHeader {
     public int getTerminalConfigVersion() {
         return terminalConfigVersion;
     }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
+    public void setInvoiceDateTime(LocalDateTime invoiceDateTime) {
+        this.invoiceDateTime = invoiceDateTime;
+    }
+
+    public void setSellerTIN(String sellerTIN) {
+        this.sellerTIN = sellerTIN;
+    }
+
+    public void setBuyerTIN(String buyerTIN) {
+        this.buyerTIN = buyerTIN;
+    }
+
+    public void setBuyerAuthorizationCode(String buyerAuthorizationCode) {
+        this.buyerAuthorizationCode = buyerAuthorizationCode;
+    }
+
+    public void setSiteId(String siteId) {
+        this.siteId = siteId;
+    }
+
+    public void setGlobalConfigVersion(int globalConfigVersion) {
+        this.globalConfigVersion = globalConfigVersion;
+    }
+
+    public void setTaxpayerConfigVersion(int taxpayerConfigVersion) {
+        this.taxpayerConfigVersion = taxpayerConfigVersion;
+    }
+
+    public void setTerminalConfigVersion(int terminalConfigVersion) {
+        this.terminalConfigVersion = terminalConfigVersion;
+    }
+    
+    
 }
 

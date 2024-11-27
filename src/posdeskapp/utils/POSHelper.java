@@ -250,7 +250,7 @@ public class POSHelper {
 
         return terminalLabel;
     }
-    
+
     public static void markInvoiceAsProcessed(String invoiceNumber) {
         String updateQuery = "UPDATE Invoices SET State = ? WHERE InvoiceNumber = ?";
         Connection connection = null;
@@ -279,6 +279,42 @@ public class POSHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
+    }
+
+    public static String getTaxPayerTIN() {
+        String tin = null;
+        String query = "SELECT TIN FROM TaxpayerConfiguration";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                tin = resultSet.getString(1); // Column index starts at 1
+            }
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while fetching TIN: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return tin;
     }
 
     public static double parseDecimal(String value) {
@@ -344,7 +380,7 @@ public class POSHelper {
         return quantity;
     }
 
-    public static boolean processTransaction (
+    public static boolean processTransaction(
             InvoiceHeader invoice,
             List<LineItem> lineItems,
             List<TaxBreakDown> taxBreakdowns,

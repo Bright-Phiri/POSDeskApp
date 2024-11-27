@@ -9,12 +9,13 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -44,8 +45,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
+import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
+import posdeskapp.models.TaxBreakDown;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
@@ -121,7 +124,7 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-     
+       
     };
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
@@ -235,6 +238,36 @@ public class MainController implements Initializable {
 
     @FXML
     private void checkOut(ActionEvent event) {
+        if (data.isEmpty()) {
+            Notification notification = new Notification("Warning", "No products added, add some products first ", 3);
+            return;
+        }
+        
+        InvoiceHeader invoice = new InvoiceHeader();
+        invoice.setInvoiceNumber(UUID.randomUUID().toString());
+        invoice.setGlobalConfigVersion(1);
+        invoice.setTaxpayerConfigVersion(1);
+        invoice.setTerminalConfigVersion(1);
+        invoice.setBuyerTIN("");
+        invoice.setSellerTIN(POSHelper.getTaxPayerTIN());
+        invoice.setInvoiceDateTime(LocalDateTime.now());
+
+        List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
+ 
+        double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
+        double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
+
+        boolean isProcessed = POSHelper.processTransaction(invoice, data,
+                taxBreakdowns, invoiceTotal, totalVAT);
+        if (isProcessed) {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Transaction", "Transaction completed successfully");
+            data.clear();
+            POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+            productsTable.refresh();
+
+        } else {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.ERROR, "Transaction", "Failed to completed the transaction");
+        }
     }
 
     @FXML
@@ -364,9 +397,7 @@ public class MainController implements Initializable {
 
         lineItem.setTotal(newQuantity * lineItem.getUnitPrice());
 
-        Platform.runLater(() -> {
-            productsTable.refresh();
-        });
+        productsTable.refresh();
 
         POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
 

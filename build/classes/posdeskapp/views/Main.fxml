@@ -331,7 +331,7 @@
                            </HBox.margin>
                         </Text>
                         <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <JFXButton fx:id="itemLookUpButton" buttonType="RAISED" onAction="#loadItemsLookupScreen" prefHeight="38.0" prefWidth="137.0" style="-fx-border-color: black; -fx-border-radius: 15; -fx-background-radius: 15;" text="Item Lookup">
+                        <JFXButton fx:id="itemLookUpButton" buttonType="RAISED" onAction="#loadItemsLookupScreen" prefHeight="38.0" prefWidth="137.0" text="Item Lookup">
                            <graphic>
                               <OctIconView glyphName="SEARCH" size="20" />
                            </graphic>
