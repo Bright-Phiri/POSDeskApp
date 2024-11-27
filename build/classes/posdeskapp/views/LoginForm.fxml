@@ -7,6 +7,8 @@
 <?import de.jensd.fx.glyphs.octicons.OctIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
@@ -25,27 +27,24 @@
       </HBox>
       <HBox alignment="CENTER" spacing="5.0">
          <children>
-            <Text fill="#599fff" strokeType="OUTSIDE" strokeWidth="0.0" text="POS">
-               <font>
-                  <Font size="31.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="-7.0" />
-               </HBox.margin>
-            </Text>
+            <ImageView fitHeight="69.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/point-of-sale-icon.png" />
+               </image>
+            </ImageView>
          </children>
          <VBox.margin>
-            <Insets top="60.0" />
+            <Insets top="40.0" />
          </VBox.margin>
       </HBox>
       <HBox alignment="CENTER">
          <VBox.margin>
-            <Insets top="15.0" />
+            <Insets top="10.0" />
          </VBox.margin>
          <children>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Login to your account.">
                <font>
-                  <Font name="System Bold" size="24.0" />
+                  <Font size="24.0" />
                </font>
                <HBox.margin>
                   <Insets right="30.0" />
@@ -67,7 +66,7 @@
             </FontAwesomeIconView>
          </children>
          <VBox.margin>
-            <Insets top="25.0" />
+            <Insets top="40.0" />
          </VBox.margin>
       </HBox>
       <HBox alignment="CENTER" layoutX="10.0" layoutY="135.0" prefHeight="32.0" prefWidth="386.0">

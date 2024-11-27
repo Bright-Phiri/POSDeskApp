@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Tooltip;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import posdeskapp.utils.POSHelper;
@@ -55,6 +56,9 @@ public class LoginFormController implements Initializable {
 
     @FXML
     private void signIn(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            login(new ActionEvent());
+        }
     }
 
     @FXML
