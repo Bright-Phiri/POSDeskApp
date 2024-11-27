@@ -21,7 +21,7 @@ public class POSDeskApp extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/Login.fxml"));
         
         Scene scene = new Scene(root);
         

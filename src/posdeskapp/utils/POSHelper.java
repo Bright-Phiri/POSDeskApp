@@ -7,6 +7,7 @@ package posdeskapp.utils;
 
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,15 +23,25 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
@@ -278,6 +289,22 @@ public class POSHelper {
             } catch (SQLException ex) {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
+        }
+    }
+
+    public void showUserStage(Node node, String fxmlUrl) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(fxmlUrl));
+            Stage stage = (Stage) node.getScene().getWindow();
+            stage.hide();
+            Stage stage1 = new Stage(StageStyle.DECORATED);
+            stage1.setScene(new Scene(root, 1812, 987));
+            stage1.centerOnScreen();
+            stage1.setTitle("POS");
+            stage1.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
+            stage1.show();
+        } catch (IOException ex) {
+            Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

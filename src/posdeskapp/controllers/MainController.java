@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Predicate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,10 +29,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -44,6 +48,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
@@ -124,10 +129,13 @@ public class MainController implements Initializable {
     public static Text totalVAText;
 
     static {
-     
-    };
+
+    }
+    ;
 
    ObservableList<LineItem> data = FXCollections.observableArrayList();
+    @FXML
+    private MenuBar menubar;
 
     /**
      * Initializes the controller class.
@@ -177,13 +185,25 @@ public class MainController implements Initializable {
     @FXML
     private void closeApp(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Close POS");
+        alert.setTitle("Sign Out");
         alert.setHeaderText(null);
-        alert.setContentText("Are you sure you want to close the application ?");
+        alert.setContentText("Are you sure, you want to Sign Out?");
         Optional<ButtonType> option = alert.showAndWait();
         if (option.get() == ButtonType.OK) {
-            Platform.exit();
-            System.exit(0);
+            Stage stage = (Stage) menubar.getScene().getWindow();
+            stage.close();
+            try {
+                Parent root1 = FXMLLoader.load(getClass().getResource("/posdeskapp/views/Login.fxml"));
+                Scene scene = new Scene(root1);
+                Stage stage1 = new Stage();
+                stage1.setScene(scene);
+                stage1.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
+                stage1.initStyle(StageStyle.UNDECORATED);
+                stage1.centerOnScreen();
+                stage1.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -242,7 +262,7 @@ public class MainController implements Initializable {
             Notification notification = new Notification("Warning", "No products added, add some products first ", 3);
             return;
         }
-        
+
         InvoiceHeader invoice = new InvoiceHeader();
         invoice.setInvoiceNumber(UUID.randomUUID().toString());
         invoice.setGlobalConfigVersion(1);
@@ -253,7 +273,7 @@ public class MainController implements Initializable {
         invoice.setInvoiceDateTime(LocalDateTime.now());
 
         List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
- 
+
         double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
         double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
 
@@ -495,4 +515,5 @@ public class MainController implements Initializable {
             System.err.println("Error: " + ex.getMessage());
         }
     }
+
 }

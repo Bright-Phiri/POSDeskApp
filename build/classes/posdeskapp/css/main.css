@@ -80,11 +80,21 @@ and open the template in the editor.
 }
 
 #addLineItemButton {
-   -fx-background-color: rgba(0, 0, 255, 1);
+   -fx-background-color: #599fff; /* Light blue */
 }
 
 #addLineItemButton:hover {
-    -fx-background-color: rgba(0, 0, 255, 0.8); /* Slightly transparent */
+    -fx-background-color: #72b2ff; /* Brighter blue */
+}
+
+#loginButton {
+    -fx-background-color: #599fff; /* Light blue */
+    -fx-text-fill: #ffffff;
+}
+
+/* Hover effect: brighter blue when hovering */
+#loginButton:hover {
+    -fx-background-color: #72b2ff; /* Brighter blue */
 }
 
 .table-row-cell:hover:filled {

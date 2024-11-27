@@ -5,17 +5,22 @@
  */
 package posdeskapp.controllers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 /**
@@ -23,12 +28,13 @@ import javafx.util.Duration;
  *
  * @author biphiri
  */
-public class loginController implements Initializable {
+public class LoginController implements Initializable {
 
     @FXML
     private BorderPane rootPane;
     @FXML
     private ImageView imageView;
+    public static BorderPane root;
     ScheduledService scheduledService;
 
     /**
@@ -36,6 +42,14 @@ public class loginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        root = rootPane;
+        try {
+            VBox box = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
+            rootPane.setRight(box);
+        } catch (IOException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         scheduledService = new ScheduledService() {
             @Override
             protected Task createTask() {
@@ -48,6 +62,7 @@ public class loginController implements Initializable {
                 };
             }
         };
+
         scheduledService.setDelay(Duration.ONE);
         scheduledService.setRestartOnFailure(true);
         scheduledService.setPeriod(Duration.seconds(8));

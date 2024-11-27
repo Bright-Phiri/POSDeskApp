@@ -8,11 +8,11 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="1171.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.loginController">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="1254.0" style="-fx-border-color: black; -fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.LoginController">
    <left>
-      <StackPane prefHeight="635.0" prefWidth="636.0" BorderPane.alignment="CENTER">
+      <StackPane prefHeight="643.0" prefWidth="721.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="imageView" fitHeight="635.0" fitWidth="636.0" pickOnBounds="true">
+            <ImageView fx:id="imageView" fitHeight="635.0" fitWidth="721.0" pickOnBounds="true">
                <StackPane.margin>
                   <Insets />
                </StackPane.margin>
@@ -24,9 +24,9 @@
                <center>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
-                        <Text fill="#d7d1d1" layoutX="133.0" layoutY="401.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Transform the Way You Do Busines">
+                        <Text fill="#d7d1d1" layoutX="143.0" layoutY="382.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Transform the Way You Do Busines">
                            <font>
-                              <Font size="20.0" />
+                              <Font size="28.0" />
                            </font>
                         </Text>
                      </children>
