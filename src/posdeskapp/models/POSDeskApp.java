@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 /**
  *
@@ -20,11 +21,12 @@ public class POSDeskApp extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/Main.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/login.fxml"));
         
-        Scene scene = new Scene(root, 1812, 987);
+        Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
         stage.setTitle("POS");
         stage.centerOnScreen();
