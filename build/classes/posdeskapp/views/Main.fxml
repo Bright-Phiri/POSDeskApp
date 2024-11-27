@@ -29,11 +29,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Transactions">
             <items>
-              <MenuItem mnemonicParsing="false" onAction="#viewAllTransactions" text="View All " />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Suspended Sales">
-            <items>
+              <MenuItem mnemonicParsing="false" onAction="#viewAllTransactions" text="View All Sales" />
               <MenuItem mnemonicParsing="false" onAction="#viewSuspendedSales" text="View Suspended Sales" />
             </items>
           </Menu>
