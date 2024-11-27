@@ -41,13 +41,15 @@ public class LoginFormController implements Initializable {
 
     /**
      * Initializes the controller class.
+     * @param url
+     * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        Tooltip closeApp = new Tooltip("Sign out");
-        closeApp.setStyle("-fx-font-size:11");
-        closeApp.setMinSize(20, 20);
-        Tooltip.install(this.closeApp, closeApp);
+        Tooltip close = new Tooltip("Sign out");
+        close.setStyle("-fx-font-size:11");
+        close.setMinSize(20, 20);
+        Tooltip.install(this.closeApp, close);
     }
 
     @FXML
