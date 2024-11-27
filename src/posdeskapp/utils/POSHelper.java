@@ -45,6 +45,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
+import posdeskapp.models.Invoice;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
@@ -143,6 +144,43 @@ public class POSHelper {
         }
 
         return null;
+    }
+
+    public static ObservableList<Invoice> fetchInvoices() {
+        ObservableList<Invoice> invoices = FXCollections.observableArrayList();
+        PreparedStatement pre = null;
+        Connection conn = null;
+        ResultSet rs = null;
+        String query = "SELECT * FROM Invoices";
+
+        try {
+            conn = DbConnection.createConnection();
+            pre = conn.prepareStatement(query);
+            rs = pre.executeQuery();
+
+            while (rs.next()) {
+                Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5), rs.getDouble(6));
+                invoices.add(invoice);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error fetching invoices: " + e.getMessage());
+        } finally {
+            try {
+                if (pre != null) {
+                    pre.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+
+        return invoices;
     }
 
     public static ObservableList<Product> fetchProducts() {

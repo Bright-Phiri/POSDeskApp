@@ -10,6 +10,7 @@ package posdeskapp.models;
  * @author biphiri
  */
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class InvoiceHeader {
 
@@ -77,7 +78,7 @@ public class InvoiceHeader {
 
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
-    }
+}
 
     public void setInvoiceDateTime(LocalDateTime invoiceDateTime) {
         this.invoiceDateTime = invoiceDateTime;
@@ -110,7 +111,5 @@ public class InvoiceHeader {
     public void setTerminalConfigVersion(int terminalConfigVersion) {
         this.terminalConfigVersion = terminalConfigVersion;
     }
-    
-    
 }
 
