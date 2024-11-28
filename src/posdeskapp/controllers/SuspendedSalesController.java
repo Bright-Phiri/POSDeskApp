@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -46,10 +47,12 @@ public class SuspendedSalesController implements Initializable {
     private TableColumn<PausedTransaction, String> pausedIdCol;
 
     ObservableList<PausedTransaction> data = FXCollections.observableArrayList();
+    ObservableList<PausedTransaction> suspendedSales = FXCollections.observableArrayList();
     @FXML
     private TableView<PausedTransaction> suspendedTransactionsTable;
     @FXML
     private TableColumn<PausedTransaction, CheckBox> check;
+    int selected = 0;
 
     /**
      * Initializes the controller class.
@@ -61,7 +64,28 @@ public class SuspendedSalesController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         initializeColumns();
         loadProducts();
+
         transactionTotal.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTransactionTotal()));
+
+        suspendedTransactionsTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        cheakall.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            suspendedSales = suspendedTransactionsTable.getItems();
+            suspendedSales.forEach((sale) -> {
+                if (cheakall.isSelected()) {
+                    sale.getCheck().setSelected(true);
+                    selected++;
+                    suspendedTransactionsTable.getSelectionModel().select(sale);
+                } else {
+                    sale.getCheck().setSelected(false);
+                    selected--;
+                    ObservableList<Integer> indices = suspendedTransactionsTable.getSelectionModel().getSelectedIndices();
+                    indices.forEach((i) -> {
+                        suspendedTransactionsTable.getSelectionModel().clearSelection(i);
+                    });
+                }
+            });
+        });
     }
 
     @FXML
