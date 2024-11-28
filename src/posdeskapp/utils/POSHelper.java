@@ -166,7 +166,7 @@ public class POSHelper {
 
         FontAwesomeIconView icon1 = new FontAwesomeIconView(FontAwesomeIcon.RECYCLE);
         icon1.setSize("17");
-        icon1.setFill(Color.web("#FD5B73"));
+        icon1.setFill(Color.rgb(0, 128, 0, 1));
         icon1.setId(String.valueOf(paudedId));
 
         HBox.setMargin(icon, new Insets(0, 0, 0, 0));
