@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -514,6 +515,44 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
+    }
+
+    public static List<Integer> getUsedPauseIds() {
+        List<Integer> usedIds = new ArrayList<>();
+        String query = "SELECT PauseId FROM PausedTransactions";
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                int pauseId = resultSet.getInt(1);
+                usedIds.add(pauseId);
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while fetching used PauseIds: " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return usedIds;
     }
 
     public static boolean isVATRegistered() {
