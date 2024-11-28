@@ -7,6 +7,7 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -14,6 +15,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -94,6 +97,23 @@ public class SuspendedSalesController implements Initializable {
 
     @FXML
     private void deleteselectedSuspendedTransactions(ActionEvent event) {
+        ObservableList<PausedTransaction> delete = FXCollections.observableArrayList();
+        int transactions_to_delete = 0;
+        for (PausedTransaction transaction : data) {
+            if (transaction.getCheck().isSelected()) {
+                transactions_to_delete++;
+            }
+        }
+        if (transactions_to_delete > 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete suspended sales");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to delete the selected records");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+                
+            }
+        }
     }
 
     private void initializeColumns() {
