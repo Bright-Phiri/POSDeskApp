@@ -23,6 +23,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import posdeskapp.models.Product;
+import posdeskapp.utils.DbHelper;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -120,7 +121,7 @@ public class ProductsLookUpController implements Initializable {
 
     private void loadProducts() {
         data.clear();
-        data = POSHelper.fetchProducts();
+        data = DbHelper.fetchProducts();
         productsTable.getItems().setAll(data);
     }
 }

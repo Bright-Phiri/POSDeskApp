@@ -23,6 +23,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.models.Invoice;
 import posdeskapp.models.LineItem;
+import posdeskapp.utils.DbHelper;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -105,7 +106,7 @@ public class TransactionsController implements Initializable {
 
     private void loadAllTransactions() {
         data.clear();
-        data = POSHelper.fetchInvoices();
+        data = DbHelper.fetchInvoices();
         transactionTable.getItems().setAll(data);
     }
 }

@@ -57,6 +57,7 @@ import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
 import posdeskapp.models.TaxBreakDown;
 import posdeskapp.utils.DbConnection;
+import posdeskapp.utils.DbHelper;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
@@ -155,11 +156,11 @@ public class MainController implements Initializable {
             timeline.play();
         });
 
-        String terminalLbel = POSHelper.getTerminalLabel();
+        String terminalLbel = DbHelper.getTerminalLabel();
         tillName.setText(terminalLbel);
 
         date.setText(POSHelper.getDate());
-        cashierLabel.setText(POSHelper.USERNAME);
+        cashierLabel.setText(DbHelper.USERNAME);
 
         totalItemsText = totalNoOfItems;
         taxableAmountText = subTotalLabel;
@@ -289,7 +290,7 @@ public class MainController implements Initializable {
         invoice.setTaxpayerConfigVersion(1);
         invoice.setTerminalConfigVersion(1);
         invoice.setBuyerTIN("");
-        invoice.setSellerTIN(POSHelper.getTaxPayerTIN());
+        invoice.setSellerTIN(DbHelper.getTaxPayerTIN());
         invoice.setInvoiceDateTime(LocalDateTime.now());
 
         List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
@@ -297,7 +298,7 @@ public class MainController implements Initializable {
         double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
         double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
 
-        boolean isProcessed = POSHelper.processTransaction(invoice, data,
+        boolean isProcessed = DbHelper.processTransaction(invoice, data,
                 taxBreakdowns, invoiceTotal, totalVAT);
         if (isProcessed) {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Transaction", "Transaction completed successfully");
@@ -428,8 +429,8 @@ public class MainController implements Initializable {
         lineItem.setQuantity(newQuantity);
 
         // Update VAT and total for the line item
-        double taxRate = POSHelper.getTaxRateById(lineItem.getTaxRateId());
-        boolean isVATRegistered = POSHelper.isVATRegistered();
+        double taxRate = DbHelper.getTaxRateById(lineItem.getTaxRateId());
+        boolean isVATRegistered = DbHelper.isVATRegistered();
 
         if (isVATRegistered) {
             lineItem.setTotalVAT(POSHelper.extractVATAmount(lineItem.getUnitPrice(), newQuantity, taxRate));
@@ -472,7 +473,7 @@ public class MainController implements Initializable {
 
     private void addProductToTable(String barcode) {
         try {
-            LineItem lineItem = POSHelper.searchProductByCode(barcode, data);
+            LineItem lineItem = DbHelper.searchProductByCode(barcode, data);
 
             if (lineItem == null) {
                 searchProductTextField.clear();
@@ -506,8 +507,8 @@ public class MainController implements Initializable {
                 existingLineItem.setQuantity(existingLineItem.getQuantity() + 1);
 
                 double quantity = existingLineItem.getQuantity();
-                double taxRate = POSHelper.getTaxRateById(existingLineItem.getTaxRateId());
-                boolean isVATRegistered = POSHelper.isVATRegistered();
+                double taxRate = DbHelper.getTaxRateById(existingLineItem.getTaxRateId());
+                boolean isVATRegistered = DbHelper.isVATRegistered();
 
                 // Calculate VAT for the line item
                 double lineItemVAT = isVATRegistered
@@ -521,8 +522,8 @@ public class MainController implements Initializable {
                 tenderedAmountTextField.setText(null);
             } else {
 
-                double lineItemVAT = POSHelper.isVATRegistered()
-                        ? POSHelper.extractVATAmount(lineItem.getUnitPrice() - (lineItem.getDiscount() / lineItem.getQuantity()), lineItem.getQuantity(), POSHelper.getTaxRateById(lineItem.getTaxRateId()))
+                double lineItemVAT = DbHelper.isVATRegistered()
+                        ? POSHelper.extractVATAmount(lineItem.getUnitPrice() - (lineItem.getDiscount() / lineItem.getQuantity()), lineItem.getQuantity(), DbHelper.getTaxRateById(lineItem.getTaxRateId()))
                         : 0;
 
                 lineItem.setTotalVAT(lineItemVAT);
