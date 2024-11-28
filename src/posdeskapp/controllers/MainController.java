@@ -235,6 +235,20 @@ public class MainController implements Initializable {
 
     @FXML
     private void viewSuspendedSales(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/SuspendedSales.fxml"));
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
+            stage.setTitle("POS");
+            stage.centerOnScreen();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+        } catch (IOException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @FXML

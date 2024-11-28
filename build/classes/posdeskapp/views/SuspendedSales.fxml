@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="795.0" prefWidth="1306.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.SuspendedSalesController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="795.0" prefWidth="1306.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.SuspendedSalesController">
    <top>
       <VBox alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="1261.0" BorderPane.alignment="CENTER">
          <children>
@@ -51,10 +51,10 @@
       </VBox>
    </top>
    <center>
-      <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="suspendedTransactionsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-            <TableColumn maxWidth="1500.0" minWidth="-1.0" prefWidth="33.0" />
-          <TableColumn fx:id="pausedIdCol" prefWidth="75.0" text="Paused ID" />
+            <TableColumn fx:id="check" maxWidth="800.0" minWidth="-1.0" prefWidth="20.0" />
+          <TableColumn fx:id="pausedIdCol" prefWidth="331.0" text="Paused ID" />
           <TableColumn fx:id="suspendedDateCol" prefWidth="75.0" text="Suspended Date" />
             <TableColumn fx:id="transactionTotal" prefWidth="75.0" text="Transaction Total" />
             <TableColumn fx:id="actions" prefWidth="75.0" text="Actions" />
@@ -68,7 +68,7 @@
       </TableView>
    </center>
    <bottom>
-      <HBox fx:id="controlBox" prefHeight="32.0" prefWidth="1000.0" spacing="5.0" BorderPane.alignment="CENTER">
+      <HBox fx:id="controlBox" prefHeight="32.0" prefWidth="1000.0" spacing="5.0" BorderPane.alignment="CENTER_LEFT">
          <children>
             <ImageView fitHeight="25.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0">
                <image>
@@ -97,6 +97,7 @@
                   <Font size="17.0" />
                </font>
             </Hyperlink>
+            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
          </children>
          <padding>
             <Insets bottom="10.0" top="10.0" />

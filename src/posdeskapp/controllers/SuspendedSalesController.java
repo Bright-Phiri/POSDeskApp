@@ -8,15 +8,20 @@ package posdeskapp.controllers;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import posdeskapp.models.PausedTransaction;
+import posdeskapp.utils.DbHelper;
 
 /**
  * FXML Controller class
@@ -38,7 +43,13 @@ public class SuspendedSalesController implements Initializable {
     @FXML
     private TableColumn<PausedTransaction, HBox> actions;
     @FXML
-    private TableColumn<PausedTransaction, Integer> pausedIdCol;
+    private TableColumn<PausedTransaction, String> pausedIdCol;
+
+    ObservableList<PausedTransaction> data = FXCollections.observableArrayList();
+    @FXML
+    private TableView<PausedTransaction> suspendedTransactionsTable;
+    @FXML
+    private TableColumn<PausedTransaction, CheckBox> check;
 
     /**
      * Initializes the controller class.
@@ -49,6 +60,8 @@ public class SuspendedSalesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeColumns();
+        loadProducts();
+        transactionTotal.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTransactionTotal()));
     }
 
     @FXML
@@ -60,10 +73,17 @@ public class SuspendedSalesController implements Initializable {
     }
 
     private void initializeColumns() {
+        check.setCellValueFactory(new PropertyValueFactory<>("check"));
         pausedIdCol.setCellValueFactory(new PropertyValueFactory<>("pauseId"));
         suspendedDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
         transactionTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
         actions.setCellValueFactory(new PropertyValueFactory<>("controlsPane"));
+    }
+
+    private void loadProducts() {
+        data.clear();
+        data = DbHelper.getSuspendedTransactions();
+        suspendedTransactionsTable.getItems().setAll(data);
     }
 
 }

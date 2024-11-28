@@ -8,6 +8,7 @@ package posdeskapp.models;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import posdeskapp.utils.POSHelper;
 
@@ -17,12 +18,14 @@ import posdeskapp.utils.POSHelper;
  */
 public class PausedTransaction {
 
+    private final CheckBox check;
     private final SimpleIntegerProperty pauseId;
     private final SimpleStringProperty transactionDate;
     private final SimpleDoubleProperty total;
     private final HBox controlsPane;
 
     public PausedTransaction(Integer pauseId, String transactionDate, Double total, HBox controlsPane) {
+        this.check = new CheckBox();
         this.pauseId = new SimpleIntegerProperty(pauseId);
         this.transactionDate = new SimpleStringProperty(transactionDate);
         this.total = new SimpleDoubleProperty(total);
@@ -35,6 +38,10 @@ public class PausedTransaction {
 
     public String getTransactionDate() {
         return transactionDate.get();
+    }
+
+    public CheckBox getCheck() {
+        return check;
     }
 
     public double getTotal() {

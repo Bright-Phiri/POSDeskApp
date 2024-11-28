@@ -21,6 +21,7 @@ import javafx.collections.ObservableList;
 import posdeskapp.models.Invoice;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
+import posdeskapp.models.PausedTransaction;
 import posdeskapp.models.Product;
 import posdeskapp.models.TaxBreakDown;
 
@@ -191,6 +192,44 @@ public class DbHelper {
         }
 
         return invoices;
+    }
+
+    public static ObservableList<PausedTransaction> getSuspendedTransactions() {
+        ObservableList<PausedTransaction> suspendedTransactions = FXCollections.observableArrayList();
+        String query = "SELECT * FROM PausedTransactions ORDER BY Timestamp DESC";
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnection.createConnection();
+            stmt = conn.prepareStatement(query);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                PausedTransaction transaction = new PausedTransaction(rs.getInt(1), rs.getString(2), rs.getDouble(3), POSHelper.suspendedSalesActions(rs.getInt(1)));
+                suspendedTransactions.add(transaction);
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while fetching suspended transactions: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return suspendedTransactions;
     }
 
     public static ObservableList<Product> fetchProducts() {

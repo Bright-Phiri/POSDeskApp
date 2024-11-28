@@ -156,7 +156,7 @@ public class POSHelper {
         return hBox;
     }
 
-    public static HBox suspendedSalesActions(int paudedId, ObservableList<LineItem> data) {
+    public static HBox suspendedSalesActions(int paudedId) {
         HBox hBox = new HBox(5);
         // Create a trash icon
         FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.TRASH_ALT);
