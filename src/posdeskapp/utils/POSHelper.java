@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -105,6 +106,18 @@ public class POSHelper {
             System.err.println("Invalid formatted value: " + formattedValue);
             return 0.0;
         }
+    }
+
+    public static int generatePauseId() {
+        List<Integer> usedIds = DbHelper.getUsedPauseIds();
+        Random random = new Random();
+
+        int newId;
+        do {
+            newId = random.nextInt(90) + 10;
+        } while (usedIds.contains(newId));
+
+        return newId;
     }
 
     public static HBox setActionButtons(String productCode, ObservableList<LineItem> data) {
