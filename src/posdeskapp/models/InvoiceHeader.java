@@ -10,7 +10,6 @@ package posdeskapp.models;
  * @author biphiri
  */
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 public class InvoiceHeader {
 
