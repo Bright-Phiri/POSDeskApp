@@ -8,16 +8,21 @@ package posdeskapp.controllers;
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.text.Text;
 import posdeskapp.models.Invoice;
+import posdeskapp.models.LineItem;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -61,6 +66,33 @@ public class TransactionsController implements Initializable {
 
     @FXML
     private void searchTransaction(KeyEvent event) {
+        FilteredList<Invoice> filteredList = new FilteredList<>(data, p -> true);
+        searchTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredList.setPredicate((Predicate<? super Invoice>) invoice -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterToLowerCase = newValue.toLowerCase();
+                if (invoice.getBuyerTin().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (invoice.getInvoiceNumber().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (String.valueOf(invoice.getInvoiceTotal()).contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (String.valueOf(invoice.getTotalVat()).contains(filterToLowerCase)) {
+                    return true;
+                }
+                transactionTable.setPlaceholder(new Text("No record match your search"));
+                return false;
+            });
+
+            SortedList<Invoice> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(transactionTable.comparatorProperty());
+            transactionTable.setItems(sortedList);
+        }));
     }
 
     private void initializeColumns() {
