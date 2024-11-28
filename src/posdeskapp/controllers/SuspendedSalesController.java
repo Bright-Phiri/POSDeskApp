@@ -15,6 +15,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import posdeskapp.models.PausedTransaction;
 
 /**
  * FXML Controller class
@@ -30,13 +31,13 @@ public class SuspendedSalesController implements Initializable {
     @FXML
     private CheckBox cheakall;
     @FXML
-    private TableColumn<?, ?> paudedIdCol;
+    private TableColumn<PausedTransaction, Integer> paudedIdCol;
     @FXML
-    private TableColumn<?, ?> suspendedDateCol;
+    private TableColumn<PausedTransaction, String> suspendedDateCol;
     @FXML
-    private TableColumn<?, ?> transactionTotal;
+    private TableColumn<PausedTransaction, String> transactionTotal;
     @FXML
-    private TableColumn<?, ?> actions;
+    private TableColumn<PausedTransaction, HBox> actions;
 
     /**
      * Initializes the controller class.
