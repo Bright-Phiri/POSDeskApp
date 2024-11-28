@@ -56,13 +56,12 @@ import posdeskapp.models.TaxBreakDown;
  * @author biphiri
  */
 public class POSHelper {
+
     public static String encryptPassword(String password) {
-        // Convert the password to Base64 encoded string
         return Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
     }
 
     public static String decryptPassword(String cypherText) {
-        // Decode the Base64 encoded string back to plain text
         return new String(Base64.getDecoder().decode(cypherText), StandardCharsets.UTF_8);
     }
 
@@ -106,43 +105,6 @@ public class POSHelper {
             System.err.println("Invalid formatted value: " + formattedValue);
             return 0.0;
         }
-    }
-
-    public static double getProductQuantity(String productCode) {
-        double quantity = 0;
-        String query = "SELECT Quantity FROM Products WHERE ProductCode = ?";
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
-
-        try {
-            connection = DbConnection.createConnection();
-            statement = connection.prepareStatement(query);
-            statement.setString(1, productCode);
-
-            resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                quantity = resultSet.getDouble("Quantity");
-            }
-
-        } catch (SQLException ex) {
-            System.err.println(ex);
-        } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    connection.close();
-                }
-            } catch (SQLException ex) {
-                System.err.println("Error closing resources: " + ex.getMessage());
-            }
-        }
-        return quantity;
     }
 
     public static HBox setActionButtons(String productCode, ObservableList<LineItem> data) {
