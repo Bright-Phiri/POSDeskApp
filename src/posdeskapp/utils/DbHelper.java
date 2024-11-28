@@ -30,6 +30,43 @@ public class DbHelper {
     public static String USERTYPE;
     public static String USERNAME;
 
+    public static double getProductQuantity(String productCode) {
+        double quantity = 0;
+        String query = "SELECT Quantity FROM Products WHERE ProductCode = ?";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            statement = connection.prepareStatement(query);
+            statement.setString(1, productCode);
+
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                quantity = resultSet.getDouble("Quantity");
+            }
+
+        } catch (SQLException ex) {
+            System.err.println(ex);
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+        return quantity;
+    }
+
     public static LineItem searchProductByCode(String productCode, ObservableList<LineItem> data) {
         String query = "SELECT * FROM Products WHERE ProductCode = ?";
         String taxRateQuery = "SELECT * FROM TaxRates WHERE ID = ?";
@@ -409,7 +446,7 @@ public class DbHelper {
 
             // Save line items and update Product quantity
             for (LineItem lineItem : lineItems) {
-                double currentQuantity = POSHelper.getProductQuantity(lineItem.getProductCode());
+                double currentQuantity = getProductQuantity(lineItem.getProductCode());
                 double newQuantity = currentQuantity - lineItem.getQuantity();
 
                 // Update product quantity

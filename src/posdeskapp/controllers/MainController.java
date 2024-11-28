@@ -403,7 +403,7 @@ public class MainController implements Initializable {
 
         LineItem lineItem = event.getRowValue();
 
-        double productQuantity = POSHelper.getProductQuantity(lineItem.getProductCode());
+        double productQuantity = DbHelper.getProductQuantity(lineItem.getProductCode());
 
         if (productQuantity < 0) {
             return;
@@ -487,7 +487,7 @@ public class MainController implements Initializable {
                     .mapToDouble(LineItem::getQuantity)
                     .sum();
 
-            double productQuantity = POSHelper.getProductQuantity(barcode);
+            double productQuantity = DbHelper.getProductQuantity(barcode);
             double remainingQuantity = productQuantity - lineItemsQuantity;
 
             if (remainingQuantity < 1) {
