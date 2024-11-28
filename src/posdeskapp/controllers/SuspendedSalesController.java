@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import posdeskapp.models.PausedTransaction;
@@ -31,23 +32,24 @@ public class SuspendedSalesController implements Initializable {
     @FXML
     private CheckBox cheakall;
     @FXML
-    private TableColumn<PausedTransaction, Integer> paudedIdCol;
-    @FXML
     private TableColumn<PausedTransaction, String> suspendedDateCol;
     @FXML
     private TableColumn<PausedTransaction, String> transactionTotal;
     @FXML
     private TableColumn<PausedTransaction, HBox> actions;
+    @FXML
+    private TableColumn<PausedTransaction, Integer> pausedIdCol;
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        initializeColumns();
+    }
 
     @FXML
     private void searchPausedTransaction(KeyEvent event) {
@@ -56,5 +58,11 @@ public class SuspendedSalesController implements Initializable {
     @FXML
     private void deleteselectedSuspendedTransactions(ActionEvent event) {
     }
-    
+
+    private void initializeColumns() {
+        pausedIdCol.setCellValueFactory(new PropertyValueFactory<>("pauseId"));
+        suspendedDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
+        transactionTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+    }
+
 }

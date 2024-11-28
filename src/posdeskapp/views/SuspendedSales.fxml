@@ -54,7 +54,7 @@
       <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn maxWidth="1500.0" minWidth="-1.0" prefWidth="33.0" />
-          <TableColumn fx:id="paudedIdCol" prefWidth="75.0" text="Paused ID" />
+          <TableColumn fx:id="pausedIdCol" prefWidth="75.0" text="Paused ID" />
           <TableColumn fx:id="suspendedDateCol" prefWidth="75.0" text="Suspended Date" />
             <TableColumn fx:id="transactionTotal" prefWidth="75.0" text="Transaction Total" />
             <TableColumn fx:id="actions" prefWidth="75.0" text="Actions" />
