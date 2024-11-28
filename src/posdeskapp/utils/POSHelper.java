@@ -186,7 +186,7 @@ public class POSHelper {
             alert.setContentText("Are you sure you want to recall this transaction?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-              //
+              
             }
         });
 

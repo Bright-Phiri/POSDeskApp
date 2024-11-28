@@ -240,6 +240,52 @@ public class DbHelper {
         return invoices;
     }
 
+    public static ObservableList<LineItem> getLineSuspendedTransactionLineItems(int pauseId) {
+        String query = "SELECT * FROM PausedLineItems WHERE PauseId = ?";
+        ObservableList<LineItem> lineItems = FXCollections.observableArrayList();
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnection.createConnection();
+            stmt = conn.prepareStatement(query);
+            stmt.setInt(1, pauseId);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                LineItem lineItem = new LineItem();
+                lineItem.setProductCode(rs.getString("ProductCode"));
+                lineItem.setDescription(rs.getString("Description"));
+                lineItem.setUnitPrice(rs.getDouble("UnitPrice"));
+                lineItem.setQuantity(rs.getDouble("Quantity"));
+                lineItem.setTaxRateId(rs.getString("TaxRateID"));
+                lineItem.setTotal(rs.getDouble("Total"));
+                lineItem.setTotalVAT(rs.getDouble("TotalVAT"));
+                lineItems.add(lineItem);
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while fetching line items: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return lineItems;
+    }
+
     public static List<Invoice> getUntransmittedInvoices() {
         String query = "SELECT * FROM Invoices WHERE State = 0";
         List<Invoice> invoices = new ArrayList<>();
