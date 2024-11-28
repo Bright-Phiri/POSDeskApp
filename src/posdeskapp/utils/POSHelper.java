@@ -41,6 +41,7 @@ import javafx.stage.StageStyle;
 import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
 import posdeskapp.models.LineItem;
+import posdeskapp.models.Product;
 import posdeskapp.models.TaxBreakDown;
 
 /**
@@ -48,6 +49,9 @@ import posdeskapp.models.TaxBreakDown;
  * @author biphiri
  */
 public class POSHelper {
+
+    private Product selectedProduct;
+    private MainController mainController;
 
     public static String encryptPassword(String password) {
         return Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
@@ -175,7 +179,7 @@ public class POSHelper {
             alert.setContentText("Are you sure you want to delete this transaction?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-              //
+                //
             }
         });
 
@@ -186,7 +190,11 @@ public class POSHelper {
             alert.setContentText("Are you sure you want to recall this transaction?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-              
+
+                ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(Integer.parseInt(icon1.getId()));
+                for (LineItem item : lineItems) {
+                    System.out.println(item.getProductCode());
+                }
             }
         });
 

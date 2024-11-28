@@ -105,38 +105,38 @@ public class LineItem {
     }
 
     public void setProductCode(String productCode) {
-        this.productCode.set(productCode);
+        this.productCode = new SimpleStringProperty(productCode);
     }
 
     public void setDescription(String description) {
-        this.description.set(description);
+        this.description = new SimpleStringProperty(description);
     }
 
     public void setUnitPrice(Double unitPrice) {
-        this.unitPrice.set(unitPrice);
+        this.unitPrice = new SimpleDoubleProperty(unitPrice);
     }
 
     public void setQuantity(Double quantity) {
-        this.quantity.set(quantity);
+        this.quantity = new SimpleDoubleProperty(quantity);
     }
 
     public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber.set(invoiceNumber);
+        this.invoiceNumber = new SimpleStringProperty(invoiceNumber);
     }
 
     public void setTaxRateId(String taxRateId) {
-        this.taxRateId.set(taxRateId);
+        this.taxRateId = new SimpleStringProperty(taxRateId);
     }
 
     public void setDiscount(Double discount) {
-        this.discount.set(discount);
+        this.discount =  new SimpleDoubleProperty(discount);
     }
 
     public void setTotal(Double total) {
-        this.total.set(total);
+        this.total = new SimpleDoubleProperty(total);
     }
 
     public void setTotalVAT(Double totalVAT) {
-        this.totalVAT.set(totalVAT);
+        this.totalVAT = new SimpleDoubleProperty(totalVAT);
     }
 }
