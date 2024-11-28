@@ -17,17 +17,20 @@ import posdeskapp.utils.POSHelper;
  */
 public class LineItem {
 
-    private final SimpleIntegerProperty id;
-    private final SimpleStringProperty productCode;
-    private final SimpleStringProperty description;
-    private final SimpleDoubleProperty unitPrice;
-    private final SimpleDoubleProperty quantity;
-    private final SimpleStringProperty invoiceNumber;
-    private final SimpleStringProperty taxRateId;
-    private final SimpleDoubleProperty discount;
-    private final SimpleDoubleProperty total;
-    private final SimpleDoubleProperty totalVAT;
-    private final HBox controlsPane;
+    private SimpleIntegerProperty id;
+    private SimpleStringProperty productCode;
+    private SimpleStringProperty description;
+    private SimpleDoubleProperty unitPrice;
+    private SimpleDoubleProperty quantity;
+    private SimpleStringProperty invoiceNumber;
+    private SimpleStringProperty taxRateId;
+    private SimpleDoubleProperty discount;
+    private SimpleDoubleProperty total;
+    private SimpleDoubleProperty totalVAT;
+    private HBox controlsPane;
+
+    public LineItem() {
+    }
 
     public LineItem(String productCode, String description, double quantity, double unitPrice, double total, double discount, double totalVAT, String taxRateId, HBox controlsPane) {
         this.id = new SimpleIntegerProperty(0);
@@ -136,5 +139,4 @@ public class LineItem {
     public void setTotalVAT(Double totalVAT) {
         this.totalVAT.set(totalVAT);
     }
-
 }
