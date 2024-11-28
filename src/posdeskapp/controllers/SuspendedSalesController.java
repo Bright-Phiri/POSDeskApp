@@ -111,7 +111,7 @@ public class SuspendedSalesController implements Initializable {
             alert.setContentText("Are you sure you want to delete the selected records");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-
+              
             }
         }
     }
