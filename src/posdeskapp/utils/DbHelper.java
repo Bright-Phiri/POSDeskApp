@@ -240,6 +240,44 @@ public class DbHelper {
         return invoices;
     }
 
+    public static List<Invoice> getUntransmittedInvoices() {
+        String query = "SELECT * FROM Invoices WHERE State = 0";
+        List<Invoice> invoices = new ArrayList<>();
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnection.createConnection();
+            stmt = conn.prepareStatement(query);
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5), rs.getDouble(6));
+                invoices.add(invoice);
+            }
+        } catch (SQLException e) {
+            System.err.println("An error occurred while fetching untransmitted invoices: " + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return invoices;
+    }
+
     public static ObservableList<PausedTransaction> getSuspendedTransactions() {
         ObservableList<PausedTransaction> suspendedTransactions = FXCollections.observableArrayList();
         String query = "SELECT * FROM PausedTransactions ORDER BY Timestamp DESC";
