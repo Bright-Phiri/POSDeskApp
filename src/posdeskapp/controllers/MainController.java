@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -334,6 +335,29 @@ public class MainController implements Initializable {
 
     @FXML
     private void suspendTransaction(ActionEvent event) {
+        if (data.size() > 0) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText(null);
+            alert.setTitle("Void Transaction");
+            alert.setContentText("Are you sure you want to suspend this transaction?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+                AtomicInteger pausedId = new AtomicInteger();
+                if (DbHelper.savePausedTransaction(data, pausedId)) {
+                    data.clear();
+                    POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+                    tenderedAmountTextField.clear();
+                    changeLabel.setText("0.00");
+                    Notification notification = new Notification("Information", "Transaction successfully suspended.", 3);
+                }
+
+            } else {
+                Notification notification = new Notification("Error", "Failed to suspend transaction.", 3);
+            }
+        } else {
+            Notification notification = new Notification("Information", "No transaction to suspend.", 3);
+        }
+        searchProductTextField.requestFocus();
     }
 
     @FXML

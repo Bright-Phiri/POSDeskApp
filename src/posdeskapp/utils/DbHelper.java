@@ -10,8 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -507,6 +509,73 @@ public class DbHelper {
                 }
                 if (updateProductStmt != null) {
                     updateProductStmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+    }
+
+    public static boolean savePausedTransaction(List<LineItem> lineItems, AtomicInteger pausedId) {
+        String insertPausedTransactionQuery = "INSERT INTO PausedTransactions (PauseId, Timestamp, Total) VALUES (?, ?, ?)";
+        String insertPausedLineItemQuery = "INSERT INTO PausedLineItems (PauseId, ProductCode, Description, UnitPrice, Quantity, TaxRateID, Total, TotalVAT) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+        PreparedStatement pausedTransactionStmt = null;
+        PreparedStatement pausedLineItemStmt = null;
+        Connection connection = null;
+
+        pausedId.set(POSHelper.generatePauseId());
+        double total = lineItems.stream().mapToDouble(LineItem::getTotal).sum();
+
+        try {
+            connection = DbConnection.createConnection();
+            connection.setAutoCommit(false);
+
+            // Save paused transaction
+            pausedTransactionStmt = connection.prepareStatement(insertPausedTransactionQuery);
+            pausedTransactionStmt.setInt(1, pausedId.get());
+            pausedTransactionStmt.setString(2, LocalDate.now().toString());
+            pausedTransactionStmt.setDouble(3, total);
+            pausedTransactionStmt.executeUpdate();
+
+            // Save paused line items
+            for (LineItem lineItem : lineItems) {
+                pausedLineItemStmt = connection.prepareStatement(insertPausedLineItemQuery);
+                pausedLineItemStmt.setInt(1, pausedId.get());
+                pausedLineItemStmt.setString(2, lineItem.getProductCode());
+                pausedLineItemStmt.setString(3, lineItem.getDescription());
+                pausedLineItemStmt.setDouble(4, lineItem.getUnitPrice());
+                pausedLineItemStmt.setDouble(5, lineItem.getQuantity());
+                pausedLineItemStmt.setString(6, lineItem.getTaxRateId());
+                pausedLineItemStmt.setDouble(7, lineItem.getTotal());
+                pausedLineItemStmt.setDouble(8, lineItem.getTotalVAT());
+                pausedLineItemStmt.executeUpdate();
+                pausedLineItemStmt.close();
+            }
+
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            System.err.println("An error occurred suspending transaction: " + e.getMessage());
+            pausedId.set(0);
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException rollbackEx) {
+                    System.err.println("Rollback failed: " + rollbackEx.getMessage());
+                }
+            }
+            return false;
+        } finally {
+            try {
+                if (pausedTransactionStmt != null) {
+                    pausedTransactionStmt.close();
+                }
+                if (pausedLineItemStmt != null) {
+                    pausedLineItemStmt.close();
                 }
                 if (connection != null) {
                     connection.close();
