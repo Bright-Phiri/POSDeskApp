@@ -8,6 +8,7 @@ package posdeskapp.models;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.scene.layout.HBox;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -19,11 +20,13 @@ public class PausedTransaction {
     private final SimpleIntegerProperty pauseId;
     private final SimpleStringProperty transactionDate;
     private final SimpleDoubleProperty total;
+    private final HBox controlsPane;
 
-    public PausedTransaction(Integer pauseId, String transactionDate, Double total) {
+    public PausedTransaction(Integer pauseId, String transactionDate, Double total, HBox controlsPane) {
         this.pauseId = new SimpleIntegerProperty(pauseId);
         this.transactionDate = new SimpleStringProperty(transactionDate);
         this.total = new SimpleDoubleProperty(total);
+        this.controlsPane = controlsPane;
     }
 
     public int getPauseId() {
@@ -40,6 +43,10 @@ public class PausedTransaction {
 
     public String getFormattedTransactionTotal() {
         return POSHelper.formatValue(getTotal());
+    }
+
+    public HBox getControlsPane() {
+        return controlsPane;
     }
 
 }

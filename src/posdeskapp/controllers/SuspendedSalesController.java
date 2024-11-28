@@ -63,6 +63,7 @@ public class SuspendedSalesController implements Initializable {
         pausedIdCol.setCellValueFactory(new PropertyValueFactory<>("pauseId"));
         suspendedDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
         transactionTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
+        actions.setCellValueFactory(new PropertyValueFactory<>("controlsPane"));
     }
 
 }
