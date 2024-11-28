@@ -24,7 +24,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import posdeskapp.models.Product;
 import posdeskapp.utils.DbHelper;
-import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class

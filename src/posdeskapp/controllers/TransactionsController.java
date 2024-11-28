@@ -22,9 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.models.Invoice;
-import posdeskapp.models.LineItem;
 import posdeskapp.utils.DbHelper;
-import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class
