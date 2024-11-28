@@ -156,6 +156,55 @@ public class POSHelper {
         return hBox;
     }
 
+    public static HBox suspendedSalesActions(int paudedId, ObservableList<LineItem> data) {
+        HBox hBox = new HBox(5);
+        // Create a trash icon
+        FontAwesomeIconView icon = new FontAwesomeIconView(FontAwesomeIcon.TRASH_ALT);
+        icon.setSize("20");
+        icon.setFill(Color.RED);
+        icon.setId(String.valueOf(paudedId));
+
+        FontAwesomeIconView icon1 = new FontAwesomeIconView(FontAwesomeIcon.RECYCLE);
+        icon1.setSize("17");
+        icon1.setFill(Color.web("#FD5B73"));
+        icon1.setId(String.valueOf(paudedId));
+
+        HBox.setMargin(icon, new Insets(0, 0, 0, 0));
+        HBox.setHgrow(icon, Priority.ALWAYS);
+
+        HBox.setMargin(icon1, new Insets(0, 0, 0, 0));
+        HBox.setHgrow(icon1, Priority.ALWAYS);
+
+        hBox.setAlignment(Pos.CENTER);
+
+        icon.setOnMouseClicked(event -> {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Suspended Transaction");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to delete this transaction?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+              //
+            }
+        });
+
+        icon1.setOnMouseClicked(event -> {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Recall Transaction");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to recall this transaction?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+              //
+            }
+        });
+
+        // Add the icons to the HBox
+        hBox.getChildren().addAll(icon1, icon);
+
+        return hBox;
+    }
+
     public static List<TaxBreakDown> generateTaxSummary(List<LineItem> lineItems) {
         Map<String, TaxBreakDown> taxBreakdowns = new HashMap<>();
 
