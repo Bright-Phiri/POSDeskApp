@@ -53,6 +53,13 @@ public class POSHelper {
     private Product selectedProduct;
     private MainController mainController;
 
+    public POSHelper(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public POSHelper() {
+    }
+
     public static String encryptPassword(String password) {
         return Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
     }
@@ -190,11 +197,12 @@ public class POSHelper {
             alert.setContentText("Are you sure you want to recall this transaction?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-
                 ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(Integer.parseInt(icon1.getId()));
-                for (LineItem item : lineItems) {
-                    System.out.println(item.getProductCode());
+                for (LineItem lineItem : lineItems) {
+                    System.out.println("test" + lineItem.getDescription());
                 }
+                Stage stage = (Stage) icon1.getScene().getWindow();
+                stage.close();
             }
         });
 

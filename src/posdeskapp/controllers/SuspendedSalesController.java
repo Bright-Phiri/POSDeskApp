@@ -6,6 +6,8 @@
 package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -15,6 +17,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -24,8 +28,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
+import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
 import posdeskapp.utils.DbHelper;
+import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class
@@ -111,7 +119,7 @@ public class SuspendedSalesController implements Initializable {
             alert.setContentText("Are you sure you want to delete the selected records");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-              
+
             }
         }
     }
@@ -127,6 +135,9 @@ public class SuspendedSalesController implements Initializable {
     private void loadProducts() {
         data.clear();
         data = DbHelper.getSuspendedTransactions();
+        for (PausedTransaction pausedTransaction : data) {
+            System.out.println(pausedTransaction.getTotal()); 
+        }
         suspendedTransactionsTable.getItems().setAll(data);
     }
 
