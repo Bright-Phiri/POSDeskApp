@@ -131,6 +131,8 @@ public class MainController implements Initializable {
     private JFXButton suspendButton;
     @FXML
     private JFXButton addLineItemButton;
+    @FXML
+    private MenuBar menubar;
 
     private static final Map<String, String> TABLE_DEFINITIONS = new HashMap<>();
     public static Text totalItemsText;
@@ -141,12 +143,9 @@ public class MainController implements Initializable {
 
     static {
 
-    }
-    ;
+    };
 
     ObservableList<LineItem> data = FXCollections.observableArrayList();
-    @FXML
-    private MenuBar menubar;
 
     /**
      * Initializes the controller class.
