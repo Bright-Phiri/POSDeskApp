@@ -9,9 +9,12 @@ import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,9 +28,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
+import posdeskapp.models.Product;
 import posdeskapp.utils.DbHelper;
 
 /**
@@ -96,6 +101,33 @@ public class SuspendedSalesController implements Initializable {
 
     @FXML
     private void searchPausedTransaction(KeyEvent event) {
+        FilteredList<PausedTransaction> filteredList = new FilteredList<>(data, p -> true);
+        searchTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredList.setPredicate((Predicate<? super PausedTransaction>) transaction -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterToLowerCase = newValue.toLowerCase();
+                if (String.valueOf(transaction.getPauseId()).contains(filterToLowerCase)) {
+                    return true;
+                }
+
+                if (String.valueOf(transaction.getFormattedTransactionTotal()).contains(filterToLowerCase)) {
+                    return true;
+                }
+
+                if (String.valueOf(transaction.getTransactionDate()).contains(filterToLowerCase)) {
+                    return true;
+                }
+
+                suspendedTransactionsTable.setPlaceholder(new Text("No record match your search"));
+                return false;
+            });
+
+            SortedList<PausedTransaction> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(suspendedTransactionsTable.comparatorProperty());
+            suspendedTransactionsTable.setItems(sortedList);
+        }));
     }
 
     @FXML
