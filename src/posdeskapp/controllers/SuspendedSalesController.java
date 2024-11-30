@@ -48,8 +48,6 @@ public class SuspendedSalesController implements Initializable {
     @FXML
     private TableColumn<PausedTransaction, String> transactionTotal;
     @FXML
-    private TableColumn<PausedTransaction, HBox> actions;
-    @FXML
     private TableColumn<PausedTransaction, String> pausedIdCol;
 
     ObservableList<PausedTransaction> data = FXCollections.observableArrayList();
@@ -126,7 +124,6 @@ public class SuspendedSalesController implements Initializable {
         pausedIdCol.setCellValueFactory(new PropertyValueFactory<>("pauseId"));
         suspendedDateCol.setCellValueFactory(new PropertyValueFactory<>("transactionDate"));
         transactionTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
-        actions.setCellValueFactory(new PropertyValueFactory<>("controlsPane"));
     }
 
     private void loadProducts() {
@@ -152,7 +149,7 @@ public class SuspendedSalesController implements Initializable {
                 ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(pausedTransaction.getPauseId());
 
                 mainController.setRecaledTransactionLineItems(lineItems);
-
+                DbHelper.deletePausedTransaction(pausedTransaction.getPauseId());
                 // Close the suspended transactions panel
                 Stage stage = (Stage) suspendedTransactionsTable.getScene().getWindow();
                 stage.close();

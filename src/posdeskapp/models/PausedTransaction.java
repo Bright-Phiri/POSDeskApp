@@ -22,14 +22,12 @@ public class PausedTransaction {
     private final SimpleIntegerProperty pauseId;
     private final SimpleStringProperty transactionDate;
     private final SimpleDoubleProperty total;
-    private final HBox controlsPane;
 
-    public PausedTransaction(Integer pauseId, String transactionDate, Double total, HBox controlsPane) {
+    public PausedTransaction(Integer pauseId, String transactionDate, Double total) {
         this.check = new CheckBox();
         this.pauseId = new SimpleIntegerProperty(pauseId);
         this.transactionDate = new SimpleStringProperty(transactionDate);
         this.total = new SimpleDoubleProperty(total);
-        this.controlsPane = controlsPane;
     }
 
     public int getPauseId() {
@@ -51,9 +49,4 @@ public class PausedTransaction {
     public String getFormattedTransactionTotal() {
         return POSHelper.formatValue(getTotal());
     }
-
-    public HBox getControlsPane() {
-        return controlsPane;
-    }
-
 }

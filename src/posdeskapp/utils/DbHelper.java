@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import posdeskapp.controllers.SuspendedSalesController;
 import posdeskapp.models.Invoice;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
@@ -30,27 +31,27 @@ import posdeskapp.models.TaxBreakDown;
  * @author biphiri
  */
 public class DbHelper {
-    
+
     public static String USERTYPE;
     public static String USERNAME;
-    
+
     public static double getProductQuantity(String productCode) {
         double quantity = 0;
         String query = "SELECT Quantity FROM Products WHERE ProductCode = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             statement = connection.prepareStatement(query);
             statement.setString(1, productCode);
-            
+
             resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 quantity = resultSet.getDouble("Quantity");
             }
-            
+
         } catch (SQLException ex) {
             System.err.println(ex);
         } finally {
@@ -70,7 +71,7 @@ public class DbHelper {
         }
         return quantity;
     }
-    
+
     public static LineItem searchProductByCode(String productCode, ObservableList<LineItem> data) {
         String query = "SELECT * FROM Products WHERE ProductCode = ?";
         String taxRateQuery = "SELECT * FROM TaxRates WHERE ID = ?";
@@ -79,29 +80,29 @@ public class DbHelper {
         PreparedStatement taxRateStmt = null;
         ResultSet productRs = null;
         ResultSet taxRateRs = null;
-        
+
         try {
             connection = DbConnection.createConnection();
-            
+
             productStmt = connection.prepareStatement(query);
             productStmt.setString(1, productCode);
             productRs = productStmt.executeQuery();
-            
+
             if (productRs.next()) {
                 String description = productRs.getString("Description");
                 double price = productRs.getDouble("Price");
                 String taxRateId = productRs.getString("TaxRateId");
-                
+
                 taxRateStmt = connection.prepareStatement(taxRateQuery);
                 taxRateStmt.setString(1, taxRateId);
                 taxRateRs = taxRateStmt.executeQuery();
-                
+
                 if (taxRateRs.next()) {
                     double taxRate = taxRateRs.getDouble("Rate");
                     double lineItemVAT = 0.0;
-                    
+
                     boolean isVATRegistered = isVATRegistered();
-                    
+
                     if (isVATRegistered) {
                         lineItemVAT = POSHelper.extractVATAmount(price, 1, taxRate);
                     }
@@ -109,10 +110,10 @@ public class DbHelper {
                     // Format numeric values
                     String formattedPrice = POSHelper.formatValue(price);
                     String formattedLineItemVAT = POSHelper.formatValue(lineItemVAT);
-                    
+
                     double formattedPriceDouble = Double.parseDouble(formattedPrice.replace(",", ""));
                     double formattedLineItemVATDouble = Double.parseDouble(formattedLineItemVAT.replace(",", ""));
-                    
+
                     LineItem lineItem = new LineItem(
                             productCode,
                             description,
@@ -124,7 +125,7 @@ public class DbHelper {
                             taxRateId,
                             POSHelper.setActionButtons(productCode, data)
                     );
-                    
+
                     return lineItem;
                 }
             } else {
@@ -153,24 +154,24 @@ public class DbHelper {
                 System.err.println(ex);
             }
         }
-        
+
         return null;
     }
-    
+
     public static List<LineItem> getSuspendedTransactionLineItems(int pauseId) {
         String query = "SELECT * FROM PausedLineItems WHERE PauseId = ?";
         List<LineItem> lineItems = new ArrayList<>();
-        
+
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = DbConnection.createConnection();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, pauseId);
             rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
                 LineItem lineItem = new LineItem();
                 lineItem.setProductCode(rs.getString("ProductCode"));
@@ -199,22 +200,22 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
-        
+
         return lineItems;
     }
-    
+
     public static ObservableList<Invoice> fetchInvoices() {
         ObservableList<Invoice> invoices = FXCollections.observableArrayList();
         PreparedStatement pre = null;
         Connection conn = null;
         ResultSet rs = null;
         String query = "SELECT * FROM Invoices";
-        
+
         try {
             conn = DbConnection.createConnection();
             pre = conn.prepareStatement(query);
             rs = pre.executeQuery();
-            
+
             while (rs.next()) {
                 Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5), rs.getDouble(6));
                 invoices.add(invoice);
@@ -236,24 +237,24 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + e.getMessage());
             }
         }
-        
+
         return invoices;
     }
-    
+
     public static ObservableList<LineItem> getLineSuspendedTransactionLineItems(int pauseId) {
         String query = "SELECT * FROM PausedLineItems WHERE PauseId = ?";
         ObservableList<LineItem> lineItems = FXCollections.observableArrayList();
-        
+
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = DbConnection.createConnection();
             stmt = conn.prepareStatement(query);
             stmt.setInt(1, pauseId);
             rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
                 LineItem lineItem = new LineItem();
                 lineItem.setProductCode(rs.getString("ProductCode"));
@@ -284,23 +285,23 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
-        
+
         return lineItems;
     }
-    
+
     public static List<Invoice> getUntransmittedInvoices() {
         String query = "SELECT * FROM Invoices WHERE State = 0";
         List<Invoice> invoices = new ArrayList<>();
-        
+
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = DbConnection.createConnection();
             stmt = conn.prepareStatement(query);
             rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
                 Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5), rs.getDouble(6));
                 invoices.add(invoice);
@@ -322,25 +323,25 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
-        
+
         return invoices;
     }
-    
+
     public static ObservableList<PausedTransaction> getSuspendedTransactions() {
         ObservableList<PausedTransaction> suspendedTransactions = FXCollections.observableArrayList();
         String query = "SELECT * FROM PausedTransactions ORDER BY Timestamp DESC";
-        
+
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+        SuspendedSalesController controller = new SuspendedSalesController();
         try {
             conn = DbConnection.createConnection();
             stmt = conn.prepareStatement(query);
             rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
-                PausedTransaction transaction = new PausedTransaction(rs.getInt(1), rs.getString(2), rs.getDouble(3), POSHelper.suspendedSalesActions(rs.getInt(1)));
+                PausedTransaction transaction = new PausedTransaction(rs.getInt(1), rs.getString(2), rs.getDouble(3));
                 suspendedTransactions.add(transaction);
             }
         } catch (SQLException e) {
@@ -360,22 +361,66 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
-        
+
         return suspendedTransactions;
     }
-    
+
+    public static void deletePausedTransaction(int pausedId) {
+        PreparedStatement deleteLineItemsCommand = null;
+        PreparedStatement deleteTransactionCommand = null;
+        Connection connection = null;
+        try {
+            connection = DbConnection.createConnection();
+            connection.setAutoCommit(false);
+
+            deleteLineItemsCommand = connection.prepareStatement("DELETE FROM PausedLineItems WHERE PauseId = ?");
+            deleteLineItemsCommand.setInt(1, pausedId);
+            deleteLineItemsCommand.executeUpdate();
+
+            deleteTransactionCommand = connection.prepareStatement("DELETE FROM PausedTransactions WHERE PauseId = ?");
+            deleteTransactionCommand.setInt(1, pausedId);
+            deleteTransactionCommand.executeUpdate();
+
+            // Commit the transaction
+            connection.commit();
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while deleting paused transaction: " + ex.getMessage());
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Rollback failed: " + rollbackEx.getMessage());
+            }
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.setAutoCommit(true);
+                }
+                if (deleteLineItemsCommand != null) {
+                    deleteLineItemsCommand.close();
+                }
+                if (deleteTransactionCommand != null) {
+                    deleteTransactionCommand.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+    }
+
     public static ObservableList<Product> fetchProducts() {
         ObservableList<Product> products = FXCollections.observableArrayList();
         PreparedStatement pre = null;
         Connection conn = null;
         ResultSet rs = null;
         String query = "SELECT * FROM Products";
-        
+
         try {
             conn = DbConnection.createConnection();
             pre = conn.prepareStatement(query);
             rs = pre.executeQuery();
-            
+
             while (rs.next()) {
                 products.add(new Product(
                         rs.getString(1),
@@ -404,10 +449,10 @@ public class DbHelper {
                 System.err.println(e);
             }
         }
-        
+
         return products;
     }
-    
+
     public static double getTaxRateById(String taxRateId) {
         String taxRateQuery = "SELECT * FROM TaxRates WHERE ID = ?";
         Connection connection = null;
@@ -426,7 +471,7 @@ public class DbHelper {
                 // Retrieve the tax rate from the result set
                 taxRate = taxRateRs.getDouble("Rate");
             }
-            
+
         } catch (SQLException e) {
             System.err.println(e);
         } finally {
@@ -447,24 +492,24 @@ public class DbHelper {
         }
         return taxRate;
     }
-    
+
     public static String getTerminalLabel() {
         String terminalLabel = null;
         String query = "SELECT TerminalLabel FROM TerminalConfiguration";
-        
+
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
-            
+
             if (resultSet.next()) {
                 terminalLabel = resultSet.getString("TerminalLabel");
             }
-            
+
         } catch (SQLException ex) {
             System.err.println("An error occurred while fetching Terminal Label: " + ex.getMessage());
         } finally {
@@ -482,10 +527,10 @@ public class DbHelper {
                 System.err.println("Error closing database resources: " + ex.getMessage());
             }
         }
-        
+
         return terminalLabel;
     }
-    
+
     public static Boolean userSignIn(String userName, String password) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -522,21 +567,21 @@ public class DbHelper {
         }
         return Boolean.FALSE;
     }
-    
+
     public static void markInvoiceAsProcessed(String invoiceNumber) {
         String updateQuery = "UPDATE Invoices SET State = ? WHERE InvoiceNumber = ?";
         Connection connection = null;
         PreparedStatement statement = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             statement = connection.prepareStatement(updateQuery);
-            
+
             statement.setString(1, invoiceNumber);
             statement.setInt(2, 1);
-            
+
             statement.executeUpdate();
-            
+
         } catch (SQLException ex) {
             System.err.println("An error occurred while updating invoice state: " + ex.getMessage());
         } finally {
@@ -552,19 +597,19 @@ public class DbHelper {
             }
         }
     }
-    
+
     public static String getTaxPayerTIN() {
         String tin = null;
         String query = "SELECT TIN FROM TaxpayerConfiguration";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 tin = resultSet.getString(1); // Column index starts at 1
             }
@@ -585,23 +630,23 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
-        
+
         return tin;
     }
-    
+
     public static boolean processTransaction(InvoiceHeader invoice, List<LineItem> lineItems, List<TaxBreakDown> taxBreakdowns, double total, double totalVAT) {
         String insertInvoiceQuery = "INSERT INTO Invoices (InvoiceNumber, InvoiceDateTime, InvoiceTotal, SellerTin, BuyerTin, TotalVAT, State) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertLineItemQuery = "INSERT INTO LineItems (ProductCode, Description, UnitPrice, Quantity, InvoiceNumber, TaxRateID, Discount) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertTaxBreakdownQuery = "INSERT INTO InvoiceTaxBreakDown (InvoiceNumber, RateID, TaxableAmount, TaxAmount) VALUES (?, ?, ?, ?)";
         String updateProductQuery = "UPDATE Products SET Quantity = ? WHERE ProductCode = ?";
-        
+
         Connection connection = null;
         PreparedStatement invoiceStmt = null;
         PreparedStatement lineItemStmt = null;
         PreparedStatement taxBreakdownStmt = null;
         PreparedStatement updateProductStmt = null;
         ResultSet resultSet = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             connection.setAutoCommit(false);
@@ -650,10 +695,10 @@ public class DbHelper {
                 taxBreakdownStmt.setDouble(4, taxBreakdown.getTaxAmount());
                 taxBreakdownStmt.executeUpdate();
             }
-            
+
             connection.commit();
             return true;
-            
+
         } catch (SQLException e) {
             try {
                 if (connection != null) {
@@ -689,18 +734,18 @@ public class DbHelper {
             }
         }
     }
-    
+
     public static boolean savePausedTransaction(List<LineItem> lineItems, AtomicInteger pausedId) {
         String insertPausedTransactionQuery = "INSERT INTO PausedTransactions (PauseId, Timestamp, Total) VALUES (?, ?, ?)";
         String insertPausedLineItemQuery = "INSERT INTO PausedLineItems (PauseId, ProductCode, Description, UnitPrice, Quantity, TaxRateID, Total, TotalVAT) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
+
         PreparedStatement pausedTransactionStmt = null;
         PreparedStatement pausedLineItemStmt = null;
         Connection connection = null;
-        
+
         pausedId.set(POSHelper.generatePauseId());
         double total = lineItems.stream().mapToDouble(LineItem::getTotal).sum();
-        
+
         try {
             connection = DbConnection.createConnection();
             connection.setAutoCommit(false);
@@ -726,7 +771,7 @@ public class DbHelper {
                 pausedLineItemStmt.executeUpdate();
                 pausedLineItemStmt.close();
             }
-            
+
             connection.commit();
             return true;
         } catch (SQLException e) {
@@ -756,20 +801,20 @@ public class DbHelper {
             }
         }
     }
-    
+
     public static List<Integer> getUsedPauseIds() {
         List<Integer> usedIds = new ArrayList<>();
         String query = "SELECT PauseId FROM PausedTransactions";
-        
+
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
-            
+
             while (resultSet.next()) {
                 int pauseId = resultSet.getInt(1);
                 usedIds.add(pauseId);
@@ -791,22 +836,22 @@ public class DbHelper {
                 System.err.println("Error closing resources: " + ex.getMessage());
             }
         }
-        
+
         return usedIds;
     }
-    
+
     public static boolean isVATRegistered() {
         String query = "SELECT IsVATRegistered FROM TaxpayerConfiguration";
         boolean isVATRegistered = false;
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
-        
+
         try {
             connection = DbConnection.createConnection();
             statement = connection.prepareStatement(query);
             resultSet = statement.executeQuery();
-            
+
             if (resultSet.next()) {
                 int result = resultSet.getInt("IsVATRegistered");
                 isVATRegistered = result == 1;
@@ -828,7 +873,7 @@ public class DbHelper {
                 System.err.println("An error occurred while closing resources: " + ex.getMessage());
             }
         }
-        
+
         return isVATRegistered;
     }
 }

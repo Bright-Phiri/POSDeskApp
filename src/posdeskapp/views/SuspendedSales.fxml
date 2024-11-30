@@ -56,7 +56,6 @@
           <TableColumn fx:id="pausedIdCol" prefWidth="331.0" text="Paused ID" />
           <TableColumn fx:id="suspendedDateCol" prefWidth="75.0" text="Suspended Date" />
             <TableColumn fx:id="transactionTotal" prefWidth="75.0" text="Transaction Total" />
-            <TableColumn fx:id="actions" prefWidth="75.0" text="Actions" />
         </columns>
          <BorderPane.margin>
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
