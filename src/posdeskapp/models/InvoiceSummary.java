@@ -16,11 +16,4 @@ public class InvoiceSummary {
     public double totalVAT;
     public String offlineSignature;
     public double invoiceTotal;
-
-    public InvoiceSummary(List<TaxBreakDown> taxBreakDown, double totalVAT, String offlineSignature, double invoiceTotal) {
-        this.taxBreakDown = taxBreakDown;
-        this.totalVAT = totalVAT;
-        this.offlineSignature = offlineSignature;
-        this.invoiceTotal = invoiceTotal;
-    }
 }

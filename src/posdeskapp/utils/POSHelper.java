@@ -12,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -40,8 +41,11 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
+import posdeskapp.models.InvoiceHeader;
+import posdeskapp.models.InvoiceSummary;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
+import posdeskapp.models.SalesInvoice;
 import posdeskapp.models.TaxBreakDown;
 
 /**
@@ -90,6 +94,34 @@ public class POSHelper {
         } catch (NumberFormatException e) {
             return 0.0;
         }
+    }
+
+    public static SalesInvoice createInvoiceRequest(InvoiceHeader invoice, List<LineItem> lineItems, double total, double totalVAT) {
+        SalesInvoice invoiceRequest = new SalesInvoice();
+
+        // Set InvoiceHeader details
+        invoiceRequest.invoiceHeader = new InvoiceHeader();
+        invoiceRequest.invoiceHeader.buyerTIN = invoice.buyerTIN;
+        invoiceRequest.invoiceHeader.siteId = "CH";
+        invoiceRequest.invoiceHeader.sellerTIN = invoice.sellerTIN;
+        invoiceRequest.invoiceHeader.invoiceDateTime = LocalDateTime.now();
+        invoiceRequest.invoiceHeader.invoiceNumber = invoice.invoiceNumber;
+        invoiceRequest.invoiceHeader.buyerAuthorizationCode = invoice.buyerAuthorizationCode;
+        invoiceRequest.invoiceHeader.globalConfigVersion = invoice.globalConfigVersion;
+        invoiceRequest.invoiceHeader.taxpayerConfigVersion = invoice.taxpayerConfigVersion;
+        invoiceRequest.invoiceHeader.terminalConfigVersion = invoice.terminalConfigVersion;
+
+        // Set InvoiceLineItems
+        invoiceRequest.invoiceLineItems = lineItems;
+
+        // Set InvoiceSummary details
+        invoiceRequest.invoiceSummary = new InvoiceSummary();
+        invoiceRequest.invoiceSummary.taxBreakDown = generateTaxSummary(lineItems);
+        invoiceRequest.invoiceSummary.invoiceTotal = total;
+        invoiceRequest.invoiceSummary.offlineSignature = "";
+        invoiceRequest.invoiceSummary.totalVAT = totalVAT;
+
+        return invoiceRequest;
     }
 
     public static String formatValue(double value) {

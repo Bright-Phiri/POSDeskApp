@@ -15,10 +15,4 @@ public class SalesInvoice {
     public InvoiceHeader invoiceHeader;
     public List<LineItem> invoiceLineItems;
     public InvoiceSummary invoiceSummary;
-
-    public SalesInvoice(InvoiceHeader invoiceHeader, List<LineItem> invoiceLineItems, InvoiceSummary invoiceSummary) {
-        this.invoiceHeader = invoiceHeader;
-        this.invoiceLineItems = invoiceLineItems;
-        this.invoiceSummary = invoiceSummary;
-    }
 }

@@ -13,15 +13,15 @@ import java.time.LocalDateTime;
 
 public class InvoiceHeader {
 
-    private  String invoiceNumber;
-    private  LocalDateTime invoiceDateTime;
-    private  String sellerTIN;
-    private  String buyerTIN;
-    private  String buyerAuthorizationCode;
-    private  String siteId;
-    private  int globalConfigVersion;
-    private  int taxpayerConfigVersion;
-    private  int terminalConfigVersion;
+    public  String invoiceNumber;
+    public  LocalDateTime invoiceDateTime;
+    public  String sellerTIN;
+    public  String buyerTIN;
+    public  String buyerAuthorizationCode;
+    public  String siteId;
+    public  int globalConfigVersion;
+    public  int taxpayerConfigVersion;
+    public  int terminalConfigVersion;
 
     public InvoiceHeader() {
     }
