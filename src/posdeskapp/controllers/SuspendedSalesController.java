@@ -7,6 +7,8 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXTextField;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
@@ -74,7 +76,8 @@ public class SuspendedSalesController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeColumns();
-        loadProducts();
+       
+        loadPausedTransactions();
 
         transactionTotal.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedTransactionTotal()));
 
@@ -132,7 +135,7 @@ public class SuspendedSalesController implements Initializable {
 
     @FXML
     private void deleteselectedSuspendedTransactions(ActionEvent event) {
-        ObservableList<PausedTransaction> transactionsToDelete = FXCollections.observableArrayList();
+        List<Integer> pausedIds = new ArrayList<>();
         int transactions_to_delete = 0;
         for (PausedTransaction transaction : data) {
             if (transaction.getCheck().isSelected()) {
@@ -146,13 +149,17 @@ public class SuspendedSalesController implements Initializable {
             alert.setContentText("Are you sure you want to delete the selected records");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-                for (PausedTransaction pausedTransaction : transactionsToDelete) {
+                for (PausedTransaction pausedTransaction : data) {
                     if (pausedTransaction.getCheck().isSelected()) {
-                        transactionsToDelete.add(pausedTransaction);
+                        pausedIds.add(pausedTransaction.getPauseId());
                     }
                 }
+                DbHelper.deletePausedTransactions(pausedIds);
+                cheakall.setSelected(false);
+                loadPausedTransactions();
             }
         } else {
+            posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.WARNING, "Delete Transactions", "No suspended transactions selected to delete");
         }
     }
 
@@ -163,7 +170,7 @@ public class SuspendedSalesController implements Initializable {
         transactionTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
     }
 
-    private void loadProducts() {
+    private void loadPausedTransactions() {
         data.clear();
         data = DbHelper.getSuspendedTransactions();
         suspendedTransactionsTable.getItems().setAll(data);
@@ -186,7 +193,9 @@ public class SuspendedSalesController implements Initializable {
                 ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(pausedTransaction.getPauseId());
 
                 mainController.setRecaledTransactionLineItems(lineItems);
-                DbHelper.deletePausedTransaction(pausedTransaction.getPauseId());
+                List<Integer> pausedIds = new ArrayList<>();
+                pausedIds.add(pausedTransaction.getPauseId());
+                DbHelper.deletePausedTransactions(pausedIds);
                 // Close the suspended transactions panel
                 Stage stage = (Stage) suspendedTransactionsTable.getScene().getWindow();
                 stage.close();

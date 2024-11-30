@@ -365,34 +365,42 @@ public class DbHelper {
         return suspendedTransactions;
     }
 
-    public static void deletePausedTransaction(int pausedId) {
+    public static void deletePausedTransactions(List<Integer> pausedIds) {
         PreparedStatement deleteLineItemsCommand = null;
         PreparedStatement deleteTransactionCommand = null;
         Connection connection = null;
+
         try {
+            // Establish the connection
             connection = DbConnection.createConnection();
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false);  // Start a transaction
 
-            deleteLineItemsCommand = connection.prepareStatement("DELETE FROM PausedLineItems WHERE PauseId = ?");
-            deleteLineItemsCommand.setInt(1, pausedId);
-            deleteLineItemsCommand.executeUpdate();
+            // Iterate over each pausedId and perform the delete operations
+            for (Integer pausedId : pausedIds) {
+                // Delete from PausedLineItems
+                deleteLineItemsCommand = connection.prepareStatement("DELETE FROM PausedLineItems WHERE PauseId = ?");
+                deleteLineItemsCommand.setInt(1, pausedId);
+                deleteLineItemsCommand.executeUpdate();
 
-            deleteTransactionCommand = connection.prepareStatement("DELETE FROM PausedTransactions WHERE PauseId = ?");
-            deleteTransactionCommand.setInt(1, pausedId);
-            deleteTransactionCommand.executeUpdate();
+                // Delete from PausedTransactions
+                deleteTransactionCommand = connection.prepareStatement("DELETE FROM PausedTransactions WHERE PauseId = ?");
+                deleteTransactionCommand.setInt(1, pausedId);
+                deleteTransactionCommand.executeUpdate();
+            }
 
-            // Commit the transaction
+            // Commit the transaction after all deletions are successful
             connection.commit();
         } catch (SQLException ex) {
-            System.err.println("An error occurred while deleting paused transaction: " + ex.getMessage());
+            System.err.println("An error occurred while deleting paused transactions: " + ex.getMessage());
             try {
                 if (connection != null) {
-                    connection.rollback();
+                    connection.rollback();  // Rollback in case of an error
                 }
             } catch (SQLException rollbackEx) {
                 System.err.println("Rollback failed: " + rollbackEx.getMessage());
             }
         } finally {
+            // Ensure auto-commit is restored and resources are closed
             try {
                 if (connection != null) {
                     connection.setAutoCommit(true);
