@@ -132,7 +132,7 @@ public class SuspendedSalesController implements Initializable {
 
     @FXML
     private void deleteselectedSuspendedTransactions(ActionEvent event) {
-        ObservableList<PausedTransaction> delete = FXCollections.observableArrayList();
+        ObservableList<PausedTransaction> transactionsToDelete = FXCollections.observableArrayList();
         int transactions_to_delete = 0;
         for (PausedTransaction transaction : data) {
             if (transaction.getCheck().isSelected()) {
@@ -146,8 +146,13 @@ public class SuspendedSalesController implements Initializable {
             alert.setContentText("Are you sure you want to delete the selected records");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-
+                for (PausedTransaction pausedTransaction : transactionsToDelete) {
+                    if (pausedTransaction.getCheck().isSelected()) {
+                        transactionsToDelete.add(pausedTransaction);
+                    }
+                }
             }
+        } else {
         }
     }
 
