@@ -499,13 +499,10 @@ public class MainController implements Initializable {
         addProductToTable(product.getProductCode());
     }
 
-    public void setSelectedLineItem(ObservableList<LineItem> lineItems) {
-        productsTable.setItems(lineItems);
-    }
-
-    public void setRecalledLineItems(ObservableList<LineItem> lineItems) {
+    public void setRecaledTransactionLineItems(ObservableList<LineItem> lineItems) {
         data = lineItems;
         productsTable.setItems(data);
+        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
     }
 
     private void initializeDatabase() {

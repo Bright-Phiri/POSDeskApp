@@ -25,6 +25,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
 import posdeskapp.utils.DbHelper;
@@ -141,9 +142,22 @@ public class SuspendedSalesController implements Initializable {
     @FXML
     private void fetchSuspendeTransactionLineItems(MouseEvent event) {
         PausedTransaction pausedTransaction = (PausedTransaction) suspendedTransactionsTable.getSelectionModel().getSelectedItem();
-        ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(pausedTransaction.getPauseId());
-        
-        mainController.setSelectedLineItem(lineItems);
+        if (pausedTransaction != null) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Recall Transaction");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to recall this transaction?");
+            Optional<ButtonType> option = alert.showAndWait();
+            if (option.get() == ButtonType.OK) {
+                ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(pausedTransaction.getPauseId());
+
+                mainController.setRecaledTransactionLineItems(lineItems);
+
+                // Close the suspended transactions panel
+                Stage stage = (Stage) suspendedTransactionsTable.getScene().getWindow();
+                stage.close();
+            }
+        }
     }
 
 }
