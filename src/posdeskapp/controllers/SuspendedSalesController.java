@@ -34,7 +34,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
-import posdeskapp.models.Product;
 import posdeskapp.utils.DbHelper;
 
 /**
