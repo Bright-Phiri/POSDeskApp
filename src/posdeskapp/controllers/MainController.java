@@ -7,8 +7,6 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -34,8 +32,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -51,8 +47,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -143,7 +137,8 @@ public class MainController implements Initializable {
 
     static {
 
-    };
+    }
+    ;
 
     ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -365,15 +360,14 @@ public class MainController implements Initializable {
             alert.setContentText("Are you sure you want to suspend this transaction?");
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
-                AtomicInteger pausedId = new AtomicInteger();
+                int pausedId = POSHelper.generatePauseId();
                 if (DbHelper.savePausedTransaction(data, pausedId)) {
+                    posdeskapp.utils.Alert alert1 = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Suspend Transaction", "Transaction successfully suspended. Customer Paused ID is " + pausedId);
                     data.clear();
                     POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
                     tenderedAmountTextField.clear();
                     changeLabel.setText("0.00");
-                    Notification notification = new Notification("Information", "Transaction successfully suspended.", 3);
                 }
-
             } else {
                 Notification notification = new Notification("Error", "Failed to suspend transaction.", 3);
             }

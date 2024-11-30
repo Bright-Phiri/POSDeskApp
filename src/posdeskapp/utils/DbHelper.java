@@ -733,7 +733,7 @@ public class DbHelper {
         }
     }
 
-    public static boolean savePausedTransaction(List<LineItem> lineItems, AtomicInteger pausedId) {
+    public static boolean savePausedTransaction(List<LineItem> lineItems, int pausedId) {
         String insertPausedTransactionQuery = "INSERT INTO PausedTransactions (PauseId, Timestamp, Total) VALUES (?, ?, ?)";
         String insertPausedLineItemQuery = "INSERT INTO PausedLineItems (PauseId, ProductCode, Description, UnitPrice, Quantity, TaxRateID, Total, TotalVAT) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -741,7 +741,6 @@ public class DbHelper {
         PreparedStatement pausedLineItemStmt = null;
         Connection connection = null;
 
-        pausedId.set(POSHelper.generatePauseId());
         double total = lineItems.stream().mapToDouble(LineItem::getTotal).sum();
 
         try {
@@ -750,7 +749,7 @@ public class DbHelper {
 
             // Save paused transaction
             pausedTransactionStmt = connection.prepareStatement(insertPausedTransactionQuery);
-            pausedTransactionStmt.setInt(1, pausedId.get());
+            pausedTransactionStmt.setInt(1, pausedId);
             pausedTransactionStmt.setString(2, LocalDate.now().toString());
             pausedTransactionStmt.setDouble(3, total);
             pausedTransactionStmt.executeUpdate();
@@ -758,7 +757,7 @@ public class DbHelper {
             // Save paused line items
             for (LineItem lineItem : lineItems) {
                 pausedLineItemStmt = connection.prepareStatement(insertPausedLineItemQuery);
-                pausedLineItemStmt.setInt(1, pausedId.get());
+                pausedLineItemStmt.setInt(1, pausedId);
                 pausedLineItemStmt.setString(2, lineItem.getProductCode());
                 pausedLineItemStmt.setString(3, lineItem.getDescription());
                 pausedLineItemStmt.setDouble(4, lineItem.getUnitPrice());
@@ -774,7 +773,6 @@ public class DbHelper {
             return true;
         } catch (SQLException e) {
             System.err.println("An error occurred suspending transaction: " + e.getMessage());
-            pausedId.set(0);
             if (connection != null) {
                 try {
                     connection.rollback();
