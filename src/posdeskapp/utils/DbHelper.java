@@ -107,7 +107,6 @@ public class DbHelper {
                         lineItemVAT = POSHelper.extractVATAmount(price, 1, taxRate);
                     }
 
-                    // Format numeric values
                     String formattedPrice = POSHelper.formatValue(price);
                     String formattedLineItemVAT = POSHelper.formatValue(lineItemVAT);
 
@@ -371,36 +370,30 @@ public class DbHelper {
         Connection connection = null;
 
         try {
-            // Establish the connection
             connection = DbConnection.createConnection();
-            connection.setAutoCommit(false);  // Start a transaction
+            connection.setAutoCommit(false);
 
-            // Iterate over each pausedId and perform the delete operations
             for (Integer pausedId : pausedIds) {
-                // Delete from PausedLineItems
                 deleteLineItemsCommand = connection.prepareStatement("DELETE FROM PausedLineItems WHERE PauseId = ?");
                 deleteLineItemsCommand.setInt(1, pausedId);
                 deleteLineItemsCommand.executeUpdate();
 
-                // Delete from PausedTransactions
                 deleteTransactionCommand = connection.prepareStatement("DELETE FROM PausedTransactions WHERE PauseId = ?");
                 deleteTransactionCommand.setInt(1, pausedId);
                 deleteTransactionCommand.executeUpdate();
             }
 
-            // Commit the transaction after all deletions are successful
             connection.commit();
         } catch (SQLException ex) {
             System.err.println("An error occurred while deleting paused transactions: " + ex.getMessage());
             try {
                 if (connection != null) {
-                    connection.rollback();  // Rollback in case of an error
+                    connection.rollback();
                 }
             } catch (SQLException rollbackEx) {
                 System.err.println("Rollback failed: " + rollbackEx.getMessage());
             }
         } finally {
-            // Ensure auto-commit is restored and resources are closed
             try {
                 if (connection != null) {
                     connection.setAutoCommit(true);
@@ -466,24 +459,21 @@ public class DbHelper {
         Connection connection = null;
         PreparedStatement taxRateStmt = null;
         ResultSet taxRateRs = null;
-        double taxRate = 0.0; // Default tax rate if not found or error occurs
+        double taxRate = 0.0;
 
         try {
             connection = DbConnection.createConnection();
             taxRateStmt = connection.prepareStatement(taxRateQuery);
-            taxRateStmt.setString(1, taxRateId); // Set the parameter for the query
+            taxRateStmt.setString(1, taxRateId);
 
-            // Execute the query and get the result
             taxRateRs = taxRateStmt.executeQuery();
             if (taxRateRs.next()) {
-                // Retrieve the tax rate from the result set
                 taxRate = taxRateRs.getDouble("Rate");
             }
 
         } catch (SQLException e) {
             System.err.println(e);
         } finally {
-            // Ensure resources are closed to avoid resource leaks
             try {
                 if (taxRateRs != null) {
                     taxRateRs.close();
@@ -619,7 +609,7 @@ public class DbHelper {
             resultSet = statement.executeQuery();
 
             if (resultSet.next()) {
-                tin = resultSet.getString(1); // Column index starts at 1
+                tin = resultSet.getString(1);
             }
         } catch (SQLException ex) {
             System.err.println("An error occurred while fetching TIN: " + ex.getMessage());
