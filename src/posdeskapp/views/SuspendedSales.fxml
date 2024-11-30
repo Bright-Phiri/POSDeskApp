@@ -16,7 +16,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="795.0" prefWidth="1306.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.SuspendedSalesController">
    <top>
       <VBox alignment="CENTER_LEFT" prefHeight="84.0" prefWidth="1261.0" BorderPane.alignment="CENTER">
@@ -51,7 +50,7 @@
       </VBox>
    </top>
    <center>
-      <TableView fx:id="suspendedTransactionsTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <TableView fx:id="suspendedTransactionsTable" onMouseClicked="#fetchSuspendeTransactionLineItems" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
             <TableColumn fx:id="check" maxWidth="800.0" minWidth="-1.0" prefWidth="20.0" />
           <TableColumn fx:id="pausedIdCol" prefWidth="331.0" text="Paused ID" />

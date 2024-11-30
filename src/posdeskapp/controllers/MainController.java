@@ -7,8 +7,6 @@ package posdeskapp.controllers;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIcon;
-import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -34,8 +32,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -51,8 +47,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -241,21 +235,24 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void viewSuspendedSales(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/SuspendedSales.fxml"));
-            Parent root = loader.load();
-            Scene scene = new Scene(root);
-            Stage stage = new Stage();
-            stage.setScene(scene);
-            stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
-            stage.setTitle("POS");
-            stage.centerOnScreen();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.show();
-        } catch (IOException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private void viewSuspendedSales(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/SuspendedSales.fxml"));
+        Parent root = loader.load();
+
+        // Get the controller for the lookup screen
+        SuspendedSalesController lookupController = loader.getController();
+
+        // Pass the reference of this controller to the lookup controller
+        lookupController.setMainController(this);
+
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
+        stage.setTitle("POS");
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.show();
     }
 
     @FXML
@@ -500,6 +497,10 @@ public class MainController implements Initializable {
             return;
         }
         addProductToTable(product.getProductCode());
+    }
+
+    public void setSelectedLineItem(ObservableList<LineItem> lineItems) {
+        productsTable.setItems(lineItems);
     }
 
     public void setRecalledLineItems(ObservableList<LineItem> lineItems) {

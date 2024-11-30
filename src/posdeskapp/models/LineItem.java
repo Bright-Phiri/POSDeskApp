@@ -139,4 +139,8 @@ public class LineItem {
     public void setTotalVAT(Double totalVAT) {
         this.totalVAT = new SimpleDoubleProperty(totalVAT);
     }
+
+    public void setControlsPane(HBox controlsPane) {
+        this.controlsPane = controlsPane;
+    }   
 }

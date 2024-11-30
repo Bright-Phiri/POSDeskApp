@@ -198,9 +198,7 @@ public class POSHelper {
             Optional<ButtonType> option = alert.showAndWait();
             if (option.get() == ButtonType.OK) {
                 ObservableList<LineItem> lineItems = DbHelper.getLineSuspendedTransactionLineItems(Integer.parseInt(icon1.getId()));
-                for (LineItem lineItem : lineItems) {
-                    System.out.println("test" + lineItem.getDescription());
-                }
+
                 Stage stage = (Stage) icon1.getScene().getWindow();
                 stage.close();
             }
