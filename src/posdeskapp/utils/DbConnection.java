@@ -32,6 +32,7 @@ public class DbConnection {
             // Enable WAL mode
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute("PRAGMA journal_mode=WAL;");
+                stmt.execute("PRAGMA busy_timeout = 5000;");
             }
 
             return conn;
