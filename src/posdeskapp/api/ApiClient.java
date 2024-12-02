@@ -17,6 +17,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import posdeskapp.utils.DbHelper;
+
 /**
  *
  * @author biphiri
@@ -24,15 +26,20 @@ import org.apache.http.util.EntityUtils;
 public class ApiClient {
 
     public static HttpResponseResult pingServer(String bearerToken) {
-        String pingEndpoint = ApiConfig.PING_SERVER;
         String jsonBody = "";
 
-        return sendHttpPostRequest(pingEndpoint, jsonBody, bearerToken);
+        return sendHttpPostRequest(ApiConfig.PING_SERVER, jsonBody);
     }
 
-    public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, String bearerToken) {
+    public static HttpResponseResult submitSalesTransaction(String invoicePayload) {
+
+        return sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload);
+    }
+
+    public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody) {
         int statusCode = -1;
         String responseBody = "";
+        String token = DbHelper.getTerminalJwtToken();
 
         try {
             // Trust all certificates
@@ -60,7 +67,7 @@ public class ApiClient {
 
                 HttpPost postRequest = new HttpPost(requestUri);
                 postRequest.setHeader("Content-Type", "application/json");
-                postRequest.setHeader("Authorization", "Bearer " + bearerToken);
+                postRequest.setHeader("Authorization", "Bearer " + token);
                 postRequest.setEntity(new StringEntity(jsonBody));
 
                 HttpResponse response = client.execute(postRequest);

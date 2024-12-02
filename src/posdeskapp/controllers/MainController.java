@@ -335,7 +335,7 @@ public class MainController implements Initializable {
             Task<HttpResponseResult> task = new Task<HttpResponseResult>() {
                 @Override
                 protected HttpResponseResult call() throws Exception {
-                    return ApiClient.sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload, DbHelper.getTerminalJwtToken());
+                    return ApiClient.submitSalesTransaction(invoicePayload);
                 }
             };
 
