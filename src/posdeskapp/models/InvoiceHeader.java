@@ -5,45 +5,38 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.Expose;
+
 /**
  *
  * @author biphiri
  */
-import java.time.LocalDateTime;
-
 public class InvoiceHeader {
 
-    public  String invoiceNumber;
-    public  LocalDateTime invoiceDateTime;
-    public  String sellerTIN;
-    public  String buyerTIN;
-    public  String buyerAuthorizationCode;
-    public  String siteId;
-    public  int globalConfigVersion;
-    public  int taxpayerConfigVersion;
-    public  int terminalConfigVersion;
-
-    public InvoiceHeader() {
-    }
-
-    
-    public InvoiceHeader(String invoiceNumber, LocalDateTime invoiceDateTime, String sellerTIN, String buyerTIN, String buyerAuthorizationCode, String siteId, int globalConfigVersion, int taxpayerConfigVersion, int terminalConfigVersion) {
-        this.invoiceNumber = invoiceNumber;
-        this.invoiceDateTime = invoiceDateTime;
-        this.sellerTIN = sellerTIN;
-        this.buyerTIN = buyerTIN;
-        this.buyerAuthorizationCode = buyerAuthorizationCode;
-        this.siteId = siteId;
-        this.globalConfigVersion = globalConfigVersion;
-        this.taxpayerConfigVersion = taxpayerConfigVersion;
-        this.terminalConfigVersion = terminalConfigVersion;
-    }
+    @Expose
+    private String invoiceNumber;
+    @Expose
+    private String invoiceDateTime;
+    @Expose
+    private String sellerTIN;
+    @Expose
+    private String buyerTIN;
+    @Expose
+    private String buyerAuthorizationCode;
+    @Expose
+    private String siteId;
+    @Expose
+    private int globalConfigVersion;
+    @Expose
+    private int taxpayerConfigVersion;
+    @Expose
+    private int terminalConfigVersion;
 
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
 
-    public LocalDateTime getInvoiceDateTime() {
+    public String getInvoiceDateTime() {
         return invoiceDateTime;
     }
 
@@ -77,9 +70,9 @@ public class InvoiceHeader {
 
     public void setInvoiceNumber(String invoiceNumber) {
         this.invoiceNumber = invoiceNumber;
-}
+    }
 
-    public void setInvoiceDateTime(LocalDateTime invoiceDateTime) {
+    public void setInvoiceDateTime(String invoiceDateTime) {
         this.invoiceDateTime = invoiceDateTime;
     }
 
@@ -111,4 +104,3 @@ public class InvoiceHeader {
         this.terminalConfigVersion = terminalConfigVersion;
     }
 }
-

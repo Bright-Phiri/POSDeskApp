@@ -5,6 +5,7 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.Expose;
 import java.util.List;
 
 /**
@@ -12,7 +13,11 @@ import java.util.List;
  * @author biphiri
  */
 public class SalesInvoice {
+
+    @Expose
     public InvoiceHeader invoiceHeader;
-    public List<LineItem> invoiceLineItems;
+    @Expose
+    public List<InvoiceLineItem> invoiceLineItems;
+    @Expose
     public InvoiceSummary invoiceSummary;
 }

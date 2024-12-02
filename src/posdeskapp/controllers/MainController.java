@@ -5,11 +5,14 @@
  */
 package posdeskapp.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +56,6 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import posdeskapp.models.InvoiceHeader;
-import posdeskapp.models.InvoiceSummary;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
 import posdeskapp.models.SalesInvoice;
@@ -304,21 +306,35 @@ public class MainController implements Initializable {
             return;
         }
 
+        LocalDateTime now = LocalDateTime.now();
+
+        // Define the desired format
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+        // Format the LocalDateTime
+        String formattedDateTime = now.format(formatter);
         InvoiceHeader invoice = new InvoiceHeader();
         invoice.setInvoiceNumber(UUID.randomUUID().toString());
         invoice.setGlobalConfigVersion(1);
         invoice.setTaxpayerConfigVersion(1);
         invoice.setTerminalConfigVersion(1);
+        invoice.setSiteId("CH");
         invoice.setBuyerTIN("");
         invoice.setSellerTIN(DbHelper.getTaxPayerTIN());
-        invoice.setInvoiceDateTime(LocalDateTime.now());
+        invoice.setInvoiceDateTime(formattedDateTime);
 
         List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
 
         double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
         double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
         SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(invoice, data, invoiceTotal, totalVAT);
-        displayInvoiceData(invoiceRequest);
+
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+
+        String json = gson.toJson(invoiceRequest);
+        System.out.println(json);
         boolean isProcessed = DbHelper.processTransaction(invoice, data,
                 taxBreakdowns, invoiceTotal, totalVAT);
         if (isProcessed) {
@@ -330,48 +346,6 @@ public class MainController implements Initializable {
         } else {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.ERROR, "Transaction", "Failed to completed the transaction");
         }
-    }
-
-    public void displayInvoiceData(SalesInvoice invoiceRequest) {
-        // Display Invoice Header Data
-        InvoiceHeader header = invoiceRequest.invoiceHeader;
-        System.out.println("Invoice Header:");
-        System.out.println("Buyer TIN: " + header.buyerTIN);
-        System.out.println("Site ID: " + header.siteId);
-        System.out.println("Seller TIN: " + header.sellerTIN);
-        System.out.println("Invoice Date/Time: " + header.invoiceDateTime);
-        System.out.println("Invoice Number: " + header.invoiceNumber);
-        System.out.println("Buyer Authorization Code: " + header.buyerAuthorizationCode);
-        System.out.println("Global Config Version: " + header.globalConfigVersion);
-        System.out.println("Taxpayer Config Version: " + header.taxpayerConfigVersion);
-        System.out.println("Terminal Config Version: " + header.terminalConfigVersion);
-
-        // Display Invoice Line Items Data
-        System.out.println("\nInvoice Line Items:");
-        for (LineItem lineItem : invoiceRequest.invoiceLineItems) {
-            System.out.println("Product Code: " + lineItem.getProductCode());
-            System.out.println("Description: " + lineItem.getDescription());
-            System.out.println("Unit Price: " + lineItem.getUnitPrice());
-            System.out.println("Quantity: " + lineItem.getQuantity());
-            System.out.println("Tax Rate ID: " + lineItem.getTaxRateId());
-            System.out.println("Total: " + lineItem.getTotal());
-            System.out.println("Total VAT: " + lineItem.getTotalVAT());
-            System.out.println("---");
-        }
-
-        // Display Invoice Summary Data
-        InvoiceSummary summary = invoiceRequest.invoiceSummary;
-        System.out.println("\nInvoice Summary:");
-        if (summary.taxBreakDown != null) {
-            System.out.println("Tax Breakdown:");
-            for (TaxBreakDown taxBreakDown : summary.taxBreakDown) {
-                // Assuming TaxBreakDown has properties such as tax rate and amount
-                System.out.println("Tax Rate: " + taxBreakDown.getRateId() + ", Amount: " + taxBreakDown.getTaxAmount());
-            }
-        }
-        System.out.println("Invoice Total: " + summary.invoiceTotal);
-        System.out.println("Total VAT: " + summary.invoiceTotal);
-        System.out.println("Offline Signature: " + summary.offlineSignature);
     }
 
     @FXML

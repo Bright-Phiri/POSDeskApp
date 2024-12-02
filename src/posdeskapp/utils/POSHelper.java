@@ -42,6 +42,7 @@ import javafx.stage.StageStyle;
 import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
 import posdeskapp.models.InvoiceHeader;
+import posdeskapp.models.InvoiceLineItem;
 import posdeskapp.models.InvoiceSummary;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
@@ -99,27 +100,45 @@ public class POSHelper {
     public static SalesInvoice createInvoiceRequest(InvoiceHeader invoice, List<LineItem> lineItems, double total, double totalVAT) {
         SalesInvoice invoiceRequest = new SalesInvoice();
 
-        // Set InvoiceHeader details
-        invoiceRequest.invoiceHeader = new InvoiceHeader();
-        invoiceRequest.invoiceHeader.buyerTIN = invoice.buyerTIN;
-        invoiceRequest.invoiceHeader.siteId = "CH";
-        invoiceRequest.invoiceHeader.sellerTIN = invoice.sellerTIN;
-        invoiceRequest.invoiceHeader.invoiceDateTime = LocalDateTime.now();
-        invoiceRequest.invoiceHeader.invoiceNumber = invoice.invoiceNumber;
-        invoiceRequest.invoiceHeader.buyerAuthorizationCode = invoice.buyerAuthorizationCode;
-        invoiceRequest.invoiceHeader.globalConfigVersion = invoice.globalConfigVersion;
-        invoiceRequest.invoiceHeader.taxpayerConfigVersion = invoice.taxpayerConfigVersion;
-        invoiceRequest.invoiceHeader.terminalConfigVersion = invoice.terminalConfigVersion;
+        InvoiceHeader invoiceHeader = new InvoiceHeader();
+        invoiceHeader.setBuyerTIN(invoice.getBuyerTIN());
+        invoiceHeader.setSiteId(invoice.getSiteId());
+        invoiceHeader.setSellerTIN(invoice.getSellerTIN());
+        invoiceHeader.setInvoiceDateTime(invoice.getInvoiceDateTime());
+        invoiceHeader.setInvoiceNumber(invoice.getInvoiceNumber());
+        invoiceHeader.setBuyerAuthorizationCode("");
+        invoiceHeader.setGlobalConfigVersion(1);
+        invoiceHeader.setTaxpayerConfigVersion(1);
+        invoiceHeader.setTerminalConfigVersion(1);
+
+        invoiceRequest.invoiceHeader = invoiceHeader;
 
         // Set InvoiceLineItems
-        invoiceRequest.invoiceLineItems = lineItems;
+        List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
+        for (LineItem invoiceLineItem : lineItems) {
+            InvoiceLineItem lineItem = new InvoiceLineItem();
+            lineItem.setId(0); // Assuming you're resetting the ID to 0
+            lineItem.setProductCode(invoiceLineItem.getProductCode());
+            lineItem.setDescription(invoiceLineItem.getDescription());
+            lineItem.setUnitPrice(invoiceLineItem.getUnitPrice());
+            lineItem.setQuantity(invoiceLineItem.getQuantity());
+            lineItem.setDiscount(invoiceLineItem.getDiscount());
+            lineItem.setTotal(invoiceLineItem.getTotal());
+            lineItem.setTotalVAT(invoiceLineItem.getTotalVAT());
+            lineItem.setTaxRateId(invoiceLineItem.getTaxRateId());
+            invoiceLineItems.add(lineItem);
+        }
+
+        invoiceRequest.invoiceLineItems = invoiceLineItems;
+
+        InvoiceSummary invoiceSummary = new InvoiceSummary();
+        invoiceSummary.setInvoiceTotal(total);
+        invoiceSummary.setTotalVAT(totalVAT);
+        invoiceSummary.setTaxBreakDown(generateTaxSummary(lineItems));
+        invoiceSummary.setOfflineSignature("");
 
         // Set InvoiceSummary details
-        invoiceRequest.invoiceSummary = new InvoiceSummary();
-        invoiceRequest.invoiceSummary.taxBreakDown = generateTaxSummary(lineItems);
-        invoiceRequest.invoiceSummary.invoiceTotal = total;
-        invoiceRequest.invoiceSummary.offlineSignature = "";
-        invoiceRequest.invoiceSummary.totalVAT = totalVAT;
+        invoiceRequest.invoiceSummary = invoiceSummary;
 
         return invoiceRequest;
     }

@@ -5,16 +5,19 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.Expose;
+
 /**
  *
  * @author biphiri
  */
 public class TaxBreakDown {
 
+    @Expose
     private final String rateId;
-
+    @Expose
     private final double taxableAmount;
-
+    @Expose
     private final double taxAmount;
 
     public TaxBreakDown(String rateId, double taxableAmount, double taxAmount) {
@@ -34,4 +37,5 @@ public class TaxBreakDown {
     public double getTaxAmount() {
         return taxAmount;
     }
+
 }

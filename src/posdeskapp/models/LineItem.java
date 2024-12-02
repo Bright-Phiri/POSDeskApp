@@ -16,7 +16,6 @@ import posdeskapp.utils.POSHelper;
  * @author biphiri
  */
 public class LineItem {
-
     private SimpleIntegerProperty id;
     private SimpleStringProperty productCode;
     private SimpleStringProperty description;
