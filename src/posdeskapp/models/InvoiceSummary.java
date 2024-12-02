@@ -15,7 +15,7 @@ import java.util.List;
 public class InvoiceSummary {
 
     @Expose
-    private List<TaxBreakDown> taxBreakDown;
+    private List<TaxBreakDown> TaxBreakDown;
     @Expose
     private double totalVAT;
     @Expose
@@ -24,14 +24,14 @@ public class InvoiceSummary {
     private double invoiceTotal;
 
     public InvoiceSummary(List<TaxBreakDown> taxBreakDown, double totalVAT, String offlineSignature, double invoiceTotal) {
-        this.taxBreakDown = taxBreakDown;
+        this.TaxBreakDown = taxBreakDown;
         this.totalVAT = totalVAT;
         this.offlineSignature = offlineSignature;
         this.invoiceTotal = invoiceTotal;
     }
 
     public List<TaxBreakDown> getTaxBreakDown() {
-        return taxBreakDown;
+        return TaxBreakDown;
     }
 
     public double getTotalVAT() {

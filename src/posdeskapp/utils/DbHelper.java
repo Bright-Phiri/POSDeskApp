@@ -525,7 +525,7 @@ public class DbHelper {
         }
         return taxRate;
     }
-    
+
     public static String getTaxpayerSiteId() {
         String siteId = "";
         Connection connection = null;
@@ -646,8 +646,8 @@ public class DbHelper {
             connection = DbConnection.createConnection();
             statement = connection.prepareStatement(updateQuery);
 
-            statement.setString(1, invoiceNumber);
-            statement.setInt(2, 1);
+            statement.setInt(1, 1);
+            statement.setString(2, invoiceNumber);
 
             statement.executeUpdate();
 

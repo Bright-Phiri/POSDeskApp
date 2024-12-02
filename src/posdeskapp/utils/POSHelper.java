@@ -13,6 +13,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -74,8 +76,10 @@ public class POSHelper {
     }
 
     public static String formatDate(LocalDateTime date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-        String formattedDateTime = date.format(formatter);
+        ZonedDateTime utcDateTime = date.atZone(ZoneOffset.UTC);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        String formattedDateTime = utcDateTime.format(formatter);
         return formattedDateTime;
     }
 
@@ -106,9 +110,9 @@ public class POSHelper {
     public static SalesInvoice createInvoiceRequest(InvoiceHeader invoice, List<LineItem> lineItems, double total, double totalVAT) {
         SalesInvoice invoiceRequest = new SalesInvoice();
 
-        InvoiceHeader invoiceHeader = new InvoiceHeader(invoice.getBuyerTIN(), invoice.getInvoiceDateTime(), invoice.getSellerTIN(), invoice.getBuyerTIN(), invoice.getBuyerAuthorizationCode(), invoice.getSiteId(), invoice.getGlobalConfigVersion(), invoice.getTaxpayerConfigVersion(), invoice.getTerminalConfigVersion());
+        InvoiceHeader invoiceHeader = new InvoiceHeader(invoice.getInvoiceNumber(), invoice.getInvoiceDateTime(), invoice.getSellerTIN(), invoice.getBuyerTIN(), invoice.getBuyerAuthorizationCode(), invoice.getSiteId(), invoice.getGlobalConfigVersion(), invoice.getTaxpayerConfigVersion(), invoice.getTerminalConfigVersion());
 
-        invoiceRequest.invoiceHeader = invoiceHeader;
+        invoiceRequest.InvoiceHeader = invoiceHeader;
 
         List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
         lineItems.stream().map((invoiceLineItem) -> {
@@ -118,11 +122,11 @@ public class POSHelper {
             invoiceLineItems.add(lineItem);
         });
 
-        invoiceRequest.invoiceLineItems = invoiceLineItems;
+        invoiceRequest.InvoiceLineItems = invoiceLineItems;
 
         InvoiceSummary invoiceSummary = new InvoiceSummary(generateTaxSummary(lineItems), totalVAT, "", total);
 
-        invoiceRequest.invoiceSummary = invoiceSummary;
+        invoiceRequest.InvoiceSummary = invoiceSummary;
 
         return invoiceRequest;
     }

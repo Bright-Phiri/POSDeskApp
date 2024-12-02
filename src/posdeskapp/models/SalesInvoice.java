@@ -15,9 +15,9 @@ import java.util.List;
 public class SalesInvoice {
 
     @Expose
-    public InvoiceHeader invoiceHeader;
+    public InvoiceHeader InvoiceHeader;
     @Expose
-    public List<InvoiceLineItem> invoiceLineItems;
+    public List<InvoiceLineItem> InvoiceLineItems;
     @Expose
-    public InvoiceSummary invoiceSummary;
+    public InvoiceSummary InvoiceSummary;
 }
