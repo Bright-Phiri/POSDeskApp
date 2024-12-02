@@ -32,6 +32,18 @@ public class InvoiceHeader {
     @Expose
     private int terminalConfigVersion;
 
+    public InvoiceHeader(String invoiceNumber, String invoiceDateTime, String sellerTIN, String buyerTIN, String buyerAuthorizationCode, String siteId, int globalConfigVersion, int taxpayerConfigVersion, int terminalConfigVersion) {
+        this.invoiceNumber = invoiceNumber;
+        this.invoiceDateTime = invoiceDateTime;
+        this.sellerTIN = sellerTIN;
+        this.buyerTIN = buyerTIN;
+        this.buyerAuthorizationCode = buyerAuthorizationCode;
+        this.siteId = siteId;
+        this.globalConfigVersion = globalConfigVersion;
+        this.taxpayerConfigVersion = taxpayerConfigVersion;
+        this.terminalConfigVersion = terminalConfigVersion;
+    }
+
     public String getInvoiceNumber() {
         return invoiceNumber;
     }
@@ -66,41 +78,5 @@ public class InvoiceHeader {
 
     public int getTerminalConfigVersion() {
         return terminalConfigVersion;
-    }
-
-    public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = invoiceNumber;
-    }
-
-    public void setInvoiceDateTime(String invoiceDateTime) {
-        this.invoiceDateTime = invoiceDateTime;
-    }
-
-    public void setSellerTIN(String sellerTIN) {
-        this.sellerTIN = sellerTIN;
-    }
-
-    public void setBuyerTIN(String buyerTIN) {
-        this.buyerTIN = buyerTIN;
-    }
-
-    public void setBuyerAuthorizationCode(String buyerAuthorizationCode) {
-        this.buyerAuthorizationCode = buyerAuthorizationCode;
-    }
-
-    public void setSiteId(String siteId) {
-        this.siteId = siteId;
-    }
-
-    public void setGlobalConfigVersion(int globalConfigVersion) {
-        this.globalConfigVersion = globalConfigVersion;
-    }
-
-    public void setTaxpayerConfigVersion(int taxpayerConfigVersion) {
-        this.taxpayerConfigVersion = taxpayerConfigVersion;
-    }
-
-    public void setTerminalConfigVersion(int terminalConfigVersion) {
-        this.terminalConfigVersion = terminalConfigVersion;
     }
 }

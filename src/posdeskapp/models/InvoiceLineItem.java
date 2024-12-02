@@ -32,6 +32,18 @@ public class InvoiceLineItem {
     @Expose
     private String taxRateId;
 
+    public InvoiceLineItem(int id, String productCode, String description, double unitPrice, double quantity, double discount, double total, double totalVAT, String taxRateId) {
+        this.id = id;
+        this.productCode = productCode;
+        this.description = description;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
+        this.discount = discount;
+        this.total = total;
+        this.totalVAT = totalVAT;
+        this.taxRateId = taxRateId;
+    }
+
     public int getId() {
         return id;
     }
@@ -67,41 +79,4 @@ public class InvoiceLineItem {
     public String getTaxRateId() {
         return taxRateId;
     }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setProductCode(String productCode) {
-        this.productCode = productCode;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setUnitPrice(double unitPrice) {
-        this.unitPrice = unitPrice;
-    }
-
-    public void setQuantity(double quantity) {
-        this.quantity = quantity;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public void setTotalVAT(double totalVAT) {
-        this.totalVAT = totalVAT;
-    }
-
-    public void setTaxRateId(String taxRateId) {
-        this.taxRateId = taxRateId;
-    }
-
 }

@@ -13,7 +13,6 @@ import java.sql.Savepoint;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -155,6 +154,42 @@ public class DbHelper {
         }
 
         return null;
+    }
+
+    public static String getTerminalJwtToken() {
+        String jwtToken = "";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            String query = "SELECT JwtToken FROM TerminalKeys LIMIT 1";
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                jwtToken = resultSet.getString("JwtToken");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error fetching terminal info: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error closing resources: " + e.getMessage());
+            }
+        }
+
+        return jwtToken;
     }
 
     public static List<LineItem> getSuspendedTransactionLineItems(int pauseId) {

@@ -73,6 +73,12 @@ public class POSHelper {
         return new String(Base64.getDecoder().decode(cypherText), StandardCharsets.UTF_8);
     }
 
+    public static String formatDate(LocalDateTime date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+        String formattedDateTime = date.format(formatter);
+        return formattedDateTime;
+    }
+
     public void showUserStage(Node node, String fxmlUrl) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlUrl));
@@ -100,44 +106,22 @@ public class POSHelper {
     public static SalesInvoice createInvoiceRequest(InvoiceHeader invoice, List<LineItem> lineItems, double total, double totalVAT) {
         SalesInvoice invoiceRequest = new SalesInvoice();
 
-        InvoiceHeader invoiceHeader = new InvoiceHeader();
-        invoiceHeader.setBuyerTIN(invoice.getBuyerTIN());
-        invoiceHeader.setSiteId(invoice.getSiteId());
-        invoiceHeader.setSellerTIN(invoice.getSellerTIN());
-        invoiceHeader.setInvoiceDateTime(invoice.getInvoiceDateTime());
-        invoiceHeader.setInvoiceNumber(invoice.getInvoiceNumber());
-        invoiceHeader.setBuyerAuthorizationCode("");
-        invoiceHeader.setGlobalConfigVersion(1);
-        invoiceHeader.setTaxpayerConfigVersion(1);
-        invoiceHeader.setTerminalConfigVersion(1);
+        InvoiceHeader invoiceHeader = new InvoiceHeader(invoice.getBuyerTIN(), invoice.getInvoiceDateTime(), invoice.getSellerTIN(), invoice.getBuyerTIN(), invoice.getBuyerAuthorizationCode(), invoice.getSiteId(), invoice.getGlobalConfigVersion(), invoice.getTaxpayerConfigVersion(), invoice.getTerminalConfigVersion());
 
         invoiceRequest.invoiceHeader = invoiceHeader;
 
-        // Set InvoiceLineItems
         List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
-        for (LineItem invoiceLineItem : lineItems) {
-            InvoiceLineItem lineItem = new InvoiceLineItem();
-            lineItem.setId(0); // Assuming you're resetting the ID to 0
-            lineItem.setProductCode(invoiceLineItem.getProductCode());
-            lineItem.setDescription(invoiceLineItem.getDescription());
-            lineItem.setUnitPrice(invoiceLineItem.getUnitPrice());
-            lineItem.setQuantity(invoiceLineItem.getQuantity());
-            lineItem.setDiscount(invoiceLineItem.getDiscount());
-            lineItem.setTotal(invoiceLineItem.getTotal());
-            lineItem.setTotalVAT(invoiceLineItem.getTotalVAT());
-            lineItem.setTaxRateId(invoiceLineItem.getTaxRateId());
+        lineItems.stream().map((invoiceLineItem) -> {
+            InvoiceLineItem lineItem = new InvoiceLineItem(0, invoiceLineItem.getProductCode(), invoiceLineItem.getDescription(), invoiceLineItem.getUnitPrice(), invoiceLineItem.getQuantity(), invoiceLineItem.getDiscount(), invoiceLineItem.getTotal(), invoiceLineItem.getTotalVAT(), invoiceLineItem.getTaxRateId());
+            return lineItem;
+        }).forEachOrdered((lineItem) -> {
             invoiceLineItems.add(lineItem);
-        }
+        });
 
         invoiceRequest.invoiceLineItems = invoiceLineItems;
 
-        InvoiceSummary invoiceSummary = new InvoiceSummary();
-        invoiceSummary.setInvoiceTotal(total);
-        invoiceSummary.setTotalVAT(totalVAT);
-        invoiceSummary.setTaxBreakDown(generateTaxSummary(lineItems));
-        invoiceSummary.setOfflineSignature("");
+        InvoiceSummary invoiceSummary = new InvoiceSummary(generateTaxSummary(lineItems), totalVAT, "", total);
 
-        // Set InvoiceSummary details
         invoiceRequest.invoiceSummary = invoiceSummary;
 
         return invoiceRequest;

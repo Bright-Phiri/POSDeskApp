@@ -23,6 +23,13 @@ public class InvoiceSummary {
     @Expose
     private double invoiceTotal;
 
+    public InvoiceSummary(List<TaxBreakDown> taxBreakDown, double totalVAT, String offlineSignature, double invoiceTotal) {
+        this.taxBreakDown = taxBreakDown;
+        this.totalVAT = totalVAT;
+        this.offlineSignature = offlineSignature;
+        this.invoiceTotal = invoiceTotal;
+    }
+
     public List<TaxBreakDown> getTaxBreakDown() {
         return taxBreakDown;
     }
@@ -37,21 +44,5 @@ public class InvoiceSummary {
 
     public double getInvoiceTotal() {
         return invoiceTotal;
-    }
-
-    public void setTaxBreakDown(List<TaxBreakDown> taxBreakDown) {
-        this.taxBreakDown = taxBreakDown;
-    }
-
-    public void setTotalVAT(double totalVAT) {
-        this.totalVAT = totalVAT;
-    }
-
-    public void setOfflineSignature(String offlineSignature) {
-        this.offlineSignature = offlineSignature;
-    }
-
-    public void setInvoiceTotal(double invoiceTotal) {
-        this.invoiceTotal = invoiceTotal;
     }
 }

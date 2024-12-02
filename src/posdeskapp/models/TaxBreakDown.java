@@ -14,11 +14,11 @@ import com.google.gson.annotations.Expose;
 public class TaxBreakDown {
 
     @Expose
-    private final String rateId;
+    private String rateId;
     @Expose
-    private final double taxableAmount;
+    private double taxableAmount;
     @Expose
-    private final double taxAmount;
+    private double taxAmount;
 
     public TaxBreakDown(String rateId, double taxableAmount, double taxAmount) {
         this.rateId = rateId;
@@ -37,5 +37,4 @@ public class TaxBreakDown {
     public double getTaxAmount() {
         return taxAmount;
     }
-
 }

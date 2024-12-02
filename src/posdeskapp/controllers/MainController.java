@@ -12,7 +12,6 @@ import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -307,36 +306,23 @@ public class MainController implements Initializable {
         }
 
         LocalDateTime now = LocalDateTime.now();
-
-        // Define the desired format
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
-
-        // Format the LocalDateTime
-        String formattedDateTime = now.format(formatter);
-        InvoiceHeader invoice = new InvoiceHeader();
-        invoice.setInvoiceNumber(UUID.randomUUID().toString());
-        invoice.setGlobalConfigVersion(1);
-        invoice.setTaxpayerConfigVersion(1);
-        invoice.setTerminalConfigVersion(1);
-        invoice.setSiteId("CH");
-        invoice.setBuyerTIN("");
-        invoice.setSellerTIN(DbHelper.getTaxPayerTIN());
-        invoice.setInvoiceDateTime(formattedDateTime);
-
+        String invoiceDate = POSHelper.formatDate(now);
+      
+        InvoiceHeader invoice = new InvoiceHeader(UUID.randomUUID().toString(), invoiceDate , DbHelper.getTaxPayerTIN(), buyerTINTextField.getText(), "", "CH", 1, 1, 1);
+        
         List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
 
         double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
         double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
+        
         SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(invoice, data, invoiceTotal, totalVAT);
 
-        Gson gson = new GsonBuilder()
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        String json = gson.toJson(invoiceRequest);
-        System.out.println(json);
-        boolean isProcessed = DbHelper.processTransaction(invoice, data,
-                taxBreakdowns, invoiceTotal, totalVAT);
+        String invoicePayload = gson.toJson(invoiceRequest);
+ 
+        boolean isProcessed = DbHelper.processTransaction(invoice, data, taxBreakdowns, invoiceTotal, totalVAT);
+    
         if (isProcessed) {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Transaction", "Transaction completed successfully");
             data.clear();
