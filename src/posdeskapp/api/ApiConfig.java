@@ -9,7 +9,6 @@ package posdeskapp.api;
  *
  * @author biphiri
  */
-// src/com/yourapp/api/ApiConfig.java
 public class ApiConfig {
 
     public static final String BASE_URL = "https://dev-eis-api.mra.mw/api/v1/";
