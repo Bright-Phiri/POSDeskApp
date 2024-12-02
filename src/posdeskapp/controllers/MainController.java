@@ -336,6 +336,7 @@ public class MainController implements Initializable {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.ERROR, "Transaction", "Failed to completed the transaction");
         }
     }
+    
 
     @FXML
     private void voidTransaction(ActionEvent event) {
@@ -383,6 +384,7 @@ public class MainController implements Initializable {
         }
         searchProductTextField.requestFocus();
     }
+    
 
     @FXML
     private void searchLineItem(KeyEvent event) {
