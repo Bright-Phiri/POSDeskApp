@@ -10,12 +10,12 @@ package posdeskapp.api;
  * @author biphiri
  */
 // src/com/yourapp/api/ApiConfig.java
-
 public class ApiConfig {
-    public static final String BASE_URL = "https://localhost:7162/api/v1";
 
-    // sales endpoints
-    public static final String SUBMIT_SALES_TRANSACTION = BASE_URL + "/sales/submit-sales-transaction";
-    public static final String GET_INVOICE_STATUS = BASE_URL + "/sales/get-invoice-status";
+    public static final String BASE_URL = "https://dev-eis-api.mra.mw/api/v1/";
+
+    //End-points
+    public static final String SUBMIT_SALES_TRANSACTION = BASE_URL + "sales/submit-sales-transaction";
+    public static final String GET_INVOICE_STATUS = BASE_URL + "sales/get-invoice-status";
+    public static final String PING_SERVER = "utilities/ping";
 }
-

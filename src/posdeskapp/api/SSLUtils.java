@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package posdeskapp.utils;
+package posdeskapp.api;
 
 import java.security.cert.X509Certificate;
 import javax.net.ssl.HostnameVerifier;

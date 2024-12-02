@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package posdeskapp.utils;
+package posdeskapp.api;
 
 import java.net.URI;
 import java.security.cert.X509Certificate;
@@ -17,13 +17,20 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import posdeskapp.models.HttpResponseResult;
+import posdeskapp.api.ApiConfig;
 
 /**
  *
  * @author biphiri
  */
-public class HttpClientHelper {
+public class ApiClient {
+
+    public static HttpResponseResult pingServer(String bearerToken) {
+        String pingEndpoint = ApiConfig.PING_SERVER;
+        String jsonBody = "";
+
+        return sendHttpPostRequest(pingEndpoint, jsonBody, bearerToken);
+    }
 
     public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, String bearerToken) {
         int statusCode = -1;

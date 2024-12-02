@@ -56,8 +56,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 import posdeskapp.api.ApiConfig;
-
-import posdeskapp.models.HttpResponseResult;
+import posdeskapp.api.HttpResponseResult;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.Product;
@@ -65,7 +64,7 @@ import posdeskapp.models.SalesInvoice;
 import posdeskapp.models.TaxBreakDown;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.DbHelper;
-import posdeskapp.utils.HttpClientHelper;
+import posdeskapp.api.ApiClient;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
@@ -336,7 +335,7 @@ public class MainController implements Initializable {
             Task<HttpResponseResult> task = new Task<HttpResponseResult>() {
                 @Override
                 protected HttpResponseResult call() throws Exception {
-                    return HttpClientHelper.sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload, DbHelper.getTerminalJwtToken());
+                    return ApiClient.sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload, DbHelper.getTerminalJwtToken());
                 }
             };
 
@@ -349,15 +348,12 @@ public class MainController implements Initializable {
                     productsTable.refresh();
                     tenderedAmountTextField.clear();
                 } else {
+                    // Offline mode
                     data.clear();
                     POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
                     productsTable.refresh();
                     tenderedAmountTextField.clear();
                 }
-            });
-
-            task.setOnFailed(e -> {
-
             });
 
             new Thread(task).start();
