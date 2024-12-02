@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="532.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.TerminalActivationController">
+   <children>
+      <HBox alignment="TOP_RIGHT" prefHeight="33.0" prefWidth="386.0">
+         <children>
+            <FontAwesomeIconView fx:id="closeApp" glyphName="CLOSE" onMouseClicked="#closeApp" size="20">
+               <HBox.margin>
+                  <Insets right="10.0" top="10.0" />
+               </HBox.margin>
+            </FontAwesomeIconView>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" spacing="5.0">
+         <children>
+            <ImageView fitHeight="69.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/point-of-sale-icon.png" />
+               </image>
+            </ImageView>
+         </children>
+         <VBox.margin>
+            <Insets top="40.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Terminal Activation">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Text>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="32.0" prefWidth="386.0">
+         <children>
+            <Text text="Enter the Terminal Activation Code (TAC) provided by the MRA EIS Portal after completing the terminal acquisition process." wrappingWidth="400.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+         <VBox.margin>
+            <Insets top="20.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="32.0" prefWidth="386.0">
+         <children>
+            <JFXTextField fx:id="terminalActivationCode" focusColor="#0a0a0a" labelFloat="true" onKeyReleased="#handleTerminalActivation" prefHeight="54.0" prefWidth="389.0" promptText="Enter Terminal Activation Code">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </JFXTextField>
+            <FontAwesomeIconView fill="#b5bac6" glyphName="KEY" size="20">
+               <HBox.margin>
+                  <Insets left="-20.0" />
+               </HBox.margin>
+            </FontAwesomeIconView>
+         </children>
+         <VBox.margin>
+            <Insets top="40.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="57.0" prefWidth="386.0">
+         <VBox.margin>
+            <Insets top="30.0" />
+         </VBox.margin>
+         <children>
+            <JFXButton fx:id="activateButton" onAction="#activateTerminal" prefHeight="50.0" prefWidth="395.0" text="Activate Terminal">
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="57.0" prefWidth="386.0">
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+         <children>
+            <Text fx:id="activationStatus" text="" visible="false">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+   </children>
+</VBox>

@@ -91,6 +91,16 @@ and open the template in the editor.
     -fx-background-color: #72b2ff; /* Brighter blue */
 }
 
+#activateButton{
+     -fx-background-color: #599fff; /* Light blue */
+    -fx-text-fill: #ffffff;
+}
+
+/* Hover effect: brighter blue when hovering */
+#activateButton:hover {
+    -fx-background-color: #72b2ff; /* Brighter blue */
+}
+
 .table-row-cell:hover:filled {
     -fx-background-color: rgba(0,0,0,0.1);
     -fx-text-fill: black;          
