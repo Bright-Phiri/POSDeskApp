@@ -525,6 +525,42 @@ public class DbHelper {
         }
         return taxRate;
     }
+    
+    public static String getTaxpayerSiteId() {
+        String siteId = "";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            String query = "SELECT SiteId FROM TerminalSite LIMIT 1";
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                siteId = resultSet.getString("SiteId");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error fetching taxpayer SiteID: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing database resources: " + ex.getMessage());
+            }
+        }
+
+        return siteId;
+    }
 
     public static String getTerminalLabel() {
         String terminalLabel = null;

@@ -307,22 +307,25 @@ public class MainController implements Initializable {
 
         LocalDateTime now = LocalDateTime.now();
         String invoiceDate = POSHelper.formatDate(now);
-      
-        InvoiceHeader invoice = new InvoiceHeader(UUID.randomUUID().toString(), invoiceDate , DbHelper.getTaxPayerTIN(), buyerTINTextField.getText(), "", "CH", 1, 1, 1);
-        
+
+        String terminalSite = DbHelper.getTaxpayerSiteId();
+        String sellerTIN = DbHelper.getTaxPayerTIN();
+
+        InvoiceHeader invoice = new InvoiceHeader(UUID.randomUUID().toString(), invoiceDate, sellerTIN, buyerTINTextField.getText(), "", terminalSite, 1, 1, 1);
+
         List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
 
         double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
         double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
-        
+
         SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(invoice, data, invoiceTotal, totalVAT);
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
         String invoicePayload = gson.toJson(invoiceRequest);
- 
+
         boolean isProcessed = DbHelper.processTransaction(invoice, data, taxBreakdowns, invoiceTotal, totalVAT);
-    
+
         if (isProcessed) {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Transaction", "Transaction completed successfully");
             data.clear();
