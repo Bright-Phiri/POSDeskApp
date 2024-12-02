@@ -17,4 +17,6 @@ public class ApiConfig {
     public static final String SUBMIT_SALES_TRANSACTION = BASE_URL + "sales/submit-sales-transaction";
     public static final String GET_INVOICE_STATUS = BASE_URL + "sales/get-invoice-status";
     public static final String PING_SERVER = "utilities/ping";
+    public static final String ACTIVATE_TERMINAL = "onboarding/activate-terminal";
+    public static final String CONFIRM_TERMINAL_ACTIVATION = "onboarding/terminal-activated-confirmation";
 }
