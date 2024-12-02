@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import posdeskapp.utils.DbHelper;
 
 /**
  * FXML Controller class
@@ -39,6 +40,7 @@ public class LoginController implements Initializable {
 
     /**
      * Initializes the controller class.
+     *
      * @param url
      * @param rb
      */
@@ -46,8 +48,13 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         root = rootPane;
         try {
-            VBox box = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
-            rootPane.setRight(box);
+            if (DbHelper.doesTerminalKeyExist()) {
+                VBox loginForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
+                rootPane.setRight(loginForm);
+            } else {
+                VBox terminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/TerminalActivation.fxml"));
+                rootPane.setRight(terminalActivationForm);
+            }
         } catch (IOException ex) {
             Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,7 +75,7 @@ public class LoginController implements Initializable {
         scheduledService.setDelay(Duration.ONE);
         scheduledService.setRestartOnFailure(true);
         scheduledService.setPeriod(Duration.seconds(8));
-        
+
         Platform.runLater(() -> {
             scheduledService.start();
         });
@@ -84,7 +91,7 @@ public class LoginController implements Initializable {
 
         String image = null;
         int number = 1 + (int) (Math.random() * 6);
-        
+
         switch (number) {
             case 1: {
                 image = image1;
@@ -111,12 +118,12 @@ public class LoginController implements Initializable {
                 break;
             }
         }
-        
+
         FadeTransition fadeTransition = new FadeTransition(Duration.seconds(3), imageView);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
         fadeTransition.play();
-        
+
         imageView.setImage(new Image("/posdeskapp/images/" + image));
     }
 
