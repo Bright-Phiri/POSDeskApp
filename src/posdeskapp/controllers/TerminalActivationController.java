@@ -56,7 +56,7 @@ public class TerminalActivationController implements Initializable {
 
     @FXML
     private void closeApp(MouseEvent event) {
-        Platform.exit();
+        javafx.application.Platform.exit();
         System.exit(0);
     }
 
@@ -78,15 +78,15 @@ public class TerminalActivationController implements Initializable {
                                 terminalEnvironment.getOsBuild(),
                                 terminalEnvironment.getMacAddressValue()
                         ),
-                        new POS("uwiueiewoeoe", "MRA_POINTOFSALE_V1")
+                        new POS("tumbativ1pos", "TUMBATI_POS__V1")
                 )
         );
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-        String terminalActivationPayload = gson.toJson(terminalActivationRequest);
+        String unActivteTerminalPayload = gson.toJson(terminalActivationRequest);
 
-        System.out.println(terminalActivationRequest);
+        System.out.println(unActivteTerminalPayload);
     }
 
     @FXML

@@ -36,6 +36,11 @@ public class ApiClient {
         return sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload);
     }
 
+    public static HttpResponseResult activateTerminal(String unActivteTerminalPayload) {
+
+        return sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivteTerminalPayload);
+    }
+
     public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody) {
         int statusCode = -1;
         String responseBody = "";
