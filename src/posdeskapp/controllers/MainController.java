@@ -7,9 +7,11 @@ package posdeskapp.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -65,6 +67,8 @@ import posdeskapp.models.TaxBreakDown;
 import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.DbHelper;
 import posdeskapp.api.ApiClient;
+import posdeskapp.api.ApiResponse;
+import posdeskapp.api.InvoiceResponse;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
@@ -342,7 +346,11 @@ public class MainController implements Initializable {
             task.setOnSucceeded(e -> {
                 HttpResponseResult result = task.getValue();
                 if (result.getStatusCode() == 200) {
+                    Gson gSon = new Gson();
+                    Type apiResponseType = new TypeToken<ApiResponse<InvoiceResponse>>() {}.getType();
+                    ApiResponse<InvoiceResponse> apiResponse = gSon.fromJson(result.getResponseBody(), apiResponseType);
                     DbHelper.markInvoiceAsProcessed(invoice.getInvoiceNumber());
+                    // Generate receipt with validation URL as QR code
                     data.clear();
                     POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
                     productsTable.refresh();
