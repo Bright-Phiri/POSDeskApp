@@ -30,12 +30,20 @@ import posdeskapp.api.ApiConfig;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.HttpResponseResult;
 import posdeskapp.api.TerminalActivationResponse;
+import posdeskapp.models.ActivatedTerminal;
+import posdeskapp.models.Configuration;
 import posdeskapp.models.POS;
 import posdeskapp.models.Platform;
+import posdeskapp.models.TaxConfiguration;
+import posdeskapp.models.TaxRate;
+import posdeskapp.models.TaxpayerConfiguration;
+import posdeskapp.models.TerminalConfiguration;
+import posdeskapp.models.TerminalCredentials;
 import posdeskapp.models.TerminalEnvironment;
 import posdeskapp.models.TerminalRuntimeEnvironment;
 import posdeskapp.models.UnActivatedTerminal;
 import posdeskapp.utils.Alert;
+import posdeskapp.utils.DbHelper;
 
 /**
  * FXML Controller class
@@ -97,7 +105,7 @@ public class TerminalActivationController implements Initializable {
         String unActivatedTerminalPayload = gson.toJson(terminalActivationRequest);
 
         HttpResponseResult httpResponseResult = ApiClient.sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivatedTerminalPayload);
-
+        System.out.println(httpResponseResult.getResponseBody());
         if (httpResponseResult.getStatusCode() == 200) {
             processApiResponse(httpResponseResult.getResponseBody());
         } else {
@@ -121,12 +129,25 @@ public class TerminalActivationController implements Initializable {
 
         switch (apiResponse.getStatusCode()) {
             case 1:
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                alert.setHeaderText(null);
-                alert.setContentText("Confirm terminal activation");
-                Optional<ButtonType> option = alert.showAndWait();
-                if (option.get() == ButtonType.OK) {
-                    // Confirm Terminal Activation and Download inventory
+                Configuration configuration = apiResponse.getData().getConfiguration();
+                TerminalConfiguration terminalConfiguration = configuration.getTerminalConfiguration();
+                TaxpayerConfiguration taxpayerConfiguration = configuration.getTaxpayerConfiguration();
+                TaxConfiguration globalConfiguration = configuration.getGlobalConfiguration();
+                ActivatedTerminal activatedTerminal = apiResponse.getData().getActivatedTerminal();
+                TerminalCredentials credentials = apiResponse.getData().getActivatedTerminal().getTerminalCredentials();
+
+                boolean isSaved = DbHelper.saveConfigurationDetails(terminalConfiguration, taxpayerConfiguration, globalConfiguration, activatedTerminal, credentials);
+
+                if (isSaved) {
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("Confirm terminal activation");
+                    Optional<ButtonType> option = alert.showAndWait();
+                    if (option.get() == ButtonType.OK) {
+                        //Confirm terminal activation, set this terminal as activated and download site products
+                    }
+                } else {
+                    Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to save configuration details");
                 }
                 break;
             case -2:

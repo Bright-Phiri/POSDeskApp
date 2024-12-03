@@ -5,31 +5,35 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author biphiri
  */
 public class TerminalSite {
 
-    private String SiteId;
-    private String SiteName;
+    @SerializedName("siteId")
+    private String siteId;
+    @SerializedName("siteName")
+    private String siteName;
 
     public TerminalSite() {}
 
     public String getSiteId() {
-        return SiteId;
+        return siteId;
     }
 
     public void setSiteId(String siteId) {
-        this.SiteId = siteId;
+        this.siteId = siteId;
     }
 
     public String getSiteName() {
-        return SiteName;
+        return siteName;
     }
 
     public void setSiteName(String siteName) {
-        this.SiteName = siteName;
+        this.siteName = siteName;
     }
 }
 

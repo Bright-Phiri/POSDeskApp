@@ -75,7 +75,7 @@ public class ApiClient {
 
                 HttpPost postRequest = new HttpPost(requestUri);
                 postRequest.setHeader("Content-Type", "application/json");
-                postRequest.setHeader("Authorization", "Bearer " + token);
+                //postRequest.setHeader("Authorization", "Bearer " + token);
                 postRequest.setEntity(new StringEntity(jsonBody));
 
                 HttpResponse response = client.execute(postRequest);

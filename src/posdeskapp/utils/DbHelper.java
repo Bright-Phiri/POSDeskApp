@@ -18,12 +18,18 @@ import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import posdeskapp.controllers.SuspendedSalesController;
+import posdeskapp.models.ActivatedTerminal;
 import posdeskapp.models.Invoice;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
 import posdeskapp.models.Product;
 import posdeskapp.models.TaxBreakDown;
+import posdeskapp.models.TaxConfiguration;
+import posdeskapp.models.TaxRate;
+import posdeskapp.models.TaxpayerConfiguration;
+import posdeskapp.models.TerminalConfiguration;
+import posdeskapp.models.TerminalCredentials;
 
 /**
  *
@@ -701,6 +707,112 @@ public class DbHelper {
         }
 
         return tin;
+    }
+
+    public static boolean saveConfigurationDetails(TerminalConfiguration terminalConfiguration, TaxpayerConfiguration taxpayerConfiguration, TaxConfiguration globalConfiguration, ActivatedTerminal activatedTerminal, TerminalCredentials credentials) {
+        boolean isSuccess = false;
+        PreparedStatement terminalConfigStmt = null;
+        PreparedStatement taxpayerConfigStmt = null;
+        PreparedStatement terminalKeysStmt = null;
+        PreparedStatement taxRatesStmt = null;
+        PreparedStatement globalConfigStmt = null;
+
+        try {
+            Connection connection = DbConnection.createConnection();
+            connection.setAutoCommit(false); // Enable transaction management
+
+            // Insert TerminalConfiguration
+            String terminalConfigSQL = "INSERT INTO TerminalConfiguration (TerminalLabel, EmailAddress, PhoneNumber, TradingName, AddressLine, VersionNo, MaxTransactionAgeInHours, MaxCummulativeAmount, IsActivated, IsActiveTerminal, SiteID, TerminalPosition) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            terminalConfigStmt = connection.prepareStatement(terminalConfigSQL);
+            terminalConfigStmt.setString(1, terminalConfiguration.getTerminalLabel());
+            terminalConfigStmt.setString(2, terminalConfiguration.getEmailAddress());
+            terminalConfigStmt.setString(3, terminalConfiguration.getPhoneNumber());
+            terminalConfigStmt.setString(4, terminalConfiguration.getTradingName());
+            String addressLine = String.join(System.lineSeparator(), terminalConfiguration.getAddressLines());
+            terminalConfigStmt.setString(5, addressLine);
+            terminalConfigStmt.setInt(6, terminalConfiguration.getVersionNo());
+            terminalConfigStmt.setInt(7, terminalConfiguration.getOfflineLimit().getMaxTransactionAgeInHours());
+            terminalConfigStmt.setDouble(8, terminalConfiguration.getOfflineLimit().getMaxCummulativeAmount());
+            terminalConfigStmt.setInt(9, 0);
+            terminalConfigStmt.setInt(10, 1);
+            terminalConfigStmt.setString(11, terminalConfiguration.getTerminalSite().getSiteId());
+            terminalConfigStmt.setInt(12, activatedTerminal.getTerminalPosition());
+            terminalConfigStmt.executeUpdate();
+
+            // Insert TaxpayerConfiguration
+            String taxpayerConfigSQL = "INSERT INTO TaxpayerConfiguration (TIN, IsVATRegistered, TaxOfficeCode, TaxOfficeName, VersionNo, TaxpayerId) VALUES (?, ?, ?, ?, ?, ?)";
+            taxpayerConfigStmt = connection.prepareStatement(taxpayerConfigSQL);
+            taxpayerConfigStmt.setString(1, taxpayerConfiguration.getTin());
+            taxpayerConfigStmt.setBoolean(2, taxpayerConfiguration.isIsVATRegistered());
+            taxpayerConfigStmt.setString(3, taxpayerConfiguration.getTaxOffice().getCode());
+            taxpayerConfigStmt.setString(4, taxpayerConfiguration.getTaxOffice().getName());
+            taxpayerConfigStmt.setInt(5, taxpayerConfiguration.getVersionNo());
+            taxpayerConfigStmt.setLong(6, activatedTerminal.getTaxpayerId());
+            taxpayerConfigStmt.executeUpdate();
+
+            // Insert TerminalKeys
+            String terminalKeysSQL = "INSERT INTO TerminalKeys (TerminalId, TaxpayerId, ActivationDate, JwtToken, SecretKey) VALUES (?, ?, ?, ?, ?)";
+            terminalKeysStmt = connection.prepareStatement(terminalKeysSQL);
+            terminalKeysStmt.setString(1, activatedTerminal.getTerminalId());
+            terminalKeysStmt.setInt(2, (int) (long) activatedTerminal.getTaxpayerId());
+            terminalKeysStmt.setString(3, activatedTerminal.getActivationDate());
+            terminalKeysStmt.setString(4, credentials.getJwtToken());
+            terminalKeysStmt.setString(5, credentials.getSecretKey());
+            terminalKeysStmt.executeUpdate();
+
+            // Insert TaxRates
+            String taxRatesSQL = "INSERT INTO TaxRates (Id, Name, ChargeMode, Ordinal, Rate) VALUES (?, ?, ?, ?, ?)";
+            taxRatesStmt = connection.prepareStatement(taxRatesSQL);
+            for (TaxRate taxRate : globalConfiguration.getTaxRates()) {
+                taxRatesStmt.setString(1, taxRate.getId());
+                taxRatesStmt.setString(2, taxRate.getName());
+                taxRatesStmt.setString(3, taxRate.getChargeMode());
+                taxRatesStmt.setInt(4, taxRate.getOrdinal());
+                taxRatesStmt.setDouble(5, taxRate.getRate());
+                taxRatesStmt.executeUpdate();
+            }
+
+            // Insert GlobalConfiguration
+            String globalConfigSQL = "INSERT INTO GlobalConfiguration (Id, VersionNo) VALUES (?, ?)";
+            globalConfigStmt = connection.prepareStatement(globalConfigSQL);
+            globalConfigStmt.setInt(1, 1); // Assuming a fixed ID for global configuration
+            globalConfigStmt.setInt(2, globalConfiguration.getVersionNo());
+            globalConfigStmt.executeUpdate();
+
+            connection.commit(); // Commit the transaction
+            isSuccess = true;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            try {
+                if (globalConfigStmt != null) {
+                    globalConfigStmt.getConnection().rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                System.err.println("Rollback failed: " + rollbackEx.getMessage());
+            }
+        } finally {
+            try {
+                if (terminalConfigStmt != null) {
+                    terminalConfigStmt.close();
+                }
+                if (taxpayerConfigStmt != null) {
+                    taxpayerConfigStmt.close();
+                }
+                if (terminalKeysStmt != null) {
+                    terminalKeysStmt.close();
+                }
+                if (taxRatesStmt != null) {
+                    taxRatesStmt.close();
+                }
+                if (globalConfigStmt != null) {
+                    globalConfigStmt.close();
+                }
+            } catch (SQLException closeEx) {
+                System.err.println(closeEx.getMessage());
+            }
+        }
+
+        return isSuccess;
     }
 
     public static boolean doesTerminalKeyExist() {

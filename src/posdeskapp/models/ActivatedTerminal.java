@@ -10,14 +10,21 @@ package posdeskapp.models;
  * @author biphiri
  */
 import com.google.gson.annotations.SerializedName;
+import java.time.OffsetDateTime;
 
 public class ActivatedTerminal {
 
     @SerializedName("terminalId")
     private String terminalId;
 
+    @SerializedName("terminalPosition")
+    private Integer terminalPosition;  // Using Integer to represent nullable int
+
+    @SerializedName("taxpayerId")
+    private Long taxpayerId;
+
     @SerializedName("activationDate")
-    private String activationDate;
+    private String activationDate;  // Using OffsetDateTime to match DateTimeOffset
 
     @SerializedName("terminalCredentials")
     private TerminalCredentials terminalCredentials;
@@ -29,6 +36,22 @@ public class ActivatedTerminal {
 
     public void setTerminalId(String terminalId) {
         this.terminalId = terminalId;
+    }
+
+    public Integer getTerminalPosition() {
+        return terminalPosition;
+    }
+
+    public void setTerminalPosition(Integer terminalPosition) {
+        this.terminalPosition = terminalPosition;
+    }
+
+    public Long getTaxpayerId() {
+        return taxpayerId;
+    }
+
+    public void setTaxpayerId(Long taxpayerId) {
+        this.taxpayerId = taxpayerId;
     }
 
     public String getActivationDate() {

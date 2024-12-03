@@ -32,6 +32,9 @@ public class TerminalConfiguration {
     @SerializedName("addressLines")
     private List<String> addressLines;
 
+    @SerializedName("terminalSite")
+    private TerminalSite terminalSite;
+
     @SerializedName("offlineLimit")
     private OfflineLimit offlineLimit;
 
@@ -84,8 +87,16 @@ public class TerminalConfiguration {
         this.addressLines = addressLines;
     }
 
+    public TerminalSite getTerminalSite() {
+        return terminalSite;
+    }
+
     public OfflineLimit getOfflineLimit() {
         return offlineLimit;
+    }
+
+    public void setTerminalSite(TerminalSite terminalSite) {
+        this.terminalSite = terminalSite;
     }
 
     public void setOfflineLimit(OfflineLimit offlineLimit) {

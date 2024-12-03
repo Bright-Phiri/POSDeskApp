@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
  */
 public class OfflineLimit {
 
-     @SerializedName("maxTransactionAgeInHours")
+    @SerializedName("maxTransactionAgeInHours")
     private int maxTransactionAgeInHours;
 
     @SerializedName("maxCummulativeAmount")
