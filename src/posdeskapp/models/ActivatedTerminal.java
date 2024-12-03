@@ -13,37 +13,37 @@ import com.google.gson.annotations.SerializedName;
 
 public class ActivatedTerminal {
 
-    @SerializedName("TerminalId")
-    private String TerminalId;
+    @SerializedName("terminalId")
+    private String terminalId;
 
-    @SerializedName("ActivationDate")
-    private String ActivationDate;
+    @SerializedName("activationDate")
+    private String activationDate;
 
-    @SerializedName("TerminalCredentials")
-    private TerminalCredentials TerminalCredentials;
+    @SerializedName("terminalCredentials")
+    private TerminalCredentials terminalCredentials;
 
     // Getters and Setters
     public String getTerminalId() {
-        return TerminalId;
+        return terminalId;
     }
 
     public void setTerminalId(String terminalId) {
-        this.TerminalId = terminalId;
+        this.terminalId = terminalId;
     }
 
     public String getActivationDate() {
-        return ActivationDate;
+        return activationDate;
     }
 
     public void setActivationDate(String activationDate) {
-        this.ActivationDate = activationDate;
+        this.activationDate = activationDate;
     }
 
     public TerminalCredentials getTerminalCredentials() {
-        return TerminalCredentials;
+        return terminalCredentials;
     }
 
     public void setTerminalCredentials(TerminalCredentials terminalCredentials) {
-        this.TerminalCredentials = terminalCredentials;
+        this.terminalCredentials = terminalCredentials;
     }
 }

@@ -5,6 +5,7 @@
  */
 package posdeskapp.api;
 
+import com.google.gson.annotations.SerializedName;
 import posdeskapp.models.ActivatedTerminal;
 import posdeskapp.models.Configuration;
 
@@ -14,26 +15,26 @@ import posdeskapp.models.Configuration;
  */
 public class TerminalActivationResponse {
 
-    private ActivatedTerminal ActivatedTerminal;
-    private Configuration Configuration;
+    @SerializedName("activatedTerminal")
+    private ActivatedTerminal activatedTerminal;
 
-    public TerminalActivationResponse() {
-    }
+    @SerializedName("configuration")
+    private Configuration configuration;
 
+    // Getters and Setters
     public ActivatedTerminal getActivatedTerminal() {
-        return ActivatedTerminal;
+        return activatedTerminal;
     }
 
-    public void setActivatedTerminal(ActivatedTerminal ActivatedTerminal) {
-        this.ActivatedTerminal = ActivatedTerminal;
+    public void setActivatedTerminal(ActivatedTerminal activatedTerminal) {
+        this.activatedTerminal = activatedTerminal;
     }
 
     public Configuration getConfiguration() {
-        return Configuration;
+        return configuration;
     }
 
-    public void setConfiguration(Configuration Configuration) {
-        this.Configuration = Configuration;
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
     }
 }
-

@@ -13,26 +13,26 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TerminalCredentials {
 
-    @SerializedName("JwtToken")
-    private String JwtToken;
+    @SerializedName("jwtToken")
+    private String jwtToken;
 
-    @SerializedName("SecretKey")
-    private String SecretKey;
+    @SerializedName("secretKey")
+    private String secretKey;
 
     // Getters and Setters
     public String getJwtToken() {
-        return JwtToken;
+        return jwtToken;
     }
 
     public void setJwtToken(String jwtToken) {
-        this.JwtToken = jwtToken;
+        this.jwtToken = jwtToken;
     }
 
     public String getSecretKey() {
-        return SecretKey;
+        return secretKey;
     }
 
     public void setSecretKey(String secretKey) {
-        this.SecretKey = secretKey;
+        this.secretKey = secretKey;
     }
 }
