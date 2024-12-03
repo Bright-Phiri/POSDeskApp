@@ -709,6 +709,45 @@ public class DbHelper {
         return tin;
     }
 
+    public static String fetchTerminalId() {
+        String query = "SELECT TerminalId FROM TerminalKeys LIMIT 1";
+        String terminalId = null;
+
+        Connection connection = null;
+        PreparedStatement terminalKeysStmt = null;
+        ResultSet resultSet = null;
+
+        try {
+  
+            connection = DbConnection.createConnection();
+            terminalKeysStmt = connection.prepareStatement(query);
+            resultSet = terminalKeysStmt.executeQuery();
+
+            if (resultSet.next()) {
+                terminalId = resultSet.getString("TerminalId");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching TerminalId: " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (terminalKeysStmt != null) {
+                    terminalKeysStmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException closeEx) {
+                System.err.println("Error closing resources: " + closeEx.getMessage());
+            }
+        }
+
+        return terminalId;
+    }
+
     public static boolean saveConfigurationDetails(TerminalConfiguration terminalConfiguration, TaxpayerConfiguration taxpayerConfiguration, TaxConfiguration globalConfiguration, ActivatedTerminal activatedTerminal, TerminalCredentials credentials) {
         boolean isSuccess = false;
         PreparedStatement terminalConfigStmt = null;
