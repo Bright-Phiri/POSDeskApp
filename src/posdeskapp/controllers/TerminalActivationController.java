@@ -7,19 +7,29 @@ package posdeskapp.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import posdeskapp.api.ApiClient;
+import posdeskapp.api.ApiConfig;
+import posdeskapp.api.ApiResponse;
+import posdeskapp.api.HttpResponseResult;
+import posdeskapp.api.TerminalActivationResponse;
 import posdeskapp.models.POS;
 import posdeskapp.models.Platform;
 import posdeskapp.models.TerminalEnvironment;
@@ -63,12 +73,13 @@ public class TerminalActivationController implements Initializable {
     @FXML
     private void activateTerminal(ActionEvent event) {
         String terminalActionCode = terminalActivationCodeTextField.getText().trim();
+
         if (terminalActionCode.isEmpty()) {
             Alert alert = new Alert(javafx.scene.control.Alert.AlertType.WARNING, "Terminal Activation", "Please enter the terminal action code");
             return;
         }
-        TerminalEnvironment terminalEnvironment = new TerminalEnvironment();
 
+        TerminalEnvironment terminalEnvironment = new TerminalEnvironment();
         UnActivatedTerminal terminalActivationRequest = new UnActivatedTerminal(
                 terminalActionCode,
                 new TerminalRuntimeEnvironment(
@@ -83,16 +94,47 @@ public class TerminalActivationController implements Initializable {
         );
 
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        String unActivatedTerminalPayload = gson.toJson(terminalActivationRequest);
 
-        String unActivteTerminalPayload = gson.toJson(terminalActivationRequest);
+        HttpResponseResult httpResponseResult = ApiClient.sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivatedTerminalPayload);
 
-        System.out.println(unActivteTerminalPayload);
+        if (httpResponseResult.getStatusCode() == 200) {
+            processApiResponse(httpResponseResult.getResponseBody());
+        } else {
+            Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to activate the terminal");
+        }
     }
 
     @FXML
     private void handleTerminalActivation(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             activateTerminal(new ActionEvent());
+        }
+    }
+
+    private void processApiResponse(String responseBody) {
+        Gson gson = new Gson();
+        Type apiResponseType = new TypeToken<ApiResponse<TerminalActivationResponse>>() {
+        }.getType();
+
+        ApiResponse<TerminalActivationResponse> apiResponse = gson.fromJson(responseBody, apiResponseType);
+
+        switch (apiResponse.getStatusCode()) {
+            case 1:
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText(null);
+                alert.setContentText("Confirm terminal activation");
+                Optional<ButtonType> option = alert.showAndWait();
+                if (option.get() == ButtonType.OK) {
+                    // Confirm Terminal Activation and Download inventory
+                }
+                break;
+            case -2:
+                Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", apiResponse.getRemark());
+                terminalActivationCodeTextField.clear();
+                break;
+            default:
+                break;
         }
     }
 

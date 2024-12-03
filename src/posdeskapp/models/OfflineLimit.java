@@ -5,6 +5,8 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author biphiri
@@ -12,24 +14,26 @@ package posdeskapp.models;
 public class OfflineLimit {
 
     private double maxTransactionAgeInHours;
-    private double maxCummulativeAmount;
+    @SerializedName("MaxTransactionAgeInHours")
+    private int MaxTransactionAgeInHours;
 
-    public OfflineLimit() {}
+    @SerializedName("MaxCummulativeAmount")
+    private double MaxCummulativeAmount;
 
-    public double getMaxTransactionAgeInHours() {
-        return maxTransactionAgeInHours;
+    // Getters and Setters
+    public int getMaxTransactionAgeInHours() {
+        return MaxTransactionAgeInHours;
     }
 
-    public void setMaxTransactionAgeInHours(double maxTransactionAgeInHours) {
-        this.maxTransactionAgeInHours = maxTransactionAgeInHours;
+    public void setMaxTransactionAgeInHours(int maxTransactionAgeInHours) {
+        this.MaxTransactionAgeInHours = maxTransactionAgeInHours;
     }
 
     public double getMaxCummulativeAmount() {
-        return maxCummulativeAmount;
+        return MaxCummulativeAmount;
     }
 
     public void setMaxCummulativeAmount(double maxCummulativeAmount) {
-        this.maxCummulativeAmount = maxCummulativeAmount;
+        this.MaxCummulativeAmount = maxCummulativeAmount;
     }
 }
-

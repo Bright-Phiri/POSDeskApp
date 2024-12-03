@@ -5,7 +5,10 @@
  */
 package posdeskapp.controllers;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -22,6 +25,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import posdeskapp.api.ApiResponse;
+import posdeskapp.api.TerminalActivationResponse;
+import posdeskapp.models.TaxConfiguration;
 import posdeskapp.utils.DbHelper;
 
 /**
@@ -49,7 +55,7 @@ public class LoginController implements Initializable {
         root = rootPane;
         try {
             if (DbHelper.doesTerminalKeyExist()) {
-                 VBox terminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/TerminalActivation.fxml"));
+                VBox terminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/TerminalActivation.fxml"));
                 rootPane.setRight(terminalActivationForm);
 //                VBox loginForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
 //                rootPane.setRight(loginForm);

@@ -5,12 +5,15 @@
  */
 package posdeskapp.api;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
@@ -79,9 +82,6 @@ public class ApiClient {
 
                 statusCode = response.getStatusLine().getStatusCode();
                 responseBody = EntityUtils.toString(response.getEntity());
-
-                System.out.println("Response Status: " + statusCode);
-                System.out.println("Response Body: " + responseBody);
             }
 
         } catch (Exception e) {

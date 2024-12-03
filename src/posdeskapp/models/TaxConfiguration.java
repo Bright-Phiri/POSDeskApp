@@ -9,39 +9,42 @@ package posdeskapp.models;
  *
  * @author biphiri
  */
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class TaxConfiguration {
 
-    private long Id;
-    private double VersionNo;
-    private List<TaxRate> Taxrates;
+    @SerializedName("Id")
+    private int Id;
 
-    public TaxConfiguration() {
-    }
+    @SerializedName("VersionNo")
+    private int VersionNo;
 
-    public long getId() {
+    @SerializedName("Taxrates")
+    private List<TaxRate> TaxRates;
+
+    // Getters and Setters
+    public int getId() {
         return Id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.Id = id;
     }
 
-    public double getVersionNo() {
+    public int getVersionNo() {
         return VersionNo;
     }
 
-    public void setVersionNo(double VersionNo) {
-        this.VersionNo = VersionNo;
+    public void setVersionNo(int versionNo) {
+        this.VersionNo = versionNo;
     }
 
-    public List<TaxRate> getTaxrates() {
-        return Taxrates;
+    public List<TaxRate> getTaxRates() {
+        return TaxRates;
     }
 
-    public void setTaxrates(List<TaxRate> Taxrates) {
-        this.Taxrates = Taxrates;
+    public void setTaxRates(List<TaxRate> taxRates) {
+        this.TaxRates = taxRates;
     }
 }
-

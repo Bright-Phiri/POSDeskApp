@@ -5,32 +5,34 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author biphiri
  */
 public class TerminalCredentials {
 
+    @SerializedName("JwtToken")
     private String JwtToken;
+
+    @SerializedName("SecretKey")
     private String SecretKey;
 
-    public TerminalCredentials() {
-    }
-
+    // Getters and Setters
     public String getJwtToken() {
         return JwtToken;
     }
 
-    public void setJwtToken(String JwtToken) {
-        this.JwtToken = JwtToken;
+    public void setJwtToken(String jwtToken) {
+        this.JwtToken = jwtToken;
     }
 
     public String getSecretKey() {
         return SecretKey;
     }
 
-    public void setSecretKey(String SecretKey) {
-        this.SecretKey = SecretKey;
+    public void setSecretKey(String secretKey) {
+        this.SecretKey = secretKey;
     }
 }
-

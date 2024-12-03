@@ -5,20 +5,30 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author biphiri
  */
 public class TaxRate {
 
+    @SerializedName("Id")
     private String Id;
+
+    @SerializedName("Name")
     private String Name;
+
+    @SerializedName("ChargeMode")
     private String ChargeMode;
+
+    @SerializedName("Ordinal")
     private int Ordinal;
+
+    @SerializedName("Rate")
     private double Rate;
 
-    public TaxRate() {}
-
+    // Getters and Setters
     public String getId() {
         return Id;
     }
@@ -59,4 +69,3 @@ public class TaxRate {
         this.Rate = rate;
     }
 }
-

@@ -5,31 +5,34 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author biphiri
  */
 public class TaxOffice {
 
-    private String code;
-    private String name;
+    @SerializedName("TaxOfficeCode")
+    private String TaxOfficeCode;
 
-    public TaxOffice() {}
+    @SerializedName("TaxOfficeName")
+    private String TaxOfficeName;
 
-    public String getCode() {
-        return code;
+    // Getters and Setters
+    public String getTaxOfficeCode() {
+        return TaxOfficeCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setTaxOfficeCode(String taxOfficeCode) {
+        this.TaxOfficeCode = taxOfficeCode;
     }
 
-    public String getName() {
-        return name;
+    public String getTaxOfficeName() {
+        return TaxOfficeName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTaxOfficeName(String taxOfficeName) {
+        this.TaxOfficeName = taxOfficeName;
     }
 }
-

@@ -9,27 +9,38 @@ package posdeskapp.models;
  *
  * @author biphiri
  */
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class TerminalConfiguration {
 
-    private double VersionNo;
+    @SerializedName("VersionNo")
+    private int VersionNo;
+
+    @SerializedName("TerminalLabel")
     private String TerminalLabel;
-    private boolean IsActiveTerminal;
+
+    @SerializedName("EmailAddress")
     private String EmailAddress;
+
+    @SerializedName("PhoneNumber")
     private String PhoneNumber;
+
+    @SerializedName("TradingName")
     private String TradingName;
+
+    @SerializedName("AddressLines")
     private List<String> AddressLines;
-    private TerminalSite TerminalSite;
+
+    @SerializedName("OfflineLimit")
     private OfflineLimit OfflineLimit;
 
-    public TerminalConfiguration() {}
-
-    public double getVersionNo() {
+    // Getters and Setters
+    public int getVersionNo() {
         return VersionNo;
     }
 
-    public void setVersionNo(double versionNo) {
+    public void setVersionNo(int versionNo) {
         this.VersionNo = versionNo;
     }
 
@@ -39,14 +50,6 @@ public class TerminalConfiguration {
 
     public void setTerminalLabel(String terminalLabel) {
         this.TerminalLabel = terminalLabel;
-    }
-
-    public boolean getIsActiveTerminal() {
-        return IsActiveTerminal;
-    }
-
-    public void setIsActiveTerminal(boolean isActiveTerminal) {
-        this.IsActiveTerminal = isActiveTerminal;
     }
 
     public String getEmailAddress() {
@@ -81,14 +84,6 @@ public class TerminalConfiguration {
         this.AddressLines = addressLines;
     }
 
-    public TerminalSite getTerminalSite() {
-        return TerminalSite;
-    }
-
-    public void setTerminalSite(TerminalSite terminalSite) {
-        this.TerminalSite = terminalSite;
-    }
-
     public OfflineLimit getOfflineLimit() {
         return OfflineLimit;
     }
@@ -97,4 +92,3 @@ public class TerminalConfiguration {
         this.OfflineLimit = offlineLimit;
     }
 }
-

@@ -9,25 +9,38 @@ package posdeskapp.models;
  *
  * @author biphiri
  */
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class TaxpayerConfiguration {
 
-    private double VersionNo;
+    @SerializedName("VersionNo")
+    private int VersionNo;
+
+    @SerializedName("Tin")
     private String Tin;
+
+    @SerializedName("IsVATRegistered")
     private boolean IsVATRegistered;
+
+    @SerializedName("TaxOfficeCode")
     private String TaxOfficeCode;
+
+    @SerializedName("TaxOffice")
     private TaxOffice TaxOffice;
+
+    @SerializedName("ActivatedTaxRateIds")
     private List<String> ActivatedTaxRateIds;
-    private List<ActivatedTaxrate> ActivatedTaxrates;
 
-    public TaxpayerConfiguration() {}
+    @SerializedName("ActivatedTaxrates")
+    private Object ActivatedTaxrates;
 
-    public double getVersionNo() {
+    // Getters and Setters
+    public int getVersionNo() {
         return VersionNo;
     }
 
-    public void setVersionNo(double versionNo) {
+    public void setVersionNo(int versionNo) {
         this.VersionNo = versionNo;
     }
 
@@ -39,7 +52,7 @@ public class TaxpayerConfiguration {
         this.Tin = tin;
     }
 
-    public boolean isIsVATRegistered() {
+    public boolean isVATRegistered() {
         return IsVATRegistered;
     }
 
@@ -71,12 +84,11 @@ public class TaxpayerConfiguration {
         this.ActivatedTaxRateIds = activatedTaxRateIds;
     }
 
-    public List<ActivatedTaxrate> getActivatedTaxrates() {
+    public Object getActivatedTaxrates() {
         return ActivatedTaxrates;
     }
 
-    public void setActivatedTaxrates(List<ActivatedTaxrate> activatedTaxrates) {
+    public void setActivatedTaxrates(Object activatedTaxrates) {
         this.ActivatedTaxrates = activatedTaxrates;
     }
 }
-

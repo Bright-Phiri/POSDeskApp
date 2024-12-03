@@ -5,40 +5,45 @@
  */
 package posdeskapp.models;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  *
  * @author biphiri
  */
 public class Configuration {
 
-    private TaxConfiguration globalConfiguration;
-    private TerminalConfiguration terminalConfiguration;
-    private TaxpayerConfiguration taxpayerConfiguration;
+    @SerializedName("TaxConfiguration")
+    private TaxConfiguration GlobalConfiguration;
 
-    public Configuration() {
-    }
+    @SerializedName("TerminalConfiguration")
+    private TerminalConfiguration TerminalConfiguration;
 
+    @SerializedName("TaxpayerConfiguration")
+    private TaxpayerConfiguration TaxpayerConfiguration;
+
+    // Getters and Setters
     public TaxConfiguration getGlobalConfiguration() {
-        return globalConfiguration;
+        return GlobalConfiguration;
     }
 
-    public void setGlobalConfiguration(TaxConfiguration globalConfiguration) {
-        this.globalConfiguration = globalConfiguration;
+    public void setTaxConfiguration(TaxConfiguration GlobalConfiguration) {
+        this.GlobalConfiguration = GlobalConfiguration;
     }
 
     public TerminalConfiguration getTerminalConfiguration() {
-        return terminalConfiguration;
+        return TerminalConfiguration;
     }
 
     public void setTerminalConfiguration(TerminalConfiguration terminalConfiguration) {
-        this.terminalConfiguration = terminalConfiguration;
+        this.TerminalConfiguration = terminalConfiguration;
     }
 
     public TaxpayerConfiguration getTaxpayerConfiguration() {
-        return taxpayerConfiguration;
+        return TaxpayerConfiguration;
     }
 
     public void setTaxpayerConfiguration(TaxpayerConfiguration taxpayerConfiguration) {
-        this.taxpayerConfiguration = taxpayerConfiguration;
+        this.TaxpayerConfiguration = taxpayerConfiguration;
     }
 }

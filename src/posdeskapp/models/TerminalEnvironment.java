@@ -42,12 +42,6 @@ public class TerminalEnvironment {
             // Retrieve MAC address
             macAddress = getMacAddress();
 
-            // Print debug information
-            System.out.println("OS Name: " + osName);
-            System.out.println("OS Version: " + osVersion);
-            System.out.println("OS Build: " + osBuild);
-            System.out.println("MAC Address: " + macAddress);
-
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("Error: " + ex.getMessage());

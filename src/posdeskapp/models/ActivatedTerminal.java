@@ -9,56 +9,41 @@ package posdeskapp.models;
  *
  * @author biphiri
  */
-import java.time.OffsetDateTime;
+import com.google.gson.annotations.SerializedName;
 
 public class ActivatedTerminal {
 
+    @SerializedName("TerminalId")
     private String TerminalId;
-    private Integer TerminalPosition;
-    private long TaxpayerId;
-    private OffsetDateTime ActivationDate;
+
+    @SerializedName("ActivationDate")
+    private String ActivationDate;
+
+    @SerializedName("TerminalCredentials")
     private TerminalCredentials TerminalCredentials;
 
-    public ActivatedTerminal() {
-    }
-
+    // Getters and Setters
     public String getTerminalId() {
         return TerminalId;
     }
 
-    public void setTerminalId(String TerminalId) {
-        this.TerminalId = TerminalId;
+    public void setTerminalId(String terminalId) {
+        this.TerminalId = terminalId;
     }
 
-    public Integer getTerminalPosition() {
-        return TerminalPosition;
-    }
-
-    public void setTerminalPosition(Integer TerminalPosition) {
-        this.TerminalPosition = TerminalPosition;
-    }
-
-    public long getTaxpayerId() {
-        return TaxpayerId;
-    }
-
-    public void setTaxpayerId(long TaxpayerId) {
-        this.TaxpayerId = TaxpayerId;
-    }
-
-    public OffsetDateTime getActivationDate() {
+    public String getActivationDate() {
         return ActivationDate;
     }
 
-    public void setActivationDate(OffsetDateTime ActivationDate) {
-        this.ActivationDate = ActivationDate;
+    public void setActivationDate(String activationDate) {
+        this.ActivationDate = activationDate;
     }
 
     public TerminalCredentials getTerminalCredentials() {
         return TerminalCredentials;
     }
 
-    public void setTerminalCredentials(TerminalCredentials TerminalCredentials) {
-        this.TerminalCredentials = TerminalCredentials;
+    public void setTerminalCredentials(TerminalCredentials terminalCredentials) {
+        this.TerminalCredentials = terminalCredentials;
     }
 }
