@@ -104,7 +104,7 @@ public class TerminalActivationController implements Initializable {
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
         String unActivatedTerminalPayload = gson.toJson(terminalActivationRequest);
 
-        HttpResponseResult httpResponseResult = ApiClient.sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivatedTerminalPayload);
+        HttpResponseResult httpResponseResult = ApiClient.activateTerminal(unActivatedTerminalPayload);
         System.out.println(httpResponseResult.getResponseBody());
         if (httpResponseResult.getStatusCode() == 200) {
             processApiResponse(httpResponseResult.getResponseBody());
@@ -120,6 +120,7 @@ public class TerminalActivationController implements Initializable {
         }
     }
 
+    //Refactor me please
     private void processApiResponse(String responseBody) {
         Gson gson = new Gson();
         Type apiResponseType = new TypeToken<ApiResponse<TerminalActivationResponse>>() {
@@ -145,6 +146,7 @@ public class TerminalActivationController implements Initializable {
                     Optional<ButtonType> option = alert.showAndWait();
                     if (option.get() == ButtonType.OK) {
                         //Confirm terminal activation, set this terminal as activated and download site products
+                        String terminalId = DbHelper.fetchTerminalId();
                     }
                 } else {
                     Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to save configuration details");

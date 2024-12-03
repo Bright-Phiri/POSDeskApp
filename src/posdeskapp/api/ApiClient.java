@@ -30,24 +30,21 @@ public class ApiClient {
 
     public static HttpResponseResult pingServer(String bearerToken) {
         String jsonBody = "";
-
-        return sendHttpPostRequest(ApiConfig.PING_SERVER, jsonBody);
+        return sendHttpPostRequest(ApiConfig.PING_SERVER, jsonBody, false);
     }
 
     public static HttpResponseResult submitSalesTransaction(String invoicePayload) {
-
-        return sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload);
+        return sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload, true);
     }
 
     public static HttpResponseResult activateTerminal(String unActivteTerminalPayload) {
-
-        return sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivteTerminalPayload);
+        return sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivteTerminalPayload, false);
     }
 
-    public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody) {
+    public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean requiresAuthorization) {
         int statusCode = -1;
         String responseBody = "";
-        String token = DbHelper.getTerminalJwtToken();
+        String token = requiresAuthorization ? DbHelper.getTerminalJwtToken() : null;
 
         try {
             // Trust all certificates
@@ -68,14 +65,19 @@ public class ApiClient {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustAllCertificates, new java.security.SecureRandom());
 
-            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(
+                    sslContext, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 
             try (CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(sslSocketFactory).build()) {
                 URI requestUri = new URI(uri);
 
                 HttpPost postRequest = new HttpPost(requestUri);
                 postRequest.setHeader("Content-Type", "application/json");
-                //postRequest.setHeader("Authorization", "Bearer " + token);
+
+                if (requiresAuthorization && token != null) {
+                    postRequest.setHeader("Authorization", "Bearer " + token);
+                }
+
                 postRequest.setEntity(new StringEntity(jsonBody));
 
                 HttpResponse response = client.execute(postRequest);
@@ -90,4 +92,5 @@ public class ApiClient {
 
         return new HttpResponseResult(statusCode, responseBody);
     }
+
 }
