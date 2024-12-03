@@ -16,7 +16,6 @@ public class Configuration {
     private TaxpayerConfiguration taxpayerConfiguration;
 
     public Configuration() {
-        // Default constructor
     }
 
     public TaxConfiguration getGlobalConfiguration() {

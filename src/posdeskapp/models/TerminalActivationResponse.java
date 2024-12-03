@@ -15,7 +15,6 @@ public class TerminalActivationResponse {
     private Configuration Configuration;
 
     public TerminalActivationResponse() {
-        // Default constructor
     }
 
     public ActivatedTerminal getActivatedTerminal() {

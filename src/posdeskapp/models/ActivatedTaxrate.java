@@ -15,7 +15,6 @@ public class ActivatedTaxrate{
     private long TaxpayerConfigurationId;
     private String TaxRateId;
 
-    // Default constructor
     public ActivatedTaxrate() {}
 
     public long getId() {

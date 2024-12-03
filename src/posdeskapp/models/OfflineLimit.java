@@ -14,7 +14,6 @@ public class OfflineLimit {
     private double maxTransactionAgeInHours;
     private double maxCummulativeAmount;
 
-    // Default constructor
     public OfflineLimit() {}
 
     public double getMaxTransactionAgeInHours() {

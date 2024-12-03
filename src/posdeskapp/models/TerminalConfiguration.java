@@ -23,7 +23,6 @@ public class TerminalConfiguration {
     private TerminalSite TerminalSite;
     private OfflineLimit OfflineLimit;
 
-    // Default constructor
     public TerminalConfiguration() {}
 
     public double getVersionNo() {

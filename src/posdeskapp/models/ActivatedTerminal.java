@@ -20,7 +20,6 @@ public class ActivatedTerminal {
     private TerminalCredentials TerminalCredentials;
 
     public ActivatedTerminal() {
-        // Default constructor
     }
 
     public String getTerminalId() {

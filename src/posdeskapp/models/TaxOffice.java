@@ -14,7 +14,6 @@ public class TaxOffice {
     private String code;
     private String name;
 
-    // Default constructor
     public TaxOffice() {}
 
     public String getCode() {

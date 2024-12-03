@@ -19,7 +19,6 @@ public class TerminalActivationAPIResponse {
     private List<APIError> Errors;
 
     public TerminalActivationAPIResponse() {
-        // Default constructor
     }
 
     public int getStatusCode() {
