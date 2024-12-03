@@ -18,7 +18,9 @@ public class POS {
     @Expose
     private String ProductVersion;
 
-    public POS() {
+    public POS(String productID, String productVersion) {
+        this.ProductID = productID;
+        this.ProductVersion = productVersion;
     }
 
     public String getProductID() {

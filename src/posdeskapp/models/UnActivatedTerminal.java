@@ -18,8 +18,9 @@ public class UnActivatedTerminal {
     @Expose
     private TerminalRuntimeEnvironment Environment;
 
-    public UnActivatedTerminal() {
-        this.Environment = new TerminalRuntimeEnvironment();
+    public UnActivatedTerminal(String terminalActivationCode, TerminalRuntimeEnvironment environment) {
+        this.TerminalActivationCode = terminalActivationCode;
+        this.Environment = environment;
     }
 
     public String getTerminalActivationCode() {

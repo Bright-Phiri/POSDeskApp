@@ -18,9 +18,9 @@ public class TerminalRuntimeEnvironment {
     @Expose
     private POS Pos;
 
-    public TerminalRuntimeEnvironment() {
-        this.Platform = new Platform();
-        this.Pos = new POS();
+   public TerminalRuntimeEnvironment(Platform platform, POS pos) {
+        this.Platform = platform;
+        this.Pos = pos;
     }
 
     public Platform getPlatform() {

@@ -22,7 +22,11 @@ public class Platform {
     @Expose
     private String MacAddress;
 
-    public Platform() {
+    public Platform(String osName, String osVersion, String osBuild, String macAddress) {
+        this.OsName = osName;
+        this.OsVersion = osVersion;
+        this.OsBuild = osBuild;
+        this.MacAddress = macAddress;
     }
 
     public String getOsName() {
