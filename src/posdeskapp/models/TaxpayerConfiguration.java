@@ -14,81 +14,80 @@ import java.util.List;
 
 public class TaxpayerConfiguration {
 
-    @SerializedName("VersionNo")
-    private int VersionNo;
+    @SerializedName("versionNo")
+    private int versionNo;
 
-    @SerializedName("Tin")
-    private String Tin;
+    @SerializedName("tin")
+    private String tin;
 
-    @SerializedName("IsVATRegistered")
-    private boolean IsVATRegistered;
+    @SerializedName("isVATRegistered")
+    private boolean isVATRegistered;
 
-    @SerializedName("TaxOfficeCode")
-    private String TaxOfficeCode;
+    @SerializedName("taxOfficeCode")
+    private String taxOfficeCode;
 
-    @SerializedName("TaxOffice")
-    private TaxOffice TaxOffice;
+    @SerializedName("taxOffice")
+    private TaxOffice taxOffice;
 
-    @SerializedName("ActivatedTaxRateIds")
-    private List<String> ActivatedTaxRateIds;
+    @SerializedName("activatedTaxRateIds")
+    private List<String> activatedTaxRateIds;
 
-    @SerializedName("ActivatedTaxrates")
-    private Object ActivatedTaxrates;
+    @SerializedName("activatedTaxrates")
+    private Object activatedTaxrates;
 
-    // Getters and Setters
     public int getVersionNo() {
-        return VersionNo;
-    }
-
-    public void setVersionNo(int versionNo) {
-        this.VersionNo = versionNo;
+        return versionNo;
     }
 
     public String getTin() {
-        return Tin;
+        return tin;
     }
 
-    public void setTin(String tin) {
-        this.Tin = tin;
-    }
-
-    public boolean isVATRegistered() {
-        return IsVATRegistered;
-    }
-
-    public void setIsVATRegistered(boolean isVATRegistered) {
-        this.IsVATRegistered = isVATRegistered;
+    public boolean isIsVATRegistered() {
+        return isVATRegistered;
     }
 
     public String getTaxOfficeCode() {
-        return TaxOfficeCode;
-    }
-
-    public void setTaxOfficeCode(String taxOfficeCode) {
-        this.TaxOfficeCode = taxOfficeCode;
+        return taxOfficeCode;
     }
 
     public TaxOffice getTaxOffice() {
-        return TaxOffice;
-    }
-
-    public void setTaxOffice(TaxOffice taxOffice) {
-        this.TaxOffice = taxOffice;
+        return taxOffice;
     }
 
     public List<String> getActivatedTaxRateIds() {
-        return ActivatedTaxRateIds;
-    }
-
-    public void setActivatedTaxRateIds(List<String> activatedTaxRateIds) {
-        this.ActivatedTaxRateIds = activatedTaxRateIds;
+        return activatedTaxRateIds;
     }
 
     public Object getActivatedTaxrates() {
-        return ActivatedTaxrates;
+        return activatedTaxrates;
+    }
+
+    public void setVersionNo(int versionNo) {
+        this.versionNo = versionNo;
+    }
+
+    public void setTin(String tin) {
+        this.tin = tin;
+    }
+
+    public void setIsVATRegistered(boolean isVATRegistered) {
+        this.isVATRegistered = isVATRegistered;
+    }
+
+    public void setTaxOfficeCode(String taxOfficeCode) {
+        this.taxOfficeCode = taxOfficeCode;
+    }
+
+    public void setTaxOffice(TaxOffice taxOffice) {
+        this.taxOffice = taxOffice;
+    }
+
+    public void setActivatedTaxRateIds(List<String> activatedTaxRateIds) {
+        this.activatedTaxRateIds = activatedTaxRateIds;
     }
 
     public void setActivatedTaxrates(Object activatedTaxrates) {
-        this.ActivatedTaxrates = activatedTaxrates;
+        this.activatedTaxrates = activatedTaxrates;
     }
 }

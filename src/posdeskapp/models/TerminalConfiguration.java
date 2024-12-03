@@ -14,81 +14,81 @@ import java.util.List;
 
 public class TerminalConfiguration {
 
-    @SerializedName("VersionNo")
-    private int VersionNo;
+    @SerializedName("versionNo")
+    private int versionNo;
 
-    @SerializedName("TerminalLabel")
-    private String TerminalLabel;
+    @SerializedName("terminalLabel")
+    private String terminalLabel;
 
-    @SerializedName("EmailAddress")
-    private String EmailAddress;
+    @SerializedName("emailAddress")
+    private String emailAddress;
 
-    @SerializedName("PhoneNumber")
-    private String PhoneNumber;
+    @SerializedName("phoneNumber")
+    private String phoneNumber;
 
-    @SerializedName("TradingName")
-    private String TradingName;
+    @SerializedName("tradingName")
+    private String tradingName;
 
-    @SerializedName("AddressLines")
-    private List<String> AddressLines;
+    @SerializedName("addressLines")
+    private List<String> addressLines;
 
-    @SerializedName("OfflineLimit")
-    private OfflineLimit OfflineLimit;
+    @SerializedName("offlineLimit")
+    private OfflineLimit offlineLimit;
 
     // Getters and Setters
     public int getVersionNo() {
-        return VersionNo;
+        return versionNo;
     }
 
     public void setVersionNo(int versionNo) {
-        this.VersionNo = versionNo;
+        this.versionNo = versionNo;
     }
 
     public String getTerminalLabel() {
-        return TerminalLabel;
+        return terminalLabel;
     }
 
     public void setTerminalLabel(String terminalLabel) {
-        this.TerminalLabel = terminalLabel;
+        this.terminalLabel = terminalLabel;
     }
 
     public String getEmailAddress() {
-        return EmailAddress;
+        return emailAddress;
     }
 
     public void setEmailAddress(String emailAddress) {
-        this.EmailAddress = emailAddress;
+        this.emailAddress = emailAddress;
     }
 
     public String getPhoneNumber() {
-        return PhoneNumber;
+        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        this.PhoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getTradingName() {
-        return TradingName;
+        return tradingName;
     }
 
     public void setTradingName(String tradingName) {
-        this.TradingName = tradingName;
+        this.tradingName = tradingName;
     }
 
     public List<String> getAddressLines() {
-        return AddressLines;
+        return addressLines;
     }
 
     public void setAddressLines(List<String> addressLines) {
-        this.AddressLines = addressLines;
+        this.addressLines = addressLines;
     }
 
     public OfflineLimit getOfflineLimit() {
-        return OfflineLimit;
+        return offlineLimit;
     }
 
     public void setOfflineLimit(OfflineLimit offlineLimit) {
-        this.OfflineLimit = offlineLimit;
+        this.offlineLimit = offlineLimit;
     }
 }

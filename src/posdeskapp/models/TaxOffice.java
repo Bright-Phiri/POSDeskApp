@@ -13,26 +13,26 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TaxOffice {
 
-    @SerializedName("TaxOfficeCode")
-    private String TaxOfficeCode;
+    @SerializedName("code")
+    private String code;
 
-    @SerializedName("TaxOfficeName")
-    private String TaxOfficeName;
+    @SerializedName("name")
+    private String name;
 
-    // Getters and Setters
-    public String getTaxOfficeCode() {
-        return TaxOfficeCode;
+    public String getCode() {
+        return code;
     }
 
-    public void setTaxOfficeCode(String taxOfficeCode) {
-        this.TaxOfficeCode = taxOfficeCode;
+    public String getName() {
+        return name;
     }
 
-    public String getTaxOfficeName() {
-        return TaxOfficeName;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setTaxOfficeName(String taxOfficeName) {
-        this.TaxOfficeName = taxOfficeName;
+    public void setName(String name) {
+        this.name = name;
     }
+
 }

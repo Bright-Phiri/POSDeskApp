@@ -13,27 +13,26 @@ import com.google.gson.annotations.SerializedName;
  */
 public class OfflineLimit {
 
-    private double maxTransactionAgeInHours;
-    @SerializedName("MaxTransactionAgeInHours")
-    private int MaxTransactionAgeInHours;
+     @SerializedName("maxTransactionAgeInHours")
+    private int maxTransactionAgeInHours;
 
-    @SerializedName("MaxCummulativeAmount")
-    private double MaxCummulativeAmount;
+    @SerializedName("maxCummulativeAmount")
+    private int maxCummulativeAmount;
 
     // Getters and Setters
     public int getMaxTransactionAgeInHours() {
-        return MaxTransactionAgeInHours;
+        return maxTransactionAgeInHours;
     }
 
     public void setMaxTransactionAgeInHours(int maxTransactionAgeInHours) {
-        this.MaxTransactionAgeInHours = maxTransactionAgeInHours;
+        this.maxTransactionAgeInHours = maxTransactionAgeInHours;
     }
 
     public double getMaxCummulativeAmount() {
-        return MaxCummulativeAmount;
+        return maxCummulativeAmount;
     }
 
-    public void setMaxCummulativeAmount(double maxCummulativeAmount) {
-        this.MaxCummulativeAmount = maxCummulativeAmount;
+    public void setMaxCummulativeAmount(int maxCummulativeAmount) {
+        this.maxCummulativeAmount = maxCummulativeAmount;
     }
 }
