@@ -52,14 +52,12 @@ public class LoginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
- 
+
         root = rootPane;
         try {
             if (DbHelper.doesTerminalKeyExist()) {
-                VBox terminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/TerminalActivation.fxml"));
-                rootPane.setRight(terminalActivationForm);
-//                VBox loginForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
-//                rootPane.setRight(loginForm);
+                VBox loginForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
+                rootPane.setRight(loginForm);
             } else {
                 VBox terminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/TerminalActivation.fxml"));
                 rootPane.setRight(terminalActivationForm);

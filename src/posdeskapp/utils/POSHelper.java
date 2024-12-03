@@ -41,6 +41,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
 import posdeskapp.models.InvoiceHeader;
@@ -81,6 +83,22 @@ public class POSHelper {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         String formattedDateTime = utcDateTime.format(formatter);
         return formattedDateTime;
+    }
+
+    public static String computeXSignature(String activationCode, String secretKey) {
+        try {
+
+            Mac hmacSha512 = Mac.getInstance("HmacSHA512");
+
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
+            hmacSha512.init(keySpec);
+
+            byte[] hash = hmacSha512.doFinal(activationCode.getBytes(StandardCharsets.UTF_8));
+
+            return Base64.getEncoder().encodeToString(hash);
+        } catch (Exception e) {
+            throw new RuntimeException("Error computing X-Signature", e);
+        }
     }
 
     public void showUserStage(Node node, String fxmlUrl) {

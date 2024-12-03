@@ -30,21 +30,25 @@ public class ApiClient {
 
     public static HttpResponseResult pingServer(String bearerToken) {
         String jsonBody = "";
-        return sendHttpPostRequest(ApiConfig.PING_SERVER, jsonBody, false);
+        return sendHttpPostRequest(ApiConfig.PING_SERVER, jsonBody, false, "");
     }
 
     public static HttpResponseResult submitSalesTransaction(String invoicePayload) {
-        return sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload, true);
+        return sendHttpPostRequest(ApiConfig.SUBMIT_SALES_TRANSACTION, invoicePayload, true, "");
     }
 
     public static HttpResponseResult activateTerminal(String unActivteTerminalPayload) {
-        return sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivteTerminalPayload, false);
+        return sendHttpPostRequest(ApiConfig.ACTIVATE_TERMINAL, unActivteTerminalPayload, false, "");
     }
 
-    public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean requiresAuthorization) {
+    public static HttpResponseResult confirmTerminalActivation(String activteTerminalPayload, String xSignature) {
+        return sendHttpPostRequest(ApiConfig.CONFIRM_TERMINAL_ACTIVATION, activteTerminalPayload, false, xSignature);
+    }
+
+    public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean includeAuthorization, String xSignature) {
         int statusCode = -1;
         String responseBody = "";
-        String token = requiresAuthorization ? DbHelper.getTerminalJwtToken() : null;
+        String token = includeAuthorization ? DbHelper.getTerminalJwtToken() : null;
 
         try {
             // Trust all certificates
@@ -65,19 +69,19 @@ public class ApiClient {
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustAllCertificates, new java.security.SecureRandom());
 
-            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(
-                    sslContext, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+            SSLConnectionSocketFactory sslSocketFactory = new SSLConnectionSocketFactory(sslContext, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 
             try (CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(sslSocketFactory).build()) {
                 URI requestUri = new URI(uri);
 
                 HttpPost postRequest = new HttpPost(requestUri);
                 postRequest.setHeader("Content-Type", "application/json");
-
-                if (requiresAuthorization && token != null) {
+                if (includeAuthorization && token != null) {
                     postRequest.setHeader("Authorization", "Bearer " + token);
                 }
-
+                if (xSignature != null && !xSignature.isEmpty()) {
+                    postRequest.setHeader("X-Signature", xSignature);
+                }
                 postRequest.setEntity(new StringEntity(jsonBody));
 
                 HttpResponse response = client.execute(postRequest);

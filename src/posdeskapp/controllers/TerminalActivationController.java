@@ -11,22 +11,29 @@ import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javafx.concurrent.Task;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import posdeskapp.api.ApiClient;
-import posdeskapp.api.ApiConfig;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.HttpResponseResult;
 import posdeskapp.api.TerminalActivationResponse;
@@ -35,7 +42,6 @@ import posdeskapp.models.Configuration;
 import posdeskapp.models.POS;
 import posdeskapp.models.Platform;
 import posdeskapp.models.TaxConfiguration;
-import posdeskapp.models.TaxRate;
 import posdeskapp.models.TaxpayerConfiguration;
 import posdeskapp.models.TerminalConfiguration;
 import posdeskapp.models.TerminalCredentials;
@@ -44,6 +50,7 @@ import posdeskapp.models.TerminalRuntimeEnvironment;
 import posdeskapp.models.UnActivatedTerminal;
 import posdeskapp.utils.Alert;
 import posdeskapp.utils.DbHelper;
+import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class
@@ -145,8 +152,36 @@ public class TerminalActivationController implements Initializable {
                     alert.setContentText("Confirm terminal activation");
                     Optional<ButtonType> option = alert.showAndWait();
                     if (option.get() == ButtonType.OK) {
-                        //Confirm terminal activation, set this terminal as activated and download site products
+                        //Confirm terminal activation
                         String terminalId = DbHelper.fetchTerminalId();
+                        String xSignature = POSHelper.computeXSignature(terminalActivationCodeTextField.getText(), terminalId); //Save TAC
+                        Map<String, String> confirmActivation = new HashMap<>();
+                        confirmActivation.put("terminalId", terminalId);
+
+                        Gson gSon = new Gson();
+                        String confirmTerminalActivationPayload = gSon.toJson(confirmActivation);
+
+                        HttpResponseResult httpResponseResult = ApiClient.confirmTerminalActivation(confirmTerminalActivationPayload, xSignature);
+                        if (httpResponseResult.getStatusCode() == 200) {
+                            //Mark Terminal as fully activated
+                            javafx.scene.control.Alert activatedalert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
+                            activatedalert.setHeaderText(null);
+                            activatedalert.setContentText("Terminal is now fully activated and ready for use!");
+                            Optional<ButtonType> activatedalertOption = activatedalert.showAndWait();
+                            if (activatedalertOption.get() == ButtonType.OK) {
+                                //Download site products
+                                try {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/view/loginForm.fxml"));
+                                    Parent parent = loader.load();
+                                    LoginController controller = (LoginController) loader.getController();
+                                    controller.root.setRight(parent);
+                                } catch (IOException ex) {
+                                    Logger.getLogger(TerminalActivationController.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else {
+                                //Download site products still
+                            }
+                        }
                     }
                 } else {
                     Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to save configuration details");
