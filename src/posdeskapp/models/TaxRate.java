@@ -13,59 +13,59 @@ import com.google.gson.annotations.SerializedName;
  */
 public class TaxRate {
 
-    @SerializedName("Id")
-    private String Id;
+    @SerializedName("id")
+    private String id;
 
-    @SerializedName("Name")
-    private String Name;
+    @SerializedName("name")
+    private String name;
 
-    @SerializedName("ChargeMode")
-    private String ChargeMode;
+    @SerializedName("chargeMode")
+    private String chargeMode;
 
-    @SerializedName("Ordinal")
-    private int Ordinal;
+    @SerializedName("ordinal")
+    private int ordinal;
 
-    @SerializedName("Rate")
-    private double Rate;
+    @SerializedName("rate")
+    private double rate;
 
     // Getters and Setters
     public String getId() {
-        return Id;
+        return id;
     }
 
     public void setId(String id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        this.Name = name;
+        this.name = name;
     }
 
     public String getChargeMode() {
-        return ChargeMode;
+        return chargeMode;
     }
 
     public void setChargeMode(String chargeMode) {
-        this.ChargeMode = chargeMode;
+        this.chargeMode = chargeMode;
     }
 
     public int getOrdinal() {
-        return Ordinal;
+        return ordinal;
     }
 
     public void setOrdinal(int ordinal) {
-        this.Ordinal = ordinal;
+        this.ordinal = ordinal;
     }
 
     public double getRate() {
-        return Rate;
+        return rate;
     }
 
     public void setRate(double rate) {
-        this.Rate = rate;
+        this.rate = rate;
     }
 }
