@@ -13,37 +13,37 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Configuration {
 
-    @SerializedName("TaxConfiguration")
-    private TaxConfiguration GlobalConfiguration;
+    @SerializedName("globalConfiguration")
+    private TaxConfiguration globalConfiguration;
 
-    @SerializedName("TerminalConfiguration")
-    private TerminalConfiguration TerminalConfiguration;
+    @SerializedName("terminalConfiguration")
+    private TerminalConfiguration terminalConfiguration;
 
-    @SerializedName("TaxpayerConfiguration")
-    private TaxpayerConfiguration TaxpayerConfiguration;
+    @SerializedName("taxpayerConfiguration")
+    private TaxpayerConfiguration taxpayerConfiguration;
 
     // Getters and Setters
     public TaxConfiguration getGlobalConfiguration() {
-        return GlobalConfiguration;
+        return globalConfiguration;
     }
 
-    public void setTaxConfiguration(TaxConfiguration GlobalConfiguration) {
-        this.GlobalConfiguration = GlobalConfiguration;
+    public void setGlobalConfiguration(TaxConfiguration globalConfiguration) {
+        this.globalConfiguration = globalConfiguration;
     }
 
     public TerminalConfiguration getTerminalConfiguration() {
-        return TerminalConfiguration;
+        return terminalConfiguration;
     }
 
     public void setTerminalConfiguration(TerminalConfiguration terminalConfiguration) {
-        this.TerminalConfiguration = terminalConfiguration;
+        this.terminalConfiguration = terminalConfiguration;
     }
 
     public TaxpayerConfiguration getTaxpayerConfiguration() {
-        return TaxpayerConfiguration;
+        return taxpayerConfiguration;
     }
 
     public void setTaxpayerConfiguration(TaxpayerConfiguration taxpayerConfiguration) {
-        this.TaxpayerConfiguration = taxpayerConfiguration;
+        this.taxpayerConfiguration = taxpayerConfiguration;
     }
 }
