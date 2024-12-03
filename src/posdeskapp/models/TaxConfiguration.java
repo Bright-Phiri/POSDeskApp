@@ -14,37 +14,37 @@ import java.util.List;
 
 public class TaxConfiguration {
 
-    @SerializedName("Id")
-    private int Id;
+    @SerializedName("id")
+    private int id;
 
-    @SerializedName("VersionNo")
-    private int VersionNo;
+    @SerializedName("versionNo")
+    private int versionNo;
 
-    @SerializedName("Taxrates")
-    private List<TaxRate> TaxRates;
+    @SerializedName("taxrates")
+    private List<TaxRate> taxRates;
 
     // Getters and Setters
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        this.Id = id;
+        this.id = id;
     }
 
     public int getVersionNo() {
-        return VersionNo;
+        return versionNo;
     }
 
     public void setVersionNo(int versionNo) {
-        this.VersionNo = versionNo;
+        this.versionNo = versionNo;
     }
 
     public List<TaxRate> getTaxRates() {
-        return TaxRates;
+        return taxRates;
     }
 
     public void setTaxRates(List<TaxRate> taxRates) {
-        this.TaxRates = taxRates;
+        this.taxRates = taxRates;
     }
 }
