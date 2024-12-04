@@ -56,8 +56,13 @@ public class LoginController implements Initializable {
         root = rootPane;
         try {
             if (DbHelper.doesTerminalKeyExist()) {
-                VBox loginForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
-                rootPane.setRight(loginForm);
+                if (!DbHelper.isTerminalFullyActivated()) {
+                    VBox confirmTerminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/ConfirmTerminalActivation.fxml"));
+                    rootPane.setRight(confirmTerminalActivationForm);
+                } else {
+                    VBox loginForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
+                    rootPane.setRight(loginForm);
+                }
             } else {
                 VBox terminalActivationForm = (VBox) FXMLLoader.load(getClass().getResource("/posdeskapp/views/TerminalActivation.fxml"));
                 rootPane.setRight(terminalActivationForm);

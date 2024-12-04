@@ -281,6 +281,43 @@ public class DbHelper {
         return invoices;
     }
 
+    public static boolean isTerminalFullyActivated() {
+        String query = "SELECT * FROM TerminalConfiguration WHERE IsActivated = 1 LIMIT 1";
+        boolean isActivated = false;
+
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnection.createConnection();
+            stmt = conn.prepareStatement(query);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                isActivated = true;
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error while checking terminal activation status: " + ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return isActivated;
+    }
+
     public static ObservableList<LineItem> getLineSuspendedTransactionLineItems(int pauseId) {
         String query = "SELECT * FROM PausedLineItems WHERE PauseId = ?";
         ObservableList<LineItem> lineItems = FXCollections.observableArrayList();
@@ -709,8 +746,8 @@ public class DbHelper {
         return tin;
     }
 
-    public static String fetchTerminalId() {
-        String query = "SELECT TerminalId FROM TerminalKeys LIMIT 1";
+    public static String fetchTerminalSecretKey() {
+        String query = "SELECT SecretKey FROM TerminalKeys LIMIT 1";
         String terminalId = null;
 
         Connection connection = null;
@@ -718,13 +755,13 @@ public class DbHelper {
         ResultSet resultSet = null;
 
         try {
-  
+
             connection = DbConnection.createConnection();
             terminalKeysStmt = connection.prepareStatement(query);
             resultSet = terminalKeysStmt.executeQuery();
 
             if (resultSet.next()) {
-                terminalId = resultSet.getString("TerminalId");
+                terminalId = resultSet.getString("SecretKey");
             }
 
         } catch (SQLException e) {

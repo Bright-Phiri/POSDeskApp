@@ -42,14 +42,14 @@ public class ApiClient {
     }
 
     public static HttpResponseResult confirmTerminalActivation(String activteTerminalPayload, String xSignature) {
-        return sendHttpPostRequest(ApiConfig.CONFIRM_TERMINAL_ACTIVATION, activteTerminalPayload, false, xSignature);
+        return sendHttpPostRequest(ApiConfig.CONFIRM_TERMINAL_ACTIVATION, activteTerminalPayload, true, xSignature);
     }
 
     public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean includeAuthorization, String xSignature) {
         int statusCode = -1;
         String responseBody = "";
         String token = includeAuthorization ? DbHelper.getTerminalJwtToken() : null;
-
+        System.out.println(uri);
         try {
             // Trust all certificates
             TrustManager[] trustAllCertificates = new TrustManager[]{

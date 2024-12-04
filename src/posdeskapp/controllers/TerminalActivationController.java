@@ -152,35 +152,13 @@ public class TerminalActivationController implements Initializable {
                     alert.setContentText("Confirm terminal activation");
                     Optional<ButtonType> option = alert.showAndWait();
                     if (option.get() == ButtonType.OK) {
-                        //Confirm terminal activation
-                        String terminalId = DbHelper.fetchTerminalId();
-                        String xSignature = POSHelper.computeXSignature(terminalActivationCodeTextField.getText(), terminalId); //Save TAC
-                        Map<String, String> confirmActivation = new HashMap<>();
-                        confirmActivation.put("terminalId", terminalId);
-
-                        Gson gSon = new Gson();
-                        String confirmTerminalActivationPayload = gSon.toJson(confirmActivation);
-
-                        HttpResponseResult httpResponseResult = ApiClient.confirmTerminalActivation(confirmTerminalActivationPayload, xSignature);
-                        if (httpResponseResult.getStatusCode() == 200) {
-                            //Mark Terminal as fully activated
-                            javafx.scene.control.Alert activatedalert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                            activatedalert.setHeaderText(null);
-                            activatedalert.setContentText("Terminal is now fully activated and ready for use!");
-                            Optional<ButtonType> activatedalertOption = activatedalert.showAndWait();
-                            if (activatedalertOption.get() == ButtonType.OK) {
-                                //Download site products
-                                try {
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/app/view/loginForm.fxml"));
-                                    Parent parent = loader.load();
-                                    LoginController controller = (LoginController) loader.getController();
-                                    controller.root.setRight(parent);
-                                } catch (IOException ex) {
-                                    Logger.getLogger(TerminalActivationController.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            } else {
-                                //Download site products still
-                            }
+                        try {
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/ConfirmTerminalActivation.fxml"));
+                            Parent parent = loader.load();
+                            ConfirmTerminalActivationController controller = (ConfirmTerminalActivationController) loader.getController();
+                            LoginController.root.setRight(parent);
+                        } catch (IOException ex) {
+                            Logger.getLogger(TerminalActivationController.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
                 } else {
