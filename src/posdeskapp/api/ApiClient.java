@@ -42,6 +42,10 @@ public class ApiClient {
         return sendHttpPostRequest(ApiConfig.CONFIRM_TERMINAL_ACTIVATION, activteTerminalPayload, true, xSignature);
     }
 
+    public static HttpResponseResult getTaxpayerTerminalSiteProducts(String payLoad) {
+        return sendHttpPostRequest(ApiConfig.GET_TERMINAL_SITE_PRODUCTS, payLoad, true, "");
+    }
+
     public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean includeAuthorization, String xSignature) {
         int statusCode = -1;
         String responseBody = "";
