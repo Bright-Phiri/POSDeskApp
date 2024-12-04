@@ -302,6 +302,9 @@ public class MainController implements Initializable {
         String barcode = searchProductTextField.getText().trim();
         if (!barcode.isEmpty()) {
             addProductToTable(barcode);
+        } else {
+            Notification notification = new Notification("Warning", "Please enter or scan product barcode", 3);
+            searchProductTextField.requestFocus();
         }
     }
 
