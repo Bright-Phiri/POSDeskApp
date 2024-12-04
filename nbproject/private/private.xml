@@ -3,12 +3,54 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/TerminalActivationController.java</file>
             <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/utils/Alert.java</file>
-            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/utils/POSHelper.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/ProductsLookUpController.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/InvoiceHeader.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/Invoice.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/Configuration.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TerminalSite.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/Platform.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/SSLUtils.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/InvoiceLineItem.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TaxBreakDown.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/LoginController.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/PausedTransaction.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/SalesInvoice.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/UserRole.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/ApiResponse.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/Product.java</file>
             <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/MainController.java</file>
             <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/POSDeskApp.java</file>
-            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/LineItem.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/SuspendedSalesController.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TerminalRuntimeEnvironment.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/HttpResponseResult.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/utils/Notification.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TerminalCredentials.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TerminalEnvironment.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/InvoiceSummary.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TaxConfiguration.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/TransactionsController.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/controllers/LoginFormController.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/UnActivatedTerminal.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TerminalConfiguration.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/InvoiceResponse.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TaxRate.java</file>
             <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/utils/DbConnection.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/ActivatedTerminal.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/OfflineLimit.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TaxpayerConfiguration.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/ActivatedTaxrate.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/ApiClient.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/ApiConfig.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/TaxOffice.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/utils/POSHelper.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/utils/DbHelper.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/views/TerminalActivation.fxml</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/css/main.css</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/LineItem.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/models/POS.java</file>
+            <file>file:/C:/Users/biphiri/Documents/NetBeansProjects/POSDeskApp/src/posdeskapp/api/TerminalActivationResponse.java</file>
         </group>
     </open-files>
 </project-private>

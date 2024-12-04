@@ -80,7 +80,7 @@ public class ApiClient {
                     postRequest.setHeader("Authorization", "Bearer " + token);
                 }
                 if (xSignature != null && !xSignature.isEmpty()) {
-                    postRequest.setHeader("X-Signature", xSignature);
+                    postRequest.setHeader("x-signature", xSignature);
                 }
                 postRequest.setEntity(new StringEntity(jsonBody));
 
