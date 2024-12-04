@@ -67,13 +67,13 @@ public class ConfirmTerminalActivationController implements Initializable {
 
     @FXML
     private void confirmaTerminalActivation(ActionEvent event) {
-        String secretKey = DbHelper.fetchTerminalSecretKey();
+        String terminalId = DbHelper.fetchTerminalId();
         String activationCode = DbHelper.fetchActivationCode();
-
+        String secretKey = DbHelper.fetchTerminalSecretKey();
         String xSignature = POSHelper.computeXSignature(activationCode, secretKey);
 
         Map<String, String> confirmActivation = new HashMap<>();
-        confirmActivation.put("terminalId", secretKey);
+        confirmActivation.put("terminalId", terminalId);
 
         Gson gSon = new Gson();
         String confirmTerminalActivationPayload = gSon.toJson(confirmActivation);
