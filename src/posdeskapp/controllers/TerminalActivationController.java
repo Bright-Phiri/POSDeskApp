@@ -112,9 +112,8 @@ public class TerminalActivationController implements Initializable {
         String unActivatedTerminalPayload = gson.toJson(terminalActivationRequest);
 
         HttpResponseResult httpResponseResult = ApiClient.activateTerminal(unActivatedTerminalPayload);
-        System.out.println(httpResponseResult.getResponseBody());
         if (httpResponseResult.getStatusCode() == 200) {
-            processApiResponse(httpResponseResult.getResponseBody());
+            processApiResponse(httpResponseResult.getResponseBody(), terminalActivationCodeTextField.getText().trim());
         } else {
             Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to activate the terminal");
         }
@@ -128,7 +127,7 @@ public class TerminalActivationController implements Initializable {
     }
 
     //Refactor me please
-    private void processApiResponse(String responseBody) {
+    private void processApiResponse(String responseBody, String TAC) {
         Gson gson = new Gson();
         Type apiResponseType = new TypeToken<ApiResponse<TerminalActivationResponse>>() {
         }.getType();
@@ -144,7 +143,7 @@ public class TerminalActivationController implements Initializable {
                 ActivatedTerminal activatedTerminal = apiResponse.getData().getActivatedTerminal();
                 TerminalCredentials credentials = apiResponse.getData().getActivatedTerminal().getTerminalCredentials();
 
-                boolean isSaved = DbHelper.saveConfigurationDetails(terminalConfiguration, taxpayerConfiguration, globalConfiguration, activatedTerminal, credentials);
+                boolean isSaved = DbHelper.saveConfigurationDetails(terminalConfiguration, taxpayerConfiguration, globalConfiguration, activatedTerminal, credentials, TAC);
 
                 if (isSaved) {
                     javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);

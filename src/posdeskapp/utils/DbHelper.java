@@ -785,7 +785,7 @@ public class DbHelper {
         return terminalId;
     }
 
-    public static boolean saveConfigurationDetails(TerminalConfiguration terminalConfiguration, TaxpayerConfiguration taxpayerConfiguration, TaxConfiguration globalConfiguration, ActivatedTerminal activatedTerminal, TerminalCredentials credentials) {
+    public static boolean saveConfigurationDetails(TerminalConfiguration terminalConfiguration, TaxpayerConfiguration taxpayerConfiguration, TaxConfiguration globalConfiguration, ActivatedTerminal activatedTerminal, TerminalCredentials credentials, String TAC) {
         boolean isSuccess = false;
         PreparedStatement terminalConfigStmt = null;
         PreparedStatement taxpayerConfigStmt = null;
@@ -827,13 +827,14 @@ public class DbHelper {
             taxpayerConfigStmt.executeUpdate();
 
             // Insert TerminalKeys
-            String terminalKeysSQL = "INSERT INTO TerminalKeys (TerminalId, TaxpayerId, ActivationDate, JwtToken, SecretKey) VALUES (?, ?, ?, ?, ?)";
+            String terminalKeysSQL = "INSERT INTO TerminalKeys (TerminalId, TaxpayerId, ActivationDate, JwtToken, SecretKey, ActivationCode) VALUES (?, ?, ?, ?, ?, ?)";
             terminalKeysStmt = connection.prepareStatement(terminalKeysSQL);
             terminalKeysStmt.setString(1, activatedTerminal.getTerminalId());
             terminalKeysStmt.setInt(2, (int) (long) activatedTerminal.getTaxpayerId());
             terminalKeysStmt.setString(3, activatedTerminal.getActivationDate());
             terminalKeysStmt.setString(4, credentials.getJwtToken());
             terminalKeysStmt.setString(5, credentials.getSecretKey());
+            terminalKeysStmt.setString(6, TAC);
             terminalKeysStmt.executeUpdate();
 
             // Insert TaxRates

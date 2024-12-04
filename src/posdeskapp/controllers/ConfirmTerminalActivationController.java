@@ -67,7 +67,6 @@ public class ConfirmTerminalActivationController implements Initializable {
 
     @FXML
     private void confirmaTerminalActivation(ActionEvent event) {
-        //Confirm terminal activation
         String terminalId = DbHelper.fetchTerminalSecretKey();
         String xSignature = POSHelper.computeXSignature("ZLNB-WJ5T-MQ4F-SUEQ", terminalId); //Save TAC
         Map<String, String> confirmActivation = new HashMap<>();
