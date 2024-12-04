@@ -14,8 +14,6 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -30,8 +28,6 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import posdeskapp.api.ApiClient;
 import posdeskapp.api.ApiResponse;
@@ -50,7 +46,6 @@ import posdeskapp.models.TerminalRuntimeEnvironment;
 import posdeskapp.models.UnActivatedTerminal;
 import posdeskapp.utils.Alert;
 import posdeskapp.utils.DbHelper;
-import posdeskapp.utils.POSHelper;
 
 /**
  * FXML Controller class
@@ -126,7 +121,6 @@ public class TerminalActivationController implements Initializable {
         }
     }
 
-    //Refactor me please
     private void processApiResponse(String responseBody, String TAC) {
         Gson gson = new Gson();
         Type apiResponseType = new TypeToken<ApiResponse<TerminalActivationResponse>>() {
@@ -161,6 +155,7 @@ public class TerminalActivationController implements Initializable {
                         }
                     }
                 } else {
+                    //Save the config locally & attempt to save it later
                     Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to save configuration details");
                 }
                 break;

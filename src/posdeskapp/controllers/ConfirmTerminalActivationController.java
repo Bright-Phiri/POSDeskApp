@@ -67,10 +67,13 @@ public class ConfirmTerminalActivationController implements Initializable {
 
     @FXML
     private void confirmaTerminalActivation(ActionEvent event) {
-        String terminalId = DbHelper.fetchTerminalSecretKey();
-        String xSignature = POSHelper.computeXSignature("ZLNB-WJ5T-MQ4F-SUEQ", terminalId); //Save TAC
+        String secretKey = DbHelper.fetchTerminalSecretKey();
+        String activationCode = DbHelper.fetchActivationCode();
+
+        String xSignature = POSHelper.computeXSignature(activationCode, secretKey);
+        
         Map<String, String> confirmActivation = new HashMap<>();
-        confirmActivation.put("terminalId", terminalId);
+        confirmActivation.put("terminalId", secretKey);
 
         Gson gSon = new Gson();
         String confirmTerminalActivationPayload = gSon.toJson(confirmActivation);
@@ -78,7 +81,6 @@ public class ConfirmTerminalActivationController implements Initializable {
 
         Gson gson = new Gson();
         
-        // Deserialize the JSON string into APIResponse<Boolean>
         ApiResponse<Boolean> response = gson.fromJson(httpResponseResult.getResponseBody(), new TypeToken<ApiResponse<Boolean>>(){}.getType());
         if (httpResponseResult.getStatusCode() == 200 && response.getStatusCode() == 1) {
             //Mark Terminal as fully activated
