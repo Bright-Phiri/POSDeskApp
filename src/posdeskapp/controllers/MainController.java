@@ -634,48 +634,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void getTerminalSiteProducts(ActionEvent event) {
-        int unTransmittedInvoices = DbHelper.getUntransmittedInvoices().size();
-        if (unTransmittedInvoices == 0) {
-            Task<Void> task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    Gson gson = new Gson();
-                    String siteId = DbHelper.fetchTerminalSiteId();
-                    String TIN = DbHelper.getTIN();
-
-                    Map<String, String> getSiteProducts = new HashMap<>();
-                    getSiteProducts.put("tin", TIN);
-                    getSiteProducts.put("siteId", siteId);
-
-                    String getTerminalSitePayload = gson.toJson(getSiteProducts);
-                    HttpResponseResult productsHttpResponseResult = ApiClient.getTaxpayerTerminalSiteProducts(getTerminalSitePayload);
-
-                    if (productsHttpResponseResult.getStatusCode() == 200) {
-                        if (DbHelper.saveProductsFromJson(productsHttpResponseResult.getResponseBody())) {
-                            Platform.runLater(() -> {
-                                Notification notification = new Notification("Information", "Products successfully saved to the Terminal!", 4);
-                            });
-                        } else {
-                            Platform.runLater(() -> {
-                                Notification notification = new Notification("Error", "Failed to save products to the terminal. Please try again.", 4);
-                            });
-                        }
-                    } else {
-                        Platform.runLater(() -> {
-                            Notification notification = new Notification("Error", "Failed to fetch products from the API. Please check your connection and try again.", 4);
-                        });
-                    }
-                    return null;
-                }
-            };
-
-            // Start the background task
-            new Thread(task).start();
-        } else {
-            Platform.runLater(() -> {
-                Notification notification = new Notification("Error", "Transmission failed due to " + unTransmittedInvoices + " untransmitted invoices. Please ensure all invoices are transmitted before proceeding.", 4);
-            });
-        }
+        
     }
 
 }
