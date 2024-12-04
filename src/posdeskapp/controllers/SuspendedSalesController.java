@@ -201,4 +201,5 @@ public class SuspendedSalesController implements Initializable {
             }
         }
     }
+
 }

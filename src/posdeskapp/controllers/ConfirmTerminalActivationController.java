@@ -110,5 +110,5 @@ public class ConfirmTerminalActivationController implements Initializable {
             Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Confirma terminal activation", response.getRemark());
         }
     }
-
+    
 }
