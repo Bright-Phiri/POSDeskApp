@@ -923,7 +923,7 @@ public class DbHelper {
                 preparedStatement = connection.prepareStatement(insertQuery);
 
                 for (Product product : products) {
-                    preparedStatement.setString(1, product.getProductCode());
+                    preparedStatement.setString(1, product.getBarcode());
                     preparedStatement.setString(2, product.getDescription());
                     preparedStatement.setString(3, product.getDescription());
                     preparedStatement.setDouble(4, product.getQuantity());
@@ -1392,10 +1392,19 @@ public class DbHelper {
         private String productExpiryDate;
         private double minimumStockLevel;
         private String taxRateId;
-
+        private String barcode;
+        
         // Getters and setters
         public String getProductCode() {
             return productCode;
+        }
+
+        public String getBarcode() {
+            return barcode;
+        }
+
+        public void setBarcode(String barcode) {
+            this.barcode = barcode;
         }
 
         public void setProductCode(String productCode) {
