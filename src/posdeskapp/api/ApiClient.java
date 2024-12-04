@@ -5,15 +5,12 @@
  */
 package posdeskapp.api;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.cert.X509Certificate;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
@@ -49,7 +46,6 @@ public class ApiClient {
         int statusCode = -1;
         String responseBody = "";
         String token = includeAuthorization ? DbHelper.getTerminalJwtToken() : null;
-        System.out.println(uri);
         try {
             // Trust all certificates
             TrustManager[] trustAllCertificates = new TrustManager[]{

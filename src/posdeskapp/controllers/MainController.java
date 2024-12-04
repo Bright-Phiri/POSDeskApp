@@ -316,7 +316,7 @@ public class MainController implements Initializable {
         LocalDateTime now = LocalDateTime.now();
         String invoiceDate = POSHelper.formatDate(now);
 
-        String terminalSite = DbHelper.getTaxpayerSiteId();
+        String terminalSite = DbHelper.fetchTerminalSiteId();
         String sellerTIN = DbHelper.getTaxPayerTIN();
 
         InvoiceHeader invoice = new InvoiceHeader(UUID.randomUUID().toString(), invoiceDate, sellerTIN, buyerTINTextField.getText(), "", terminalSite, 1, 1, 1);

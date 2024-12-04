@@ -10,7 +10,6 @@ package posdeskapp.models;
  * @author biphiri
  */
 import com.google.gson.annotations.SerializedName;
-import java.time.OffsetDateTime;
 
 public class ActivatedTerminal {
 
