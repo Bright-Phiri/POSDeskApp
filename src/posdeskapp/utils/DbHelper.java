@@ -680,6 +680,39 @@ public class DbHelper {
         return Boolean.FALSE;
     }
 
+    public static boolean activateTerminalConfiguration() {
+        String updateQuery = "UPDATE TerminalConfiguration SET IsActivated = 1";
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        Connection connection = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            preparedStatement = connection.prepareStatement(updateQuery);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+    }
+
     public static void markInvoiceAsProcessed(String invoiceNumber) {
         String updateQuery = "UPDATE Invoices SET State = ? WHERE InvoiceNumber = ?";
         Connection connection = null;
@@ -785,7 +818,7 @@ public class DbHelper {
         return terminalId;
     }
 
-     public static String fetchActivationCode() {
+    public static String fetchActivationCode() {
         String query = "SELECT ActivationCode FROM TerminalKeys LIMIT 1";
         String activationCode = null;
 
@@ -804,7 +837,7 @@ public class DbHelper {
             }
 
         } catch (SQLException e) {
-            System.err.println("Error fetching TerminalId: " + e.getMessage());
+            System.err.println("Error fetching Activation Code: " + e.getMessage());
         } finally {
             try {
                 if (resultSet != null) {
@@ -823,7 +856,46 @@ public class DbHelper {
 
         return activationCode;
     }
-    
+
+    public static String fetchTerminalSiteId() {
+        String query = "SELECT SiteId FROM TerminalConfiguration LIMIT 1";
+        String siteId = null;
+
+        Connection connection = null;
+        PreparedStatement terminalKeysStmt = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            connection = DbConnection.createConnection();
+            terminalKeysStmt = connection.prepareStatement(query);
+            resultSet = terminalKeysStmt.executeQuery();
+
+            if (resultSet.next()) {
+                siteId = resultSet.getString("SiteId");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching Site Id: " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (terminalKeysStmt != null) {
+                    terminalKeysStmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException closeEx) {
+                System.err.println("Error closing resources: " + closeEx.getMessage());
+            }
+        }
+
+        return siteId;
+    }
+
     public static boolean saveConfigurationDetails(TerminalConfiguration terminalConfiguration, TaxpayerConfiguration taxpayerConfiguration, TaxConfiguration globalConfiguration, ActivatedTerminal activatedTerminal, TerminalCredentials credentials, String TAC) {
         boolean isSuccess = false;
         PreparedStatement terminalConfigStmt = null;
