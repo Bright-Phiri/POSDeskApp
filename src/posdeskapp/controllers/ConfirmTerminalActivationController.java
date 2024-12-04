@@ -76,11 +76,9 @@ public class ConfirmTerminalActivationController implements Initializable {
         Map<String, String> confirmActivation = new HashMap<>();
         confirmActivation.put("terminalId", terminalId);
 
-        Gson gSon = new Gson();
-        String confirmTerminalActivationPayload = gSon.toJson(confirmActivation);
-        HttpResponseResult httpResponseResult = ApiClient.confirmTerminalActivation(confirmTerminalActivationPayload, xSignature);
-
         Gson gson = new Gson();
+        String confirmTerminalActivationPayload = gson.toJson(confirmActivation);
+        HttpResponseResult httpResponseResult = ApiClient.confirmTerminalActivation(confirmTerminalActivationPayload, xSignature);
 
         ApiResponse<Boolean> response = gson.fromJson(httpResponseResult.getResponseBody(), new TypeToken<ApiResponse<Boolean>>() {
         }.getType());
@@ -98,8 +96,7 @@ public class ConfirmTerminalActivationController implements Initializable {
                     getSiteProducts.put("tin", TIN);
                     getSiteProducts.put("siteId", siteId);
 
-                    Gson productsSiteJson = new Gson();
-                    String getTerminalSitePayload = gSon.toJson(getSiteProducts);
+                    String getTerminalSitePayload = gson.toJson(getSiteProducts);
                     HttpResponseResult productsHttpResponseResult = ApiClient.getTaxpayerTerminalSiteProducts(getTerminalSitePayload);
                     if (productsHttpResponseResult.getStatusCode() == 200) {
                         if (DbHelper.saveProductsFromJson(productsHttpResponseResult.getResponseBody())) {
