@@ -19,4 +19,5 @@ public class ApiConfig {
     public static final String PING_SERVER = BASE_URL + "utilities/ping";
     public static final String ACTIVATE_TERMINAL = BASE_URL+  "onboarding/activate-terminal";
     public static final String CONFIRM_TERMINAL_ACTIVATION = BASE_URL + "onboarding/terminal-activated-confirmation";
+    public static final String GET_TERMINAL_SITE_PRODUCTS =  BASE_URL + "utilities/get-terminal-site-products";
 }

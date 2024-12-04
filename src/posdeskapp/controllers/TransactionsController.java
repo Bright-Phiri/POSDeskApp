@@ -107,4 +107,5 @@ public class TransactionsController implements Initializable {
         data = DbHelper.fetchInvoices();
         transactionTable.getItems().setAll(data);
     }
+ 
 }

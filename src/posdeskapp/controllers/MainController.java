@@ -57,7 +57,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
-import posdeskapp.api.ApiConfig;
 import posdeskapp.api.HttpResponseResult;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
@@ -631,4 +630,5 @@ public class MainController implements Initializable {
             System.err.println("Error: " + ex.getMessage());
         }
     }
+
 }

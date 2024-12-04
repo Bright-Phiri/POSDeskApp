@@ -5,6 +5,11 @@
  */
 package posdeskapp.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -488,8 +493,8 @@ public class DbHelper {
         }
     }
 
-    public static ObservableList<Product> fetchProducts() {
-        ObservableList<Product> products = FXCollections.observableArrayList();
+    public static ObservableList<posdeskapp.models.Product> fetchProducts() {
+        ObservableList<posdeskapp.models.Product> products = FXCollections.observableArrayList();
         PreparedStatement pre = null;
         Connection conn = null;
         ResultSet rs = null;
@@ -501,7 +506,7 @@ public class DbHelper {
             rs = pre.executeQuery();
 
             while (rs.next()) {
-                products.add(new Product(
+                products.add(new posdeskapp.models.Product(
                         rs.getString(1),
                         rs.getString(3),
                         rs.getDouble(6),
@@ -858,6 +863,97 @@ public class DbHelper {
         }
 
         return siteId;
+    }
+
+    public static String getTIN() {
+        String query = "SELECT TIN FROM TaxpayerConfiguration LIMIT 1";
+        String tin = null;
+
+        Connection connection = null;
+        PreparedStatement terminalKeysStmt = null;
+        ResultSet resultSet = null;
+
+        try {
+
+            connection = DbConnection.createConnection();
+            terminalKeysStmt = connection.prepareStatement(query);
+            resultSet = terminalKeysStmt.executeQuery();
+
+            if (resultSet.next()) {
+                tin = resultSet.getString("TIN");
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error fetching TIN: " + e.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (terminalKeysStmt != null) {
+                    terminalKeysStmt.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException closeEx) {
+                System.err.println("Error closing resources: " + closeEx.getMessage());
+            }
+        }
+
+        return tin;
+    }
+
+    public static boolean saveProductsFromJson(String jsonResponse) {
+        Gson gson = new Gson();
+        Connection connection = null; 
+        PreparedStatement preparedStatement = null;
+
+        try {
+            JsonObject responseObject = gson.fromJson(jsonResponse, JsonObject.class);
+            JsonElement dataElement = responseObject.get("data");
+
+            if (dataElement != null && dataElement.isJsonArray()) {
+                Type productListType = new TypeToken<List<Product>>() {
+                }.getType();
+                List<Product> products = gson.fromJson(dataElement, productListType);
+
+                String insertQuery = "INSERT OR REPLACE INTO Products (ProductCode, ProductName, Description, Quantity, UnitOfMeasure, Price, SiteId, ProductExpiryDate, MinimumStockLevel, TaxRateId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                connection = DbConnection.createConnection();
+                preparedStatement = connection.prepareStatement(insertQuery);
+
+                for (Product product : products) {
+                    preparedStatement.setString(1, product.getProductCode());
+                    preparedStatement.setString(2, product.getDescription());
+                    preparedStatement.setString(3, product.getDescription());
+                    preparedStatement.setDouble(4, product.getQuantity());
+                    preparedStatement.setString(5, product.getUnitOfMeasure());
+                    preparedStatement.setDouble(6, product.getPrice());
+                    preparedStatement.setString(7, product.getSiteId());
+                    preparedStatement.setString(8, product.getProductExpiryDate());
+                    preparedStatement.setDouble(9, product.getMinimumStockLevel());
+                    preparedStatement.setString(10, product.getTaxRateId());
+                    preparedStatement.addBatch();
+                }
+
+                int[] rowsAffected = preparedStatement.executeBatch();
+                return rowsAffected.length == products.size();
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+        return false;
     }
 
     public static String fetchTerminalSecretKey() {
@@ -1283,4 +1379,100 @@ public class DbHelper {
 
         return isVATRegistered;
     }
+
+    public class Product {
+
+        private String productCode;
+        private String productName;
+        private String description;
+        private double quantity;
+        private String unitOfMeasure;
+        private double price;
+        private String siteId;
+        private String productExpiryDate;
+        private double minimumStockLevel;
+        private String taxRateId;
+
+        // Getters and setters
+        public String getProductCode() {
+            return productCode;
+        }
+
+        public void setProductCode(String productCode) {
+            this.productCode = productCode;
+        }
+
+        public String getProductName() {
+            return productName;
+        }
+
+        public void setProductName(String productName) {
+            this.productName = productName;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        public double getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(double quantity) {
+            this.quantity = quantity;
+        }
+
+        public String getUnitOfMeasure() {
+            return unitOfMeasure;
+        }
+
+        public void setUnitOfMeasure(String unitOfMeasure) {
+            this.unitOfMeasure = unitOfMeasure;
+        }
+
+        public double getPrice() {
+            return price;
+        }
+
+        public void setPrice(double price) {
+            this.price = price;
+        }
+
+        public String getSiteId() {
+            return siteId;
+        }
+
+        public void setSiteId(String siteId) {
+            this.siteId = siteId;
+        }
+
+        public String getProductExpiryDate() {
+            return productExpiryDate;
+        }
+
+        public void setProductExpiryDate(String productExpiryDate) {
+            this.productExpiryDate = productExpiryDate;
+        }
+
+        public double getMinimumStockLevel() {
+            return minimumStockLevel;
+        }
+
+        public void setMinimumStockLevel(double minimumStockLevel) {
+            this.minimumStockLevel = minimumStockLevel;
+        }
+
+        public String getTaxRateId() {
+            return taxRateId;
+        }
+
+        public void setTaxRateId(String taxRateId) {
+            this.taxRateId = taxRateId;
+        }
+    }
+
 }

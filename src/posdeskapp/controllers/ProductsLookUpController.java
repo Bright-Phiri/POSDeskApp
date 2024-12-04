@@ -123,4 +123,5 @@ public class ProductsLookUpController implements Initializable {
         data = DbHelper.fetchProducts();
         productsTable.getItems().setAll(data);
     }
+
 }

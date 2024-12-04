@@ -32,6 +32,7 @@ import posdeskapp.api.ApiResponse;
 import posdeskapp.api.HttpResponseResult;
 import posdeskapp.utils.Alert;
 import posdeskapp.utils.DbHelper;
+import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
 /**
@@ -91,7 +92,22 @@ public class ConfirmTerminalActivationController implements Initializable {
                 Optional<ButtonType> activatedalertOption = activatedalert.showAndWait();
                 if (activatedalertOption.get() == ButtonType.OK) {
                     String siteId = DbHelper.fetchTerminalSiteId();
-                    //Download terminal site products
+                    String TIN = DbHelper.getTIN();
+
+                    Map<String, String> getSiteProducts = new HashMap<>();
+                    getSiteProducts.put("tin", TIN);
+                    getSiteProducts.put("siteId", siteId);
+
+                    Gson productsSiteJson = new Gson();
+                    String getTerminalSitePayload = gSon.toJson(getSiteProducts);
+                    HttpResponseResult productsHttpResponseResult = ApiClient.getTaxpayerTerminalSiteProducts(getTerminalSitePayload);
+                    if (productsHttpResponseResult.getStatusCode() == 200) {
+                        if (DbHelper.saveProductsFromJson(productsHttpResponseResult.getResponseBody())) {
+                            Notification notification = new Notification("Information", "Products successfully saved to the Terminal!", 4);
+                        } else {
+                            Notification notification = new Notification("Error", "Failed to save products to the terminal. Please try again.", 4);
+                        }
+                    }
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/LoginForm.fxml"));
                         Parent parent = loader.load();
@@ -100,8 +116,6 @@ public class ConfirmTerminalActivationController implements Initializable {
                     } catch (IOException ex) {
                         Logger.getLogger(ConfirmTerminalActivationController.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } else {
-                    //Download site products still
                 }
             } else {
                 Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal activation", "Failed to fully activate the terminal");
