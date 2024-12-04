@@ -33,6 +33,11 @@
               <MenuItem mnemonicParsing="false" onAction="#viewSuspendedSales" text="View Suspended Sales" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Terminal Site Products">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#getTerminalSiteProducts" text="Download Products" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
    </top>

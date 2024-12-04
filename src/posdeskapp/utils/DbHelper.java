@@ -372,7 +372,7 @@ public class DbHelper {
     }
 
     public static List<Invoice> getUntransmittedInvoices() {
-        String query = "SELECT * FROM Invoices WHERE State = 0";
+        String query = "SELECT * FROM Invoices WHERE TransmissionState = 0";
         List<Invoice> invoices = new ArrayList<>();
 
         Connection conn = null;
@@ -683,7 +683,7 @@ public class DbHelper {
     }
 
     public static void markInvoiceAsProcessed(String invoiceNumber) {
-        String updateQuery = "UPDATE Invoices SET State = ? WHERE InvoiceNumber = ?";
+        String updateQuery = "UPDATE Invoices SET TransmissionState = ? WHERE InvoiceNumber = ?";
         Connection connection = null;
         PreparedStatement statement = null;
 
@@ -923,7 +923,7 @@ public class DbHelper {
                 preparedStatement = connection.prepareStatement(insertQuery);
 
                 for (Product product : products) {
-                    preparedStatement.setString(1, product.getProductCode());
+                    preparedStatement.setString(1, product.getBarcode());
                     preparedStatement.setString(2, product.getDescription());
                     preparedStatement.setString(3, product.getDescription());
                     preparedStatement.setDouble(4, product.getQuantity());
@@ -1140,7 +1140,7 @@ public class DbHelper {
     }
 
     public static boolean processTransaction(InvoiceHeader invoice, List<LineItem> lineItems, List<TaxBreakDown> taxBreakdowns, double total, double totalVAT) {
-        String insertInvoiceQuery = "INSERT INTO Invoices (InvoiceNumber, InvoiceDateTime, InvoiceTotal, SellerTin, BuyerTin, TotalVAT, State) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertInvoiceQuery = "INSERT INTO Invoices (InvoiceNumber, InvoiceDateTime, InvoiceTotal, SellerTin, BuyerTin, TotalVAT, TransmissionState) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertLineItemQuery = "INSERT INTO LineItems (ProductCode, Description, UnitPrice, Quantity, InvoiceNumber, TaxRateID, Discount) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertTaxBreakdownQuery = "INSERT INTO InvoiceTaxBreakDown (InvoiceNumber, RateID, TaxableAmount, TaxAmount) VALUES (?, ?, ?, ?)";
         String updateProductQuery = "UPDATE Products SET Quantity = ? WHERE ProductCode = ?";
@@ -1392,10 +1392,19 @@ public class DbHelper {
         private String productExpiryDate;
         private double minimumStockLevel;
         private String taxRateId;
-
+        private String barcode;
+        
         // Getters and setters
         public String getProductCode() {
             return productCode;
+        }
+
+        public String getBarcode() {
+            return barcode;
+        }
+
+        public void setBarcode(String barcode) {
+            this.barcode = barcode;
         }
 
         public void setProductCode(String productCode) {
