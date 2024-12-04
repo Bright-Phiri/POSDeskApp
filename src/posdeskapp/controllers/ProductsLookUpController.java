@@ -8,6 +8,7 @@ package posdeskapp.controllers;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.function.Predicate;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -45,7 +46,7 @@ public class ProductsLookUpController implements Initializable {
     @FXML
     private TableColumn<Product, String> unitOfMeasureCol;
     @FXML
-    private TableColumn<Product, Double> priceCol;
+    private TableColumn<Product, String> priceCol;
     @FXML
     private TableColumn<Product, String> expireCol;
     @FXML
@@ -64,6 +65,7 @@ public class ProductsLookUpController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         initializeColumns();
+        priceCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getFormattedUnitPrice()));
         loadProducts();
     }
 

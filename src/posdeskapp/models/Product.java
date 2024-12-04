@@ -7,6 +7,7 @@ package posdeskapp.models;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
+import posdeskapp.utils.POSHelper;
 
 /**
  *
@@ -58,5 +59,9 @@ public class Product {
 
     public String getTaxRateId() {
         return taxRateId.get();
+    }
+
+    public String getFormattedUnitPrice() {
+        return POSHelper.formatValue(getUnitPrice());
     }
 }

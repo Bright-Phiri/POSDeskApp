@@ -68,7 +68,6 @@ import posdeskapp.utils.DbHelper;
 import posdeskapp.api.ApiClient;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.InvoiceResponse;
-import posdeskapp.models.Invoice;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
