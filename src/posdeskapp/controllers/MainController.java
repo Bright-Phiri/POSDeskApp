@@ -162,9 +162,7 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
         TransmissionService transmissionService = new TransmissionService();
- 
         transmissionService.setPeriod(Duration.minutes(10));
-        
         transmissionService.setDelay(Duration.seconds(5));
         transmissionService.setRestartOnFailure(true);
         transmissionService.start();

@@ -12,25 +12,33 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import posdeskapp.services.ServiceManager;
 
 /**
  *
  * @author biphiri
  */
 public class POSDeskApp extends Application {
-    
+
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/posdeskapp/views/Login.fxml"));
-        
+
         Scene scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.initStyle(StageStyle.UNDECORATED);
         stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
         stage.setTitle("POS");
         stage.centerOnScreen();
         stage.show();
+        ServiceManager.getInstance();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        ServiceManager.getInstance().getTransmissionService().cancel();
+        super.stop();
     }
 
     /**
@@ -39,5 +47,5 @@ public class POSDeskApp extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
+
 }

@@ -1,10 +1,11 @@
 package posdeskapp.services;
 
 import javafx.concurrent.Task;
+import javafx.concurrent.ScheduledService;
+import javafx.util.Duration;
 import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import javafx.concurrent.ScheduledService;
 import posdeskapp.api.ApiClient;
 import posdeskapp.api.HttpResponseResult;
 import posdeskapp.models.Invoice;
@@ -21,15 +22,13 @@ public class TransmissionService extends ScheduledService<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() {
-
                 // Fetch untransmitted invoices
                 List<Invoice> untransmittedInvoices = DbHelper.getUntransmittedInvoices();
                 String siteId = DbHelper.fetchTerminalSiteId();
                 System.out.println("Begin Transmission");
 
-                untransmittedInvoices.forEach((invoice) -> {
-
-                    System.out.println("Alipo");
+                untransmittedInvoices.forEach(invoice -> {
+                    System.out.println("Processing Invoice: " + invoice.getInvoiceNumber());
                     List<LineItem> lineItems = DbHelper.getInvoiceLineItems(invoice.getInvoiceNumber());
                     InvoiceHeader invoiceHeader = new InvoiceHeader(
                             invoice.getInvoiceNumber(),
@@ -50,13 +49,13 @@ public class TransmissionService extends ScheduledService<Void> {
                             invoice.getTotalVat()
                     );
                     
-                    System.out.println("Transamitting invoice "+invoiceRequest.InvoiceHeader.getInvoiceDateTime());
+                    System.out.println("Transmitting invoice " + invoiceRequest.InvoiceHeader.getInvoiceDateTime());
 
                     Gson gson = new GsonBuilder()
                             .excludeFieldsWithoutExposeAnnotation()
                             .create();
                     String invoicePayload = gson.toJson(invoiceRequest);
-                    
+
                     // Submit sales transaction
                     HttpResponseResult httpResponseResult = ApiClient.submitSalesTransaction(invoicePayload);
                     if (httpResponseResult.getStatusCode() == 200) {
@@ -68,5 +67,13 @@ public class TransmissionService extends ScheduledService<Void> {
                 return null;
             }
         };
+    }
+
+    public TransmissionService() {
+        setPeriod(Duration.minutes(10));
+        setDelay(Duration.seconds(5));
+        setRestartOnFailure(true);
+        setBackoffStrategy(EXPONENTIAL_BACKOFF_STRATEGY);
+        setMaximumFailureCount(5);
     }
 }
