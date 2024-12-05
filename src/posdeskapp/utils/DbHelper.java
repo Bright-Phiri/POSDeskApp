@@ -649,6 +649,80 @@ public class DbHelper {
         return Boolean.FALSE;
     }
 
+    public static double calculateOfflineCumulativeAmount() {
+        double totalOfflineAmount = 0.0;
+        String query = "SELECT SUM(InvoiceTotal) FROM Invoices WHERE TransmissionState = 0";
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                totalOfflineAmount = resultSet.getDouble(1);
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error fetching current offline cumulative amount: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+
+        return totalOfflineAmount;
+    }
+
+    public static double fetchOfflineTransactionThreshold() {
+        double maxCummulativeAmount = 0.0;
+        String query = "SELECT MaxCummulativeAmount FROM TerminalConfiguration LIMIT 1";
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                maxCummulativeAmount = resultSet.getDouble("MaxCummulativeAmount");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Error fetching offline transaction threshold: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println(ex.getMessage());
+            }
+        }
+
+        return maxCummulativeAmount;
+    }
+
     public static boolean activateTerminalConfiguration() {
         String updateQuery = "UPDATE TerminalConfiguration SET IsActivated = 1";
         PreparedStatement preparedStatement = null;
