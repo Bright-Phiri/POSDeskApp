@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="795.0" prefWidth="1306.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.LastOnlineTransactionController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="795.0" prefWidth="1306.0" stylesheets="@../css/main.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="posdeskapp.controllers.LastTransactionController">
    <center>
       <BorderPane prefWidth="1286.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
@@ -54,7 +54,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="52.0" prefWidth="1286.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Invoice Total:  MWK ">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Invoice Total :  MWK  ">
                            <HBox.margin>
                               <Insets left="1.0" />
                            </HBox.margin>
@@ -71,7 +71,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" prefHeight="52.0" prefWidth="1286.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Taxable        :  MWK  ">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Taxable          :  MWK  ">
                            <HBox.margin>
                               <Insets left="1.0" />
                            </HBox.margin>
@@ -88,7 +88,7 @@
                   </HBox>
                   <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="62.0" prefHeight="52.0" prefWidth="1286.0">
                      <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total VAT     :  MWK ">
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total VAT      :  MWK  ">
                            <HBox.margin>
                               <Insets left="1.0" />
                            </HBox.margin>
@@ -111,7 +111,7 @@
    <top>
       <VBox prefHeight="258.0" prefWidth="1286.0" style="-fx-border-color: #B2B2B2;" BorderPane.alignment="CENTER">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Last Online Transaction Details">
+            <Text fx:id="transactionType" strokeType="OUTSIDE" strokeWidth="0.0">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>

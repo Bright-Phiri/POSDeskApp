@@ -49,6 +49,10 @@ public class ApiClient {
         return sendHttpPostRequest(ApiConfig.GET_LAST_SUBMITTED_ONLINE_TRANSACTION, "", true, "");
     }
 
+    public static HttpResponseResult getLastOfflineTransaction() {
+        return sendHttpPostRequest(ApiConfig.GET_LAST_SUBMITTED_OFFLINE_TRANSACTION, "", true, "");
+    }
+
     public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean includeAuthorization, String xSignature) {
         int statusCode = -1;
         String responseBody = "";

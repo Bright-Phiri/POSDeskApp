@@ -5,8 +5,6 @@
  */
 package posdeskapp.api;
 
-import com.google.gson.annotations.SerializedName;
-import java.time.LocalDateTime;
 import java.util.List;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.InvoiceLineItem;
@@ -17,21 +15,17 @@ import posdeskapp.models.InvoiceSummary;
  * @author biphiri
  */
 public class SalesResponse {
-    @SerializedName("dateSubmitted")
-    private LocalDateTime dateSubmitted;
-    @SerializedName("invoiceHeader")
+    private String dateSubmitted;
     private InvoiceHeader invoiceHeader;
-    @SerializedName("invoiceLineItems")
     private List<InvoiceLineItem> invoiceLineItems;
-    @SerializedName("invoiceSummary")
     private InvoiceSummary invoiceSummary;
 
     // Getters and Setters
-    public LocalDateTime getDateSubmitted() {
+    public String getDateSubmitted() {
         return dateSubmitted;
     }
 
-    public void setDateSubmitted(LocalDateTime dateSubmitted) {
+    public void setDateSubmitted(String dateSubmitted) {
         this.dateSubmitted = dateSubmitted;
     }
 
