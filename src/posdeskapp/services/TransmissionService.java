@@ -38,9 +38,9 @@ public class TransmissionService extends ScheduledService<Void> {
                                     invoice.getBuyerTin(),
                                     "",
                                     siteId,
-                                    1, // GlobalConfigVersion (example static value)
-                                    1, // TaxpayerConfigVersion (example static value)
-                                    1  // TerminalConfigVersion (example static value)
+                                    1, 
+                                    1,
+                                    1
                             );
 
                             SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(
