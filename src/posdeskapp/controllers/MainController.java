@@ -68,6 +68,7 @@ import posdeskapp.utils.DbHelper;
 import posdeskapp.api.ApiClient;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.InvoiceResponse;
+import posdeskapp.services.TransmissionService;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
@@ -159,6 +160,15 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        TransmissionService transmissionService = new TransmissionService();
+ 
+        transmissionService.setPeriod(Duration.minutes(10));
+        
+        transmissionService.setDelay(Duration.seconds(5));
+        transmissionService.setRestartOnFailure(true);
+        transmissionService.start();
+        
         initializeDatabase();
         initializeColumns();
 

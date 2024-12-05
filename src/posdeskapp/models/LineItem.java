@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package posdeskapp.models;
 
 import javafx.beans.property.SimpleDoubleProperty;
@@ -11,11 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.HBox;
 import posdeskapp.utils.POSHelper;
 
-/**
- *
- * @author biphiri
- */
 public class LineItem {
+
     private SimpleIntegerProperty id;
     private SimpleStringProperty productCode;
     private SimpleStringProperty description;
@@ -29,20 +21,36 @@ public class LineItem {
     private HBox controlsPane;
 
     public LineItem() {
+        this.id = new SimpleIntegerProperty(0);
+        this.productCode = new SimpleStringProperty("");
+        this.description = new SimpleStringProperty("");
+        this.unitPrice = new SimpleDoubleProperty(0.0);
+        this.quantity = new SimpleDoubleProperty(0.0);
+        this.invoiceNumber = new SimpleStringProperty("");
+        this.taxRateId = new SimpleStringProperty("");
+        this.discount = new SimpleDoubleProperty(0.0);
+        this.total = new SimpleDoubleProperty(0.0);
+        this.totalVAT = new SimpleDoubleProperty(0.0);
+        this.controlsPane = null; // Can be set later
+    }
+
+    public LineItem(String productCode, String description, double quantity, double unitPrice, double discount, double totalVAT, String taxRateId, String invoiceNumber) {
+        this();
+        this.productCode.set(productCode);
+        this.description.set(description);
+        this.unitPrice.set(unitPrice);
+        this.quantity.set(quantity);
+        this.discount.set(discount);
+        this.totalVAT.set(totalVAT);
+        this.taxRateId.set(taxRateId);
+        this.invoiceNumber.set(invoiceNumber);
+        calculateTotal();
     }
 
     public LineItem(String productCode, String description, double quantity, double unitPrice, double total, double discount, double totalVAT, String taxRateId, HBox controlsPane) {
-        this.id = new SimpleIntegerProperty(0);
-        this.productCode = new SimpleStringProperty(productCode);
-        this.description = new SimpleStringProperty(description);
-        this.unitPrice = new SimpleDoubleProperty(unitPrice);
-        this.quantity = new SimpleDoubleProperty(1.0f);
-        this.invoiceNumber = new SimpleStringProperty("");
-        this.taxRateId = new SimpleStringProperty(taxRateId);
-        this.discount = new SimpleDoubleProperty(discount);
-        this.total = new SimpleDoubleProperty(total);
-        this.totalVAT = new SimpleDoubleProperty(totalVAT);
+        this(productCode, description, quantity, unitPrice, discount, totalVAT, taxRateId, "");
         this.controlsPane = controlsPane;
+        this.total.set(total);
     }
 
     // Getters
@@ -104,42 +112,50 @@ public class LineItem {
     }
 
     public void setProductCode(String productCode) {
-        this.productCode = new SimpleStringProperty(productCode);
+        this.productCode.set(productCode);
     }
 
     public void setDescription(String description) {
-        this.description = new SimpleStringProperty(description);
+        this.description.set(description);
     }
 
     public void setUnitPrice(Double unitPrice) {
-        this.unitPrice = new SimpleDoubleProperty(unitPrice);
+        this.unitPrice.set(unitPrice);
+        calculateTotal();
     }
 
     public void setQuantity(Double quantity) {
-        this.quantity = new SimpleDoubleProperty(quantity);
+        this.quantity.set(quantity);
+        calculateTotal();
     }
 
     public void setInvoiceNumber(String invoiceNumber) {
-        this.invoiceNumber = new SimpleStringProperty(invoiceNumber);
+        this.invoiceNumber.set(invoiceNumber);
     }
 
     public void setTaxRateId(String taxRateId) {
-        this.taxRateId = new SimpleStringProperty(taxRateId);
+        this.taxRateId.set(taxRateId);
     }
 
     public void setDiscount(Double discount) {
-        this.discount =  new SimpleDoubleProperty(discount);
+        this.discount.set(discount);
+        calculateTotal();
     }
 
     public void setTotal(Double total) {
-        this.total = new SimpleDoubleProperty(total);
+        this.total.set(total);
     }
 
     public void setTotalVAT(Double totalVAT) {
-        this.totalVAT = new SimpleDoubleProperty(totalVAT);
+        this.totalVAT.set(totalVAT);
     }
 
     public void setControlsPane(HBox controlsPane) {
         this.controlsPane = controlsPane;
-    }   
+    }
+
+    public void calculateTotal() {
+        double calculatedTotal = (this.quantity.get() * this.unitPrice.get()) - this.discount.get();
+        this.total.set(calculatedTotal);
+    }
 }

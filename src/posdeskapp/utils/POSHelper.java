@@ -121,14 +121,26 @@ public class POSHelper {
         SalesInvoice invoiceRequest = new SalesInvoice();
 
         InvoiceHeader invoiceHeader = new InvoiceHeader(invoice.getInvoiceNumber(), invoice.getInvoiceDateTime(), invoice.getSellerTIN(), invoice.getBuyerTIN(), invoice.getBuyerAuthorizationCode(), invoice.getSiteId(), invoice.getGlobalConfigVersion(), invoice.getTaxpayerConfigVersion(), invoice.getTerminalConfigVersion());
-
         invoiceRequest.InvoiceHeader = invoiceHeader;
-
         List<InvoiceLineItem> invoiceLineItems = new ArrayList<>();
+
         lineItems.stream().map((invoiceLineItem) -> {
-            InvoiceLineItem lineItem = new InvoiceLineItem(0, invoiceLineItem.getProductCode(), invoiceLineItem.getDescription(), invoiceLineItem.getUnitPrice(), invoiceLineItem.getQuantity(), invoiceLineItem.getDiscount(), invoiceLineItem.getTotal(), invoiceLineItem.getTotalVAT(), invoiceLineItem.getTaxRateId());
+            double lineItemTotal = invoiceLineItem.getQuantity() * invoiceLineItem.getUnitPrice();
+            // Create an InvoiceLineItem object
+            InvoiceLineItem lineItem = new InvoiceLineItem(
+                    0,
+                    invoiceLineItem.getProductCode(),
+                    invoiceLineItem.getDescription(),
+                    invoiceLineItem.getUnitPrice(),
+                    invoiceLineItem.getQuantity(),
+                    invoiceLineItem.getDiscount(),
+                    lineItemTotal,
+                    invoiceLineItem.getTotalVAT(),
+                    invoiceLineItem.getTaxRateId()
+            );
             return lineItem;
         }).forEachOrdered((lineItem) -> {
+            // Add to the list
             invoiceLineItems.add(lineItem);
         });
 

@@ -372,7 +372,7 @@ public class DbHelper {
     }
 
     public static List<Invoice> getUntransmittedInvoices() {
-        String query = "SELECT * FROM Invoices WHERE TransmissionState = 0";
+        String query = "SELECT * FROM Invoices WHERE TransmissionState = 0 ORDER BY InvoiceDateTime";
         List<Invoice> invoices = new ArrayList<>();
 
         Connection conn = null;
@@ -701,12 +701,7 @@ public class DbHelper {
             resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                LineItem lineItem = new LineItem();
-                lineItem.setProductCode(resultSet.getString("ProductCode"));
-                lineItem.setDescription(resultSet.getString("Description"));
-                lineItem.setUnitPrice(resultSet.getDouble("UnitPrice"));
-                lineItem.setQuantity(resultSet.getDouble("Quantity"));
-                lineItem.setTaxRateId(resultSet.getString("TaxRateID"));
+                LineItem lineItem = new LineItem(resultSet.getString("ProductCode"), resultSet.getString("Description"), resultSet.getDouble("Quantity"), resultSet.getDouble("UnitPrice"), resultSet.getDouble("Discount"), resultSet.getDouble("TotalVAT"), resultSet.getString("TaxRateID"), invoiceNumber);
                 lineItems.add(lineItem);
             }
         } catch (SQLException ex) {
@@ -1275,7 +1270,7 @@ public class DbHelper {
 
     public static boolean processTransaction(InvoiceHeader invoice, List<LineItem> lineItems, List<TaxBreakDown> taxBreakdowns, double total, double totalVAT) {
         String insertInvoiceQuery = "INSERT INTO Invoices (InvoiceNumber, InvoiceDateTime, InvoiceTotal, SellerTin, BuyerTin, TotalVAT, TransmissionState) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String insertLineItemQuery = "INSERT INTO LineItems (ProductCode, Description, UnitPrice, Quantity, InvoiceNumber, TaxRateID, Discount) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String insertLineItemQuery = "INSERT INTO LineItems (ProductCode, Description, UnitPrice, Quantity, InvoiceNumber, TaxRateID, Discount, TotalVAT) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
         String insertTaxBreakdownQuery = "INSERT INTO InvoiceTaxBreakDown (InvoiceNumber, RateID, TaxableAmount, TaxAmount) VALUES (?, ?, ?, ?)";
         String updateProductQuery = "UPDATE Products SET Quantity = ? WHERE ProductCode = ?";
 
@@ -1322,6 +1317,7 @@ public class DbHelper {
                 lineItemStmt.setString(5, invoice.getInvoiceNumber());
                 lineItemStmt.setString(6, lineItem.getTaxRateId());
                 lineItemStmt.setDouble(7, lineItem.getDiscount());
+                lineItemStmt.setDouble(8, lineItem.getTotalVAT());
                 lineItemStmt.executeUpdate();
             }
 

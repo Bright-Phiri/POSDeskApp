@@ -21,55 +21,50 @@ public class TransmissionService extends ScheduledService<Void> {
         return new Task<Void>() {
             @Override
             protected Void call() {
-                try {
-                    // Fetch untransmitted invoices
-                    List<Invoice> untransmittedInvoices = DbHelper.getUntransmittedInvoices();
-                    String siteId = DbHelper.fetchTerminalSiteId();
 
-                    for (Invoice invoice : untransmittedInvoices) {
-                        try {
-                            // Fetch line items for the current invoice
-                            List<LineItem> lineItems = DbHelper.getInvoiceLineItems(invoice.getInvoiceNumber());
+                // Fetch untransmitted invoices
+                List<Invoice> untransmittedInvoices = DbHelper.getUntransmittedInvoices();
+                String siteId = DbHelper.fetchTerminalSiteId();
+                System.out.println("Begin Transmission");
 
-                            InvoiceHeader invoiceHeader = new InvoiceHeader(
-                                    invoice.getInvoiceNumber(),
-                                    invoice.getInvoiceDateTime(),
-                                    invoice.getSellerTin(),
-                                    invoice.getBuyerTin(),
-                                    "",
-                                    siteId,
-                                    1, 
-                                    1,
-                                    1
-                            );
+                untransmittedInvoices.forEach((invoice) -> {
 
-                            SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(
-                                    invoiceHeader,
-                                    lineItems,
-                                    invoice.getInvoiceTotal(),
-                                    invoice.getTotalVat()
-                            );
+                    System.out.println("Alipo");
+                    List<LineItem> lineItems = DbHelper.getInvoiceLineItems(invoice.getInvoiceNumber());
+                    InvoiceHeader invoiceHeader = new InvoiceHeader(
+                            invoice.getInvoiceNumber(),
+                            invoice.getInvoiceDateTime(),
+                            invoice.getSellerTin(),
+                            invoice.getBuyerTin(),
+                            "",
+                            siteId,
+                            1,
+                            1,
+                            1
+                    );
 
-                            Gson gson = new GsonBuilder()
-                                    .excludeFieldsWithoutExposeAnnotation()
-                                    .create();
-                            String invoicePayload = gson.toJson(invoiceRequest);
+                    SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(
+                            invoiceHeader,
+                            lineItems,
+                            invoice.getInvoiceTotal(),
+                            invoice.getTotalVat()
+                    );
+                    
+                    System.out.println("Transamitting invoice "+invoiceRequest.InvoiceHeader.getInvoiceDateTime());
 
-                            // Submit sales transaction
-                            HttpResponseResult httpResponseResult = ApiClient.submitSalesTransaction(invoicePayload);
-
-                            if (httpResponseResult.getStatusCode() == 200) {
-                                DbHelper.markInvoiceAsProcessed(invoice.getInvoiceNumber());
-                            } else {
-                                System.err.println("Failed to transmit invoice: " + invoice.getInvoiceNumber());
-                            }
-                        } catch (Exception ex) {
-                            System.err.println("Error processing invoice " + invoice.getInvoiceNumber() + ": " + ex.getMessage());
-                        }
+                    Gson gson = new GsonBuilder()
+                            .excludeFieldsWithoutExposeAnnotation()
+                            .create();
+                    String invoicePayload = gson.toJson(invoiceRequest);
+                    
+                    // Submit sales transaction
+                    HttpResponseResult httpResponseResult = ApiClient.submitSalesTransaction(invoicePayload);
+                    if (httpResponseResult.getStatusCode() == 200) {
+                        DbHelper.markInvoiceAsProcessed(invoice.getInvoiceNumber());
+                    } else {
+                        System.err.println("Failed to transmit invoice: " + invoice.getInvoiceNumber());
                     }
-                } catch (Exception ex) {
-                    System.err.println("Error in TransmissionService: " + ex.getMessage());
-                }
+                });
                 return null;
             }
         };
