@@ -312,6 +312,14 @@ public class MainController implements Initializable {
             return;
         }
 
+        double offlineCumulativeAmount = DbHelper.calculateOfflineCumulativeAmount();
+        double offlineTransactionThreshold = DbHelper.fetchOfflineTransactionThreshold();
+        
+        if (offlineCumulativeAmount >= offlineTransactionThreshold) {
+            Notification notification = new Notification("Warning", "Untransmitted invoices must be sent before processing new transactions. Ensure internet connection.",3 );
+            return;
+        }
+
         LocalDateTime now = LocalDateTime.now();
         String invoiceDate = POSHelper.formatDate(now);
 
