@@ -7,6 +7,10 @@ package posdeskapp.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -68,6 +72,7 @@ import posdeskapp.utils.DbHelper;
 import posdeskapp.api.ApiClient;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.InvoiceResponse;
+import posdeskapp.api.SalesResponse;
 import posdeskapp.services.TransmissionService;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
@@ -160,13 +165,7 @@ public class MainController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        
-        TransmissionService transmissionService = new TransmissionService();
-        transmissionService.setPeriod(Duration.minutes(10));
-        transmissionService.setDelay(Duration.seconds(5));
-        transmissionService.setRestartOnFailure(true);
-        transmissionService.start();
-        
+
         initializeDatabase();
         initializeColumns();
 
@@ -322,9 +321,9 @@ public class MainController implements Initializable {
 
         double offlineCumulativeAmount = DbHelper.calculateOfflineCumulativeAmount();
         double offlineTransactionThreshold = DbHelper.fetchOfflineTransactionThreshold();
-        
+
         if (offlineCumulativeAmount >= offlineTransactionThreshold) {
-            Notification notification = new Notification("Warning", "Untransmitted invoices must be sent before processing new transactions. Ensure internet connection.",3 );
+            Notification notification = new Notification("Warning", "Untransmitted invoices must be sent before processing new transactions. Ensure internet connection.", 3);
             return;
         }
 
@@ -692,6 +691,72 @@ public class MainController implements Initializable {
                 Notification notification = new Notification("Error", "Transmission failed due to " + unTransmittedInvoices + " untransmitted invoices. Please ensure all invoices are transmitted before proceeding.", 4);
             });
         }
+    }
+
+    @FXML
+    private void viewLastSubmittedOnlineTransaction(ActionEvent event) {
+        viewLastSubmittedTransaction(event, true);
+    }
+
+    @FXML
+    private void viewLastSubmittedOfflineTransaction(ActionEvent event) {
+        viewLastSubmittedTransaction(event, false);
+    }
+
+    private void viewLastSubmittedTransaction(ActionEvent event, boolean isOnline) {
+        // Create a Task to run the blocking API call in the background
+        final String transactionType = "";
+        Task<SalesResponse> task = new Task<SalesResponse>() {
+            @Override
+            protected SalesResponse call() throws Exception {
+                HttpResponseResult httpResponseResult;
+
+                if (isOnline) {
+                    httpResponseResult = ApiClient.getLastOnlineTransaction();
+                } else {
+                    httpResponseResult = ApiClient.getLastOfflineTransaction();
+                }
+
+                if (httpResponseResult.getStatusCode() == 200) {
+                    Gson gson = new GsonBuilder().serializeNulls().create();
+                    JsonObject responseObject = gson.fromJson(httpResponseResult.getResponseBody(), JsonObject.class);
+                    JsonElement dataElement = responseObject.get("data");
+                    return gson.fromJson(dataElement, SalesResponse.class);
+                }
+                return null;
+            }
+        };
+
+        task.setOnSucceeded(event1 -> {
+            SalesResponse salesResponse = task.getValue();
+
+            if (salesResponse != null) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/posdeskapp/views/LastTransaction.fxml"));
+                    Parent root = loader.load();
+
+                    LastTransactionController transactionController = loader.getController();
+                    transactionController.setSalesResponse(salesResponse);
+
+                    Scene scene = new Scene(root);
+                    Stage stage = new Stage();
+                    stage.setScene(scene);
+                    stage.getIcons().add(new Image("/posdeskapp/images/point-of-sale-icon.png"));
+                    stage.setTitle("POS");
+                    stage.centerOnScreen();
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.show();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+        // Start the task on a new thread to keep UI responsive
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
     }
 
 }
