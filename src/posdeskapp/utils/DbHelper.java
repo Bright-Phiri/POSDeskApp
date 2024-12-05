@@ -385,7 +385,7 @@ public class DbHelper {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5), rs.getDouble(6));
+                Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5),rs.getString(4), rs.getDouble(6));
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
@@ -686,6 +686,50 @@ public class DbHelper {
         return totalOfflineAmount;
     }
 
+    public static List<LineItem> getInvoiceLineItems(String invoiceNumber) {
+        String query = "SELECT * FROM LineItems WHERE InvoiceNumber = ?";
+        List<LineItem> lineItems = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, invoiceNumber);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                LineItem lineItem = new LineItem();
+                lineItem.setProductCode(resultSet.getString("ProductCode"));
+                lineItem.setDescription(resultSet.getString("Description"));
+                lineItem.setUnitPrice(resultSet.getDouble("UnitPrice"));
+                lineItem.setQuantity(resultSet.getDouble("Quantity"));
+                lineItem.setTaxRateId(resultSet.getString("TaxRateID"));
+                lineItems.add(lineItem);
+            }
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while fetching line items for invoice " + invoiceNumber + ": " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("An error occurred while closing resources: " + ex.getMessage());
+            }
+        }
+
+        return lineItems;
+    }
+    
     public static double fetchOfflineTransactionThreshold() {
         double maxCummulativeAmount = 0.0;
         String query = "SELECT MaxCummulativeAmount FROM TerminalConfiguration LIMIT 1";
