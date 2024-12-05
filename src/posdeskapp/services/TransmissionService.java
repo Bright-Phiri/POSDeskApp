@@ -1,8 +1,10 @@
-import javafx.concurrent.ScheduledService;
+package posdeskapp.services;
+
 import javafx.concurrent.Task;
 import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import javafx.concurrent.ScheduledService;
 import posdeskapp.api.ApiClient;
 import posdeskapp.api.HttpResponseResult;
 import posdeskapp.models.Invoice;
