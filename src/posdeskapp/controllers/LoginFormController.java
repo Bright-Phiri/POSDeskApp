@@ -19,6 +19,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import org.apache.commons.codec.digest.DigestUtils;
 import posdeskapp.utils.Alert;
 import posdeskapp.utils.DbHelper;
 import posdeskapp.utils.POSHelper;
@@ -68,7 +69,7 @@ public class LoginFormController implements Initializable {
     @FXML
     private void login(ActionEvent event) {
         if (validateFields()) {
-            if (DbHelper.userSignIn(username.getText().trim(), POSHelper.encryptPassword(password.getText().trim()))) {
+            if (DbHelper.userSignIn(username.getText().trim(), DigestUtils.shaHex(password.getText().trim()))) {
                 POSHelper helper = new POSHelper();
                 switch (DbHelper.USERTYPE) {
                     case "ADMIN":

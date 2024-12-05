@@ -86,7 +86,7 @@ public class ConfirmTerminalActivationController implements Initializable {
             if (DbHelper.activateTerminalConfiguration()) {
                 javafx.scene.control.Alert activatedalert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
                 activatedalert.setHeaderText(null);
-                activatedalert.setContentText("Terminal is now fully activated and ready for use!");
+                activatedalert.setContentText(response.getRemark());
                 Optional<ButtonType> activatedalertOption = activatedalert.showAndWait();
                 if (activatedalertOption.get() == ButtonType.OK) {
                     String siteId = DbHelper.fetchTerminalSiteId();

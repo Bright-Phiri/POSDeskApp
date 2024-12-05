@@ -110,7 +110,7 @@ public class TerminalActivationController implements Initializable {
         if (httpResponseResult.getStatusCode() == 200) {
             processApiResponse(httpResponseResult.getResponseBody(), terminalActivationCodeTextField.getText().trim());
         } else {
-            Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "Failed to activate the terminal");
+            Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "An error occurred while activating terminal" );
         }
     }
 

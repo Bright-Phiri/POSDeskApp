@@ -69,14 +69,6 @@ public class POSHelper {
     public POSHelper() {
     }
 
-    public static String encryptPassword(String password) {
-        return Base64.getEncoder().encodeToString(password.getBytes(StandardCharsets.UTF_8));
-    }
-
-    public static String decryptPassword(String cypherText) {
-        return new String(Base64.getDecoder().decode(cypherText), StandardCharsets.UTF_8);
-    }
-
     public static String formatDate(LocalDateTime date) {
         ZonedDateTime utcDateTime = date.atZone(ZoneOffset.UTC);
 
