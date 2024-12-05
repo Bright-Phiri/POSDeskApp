@@ -15,11 +15,12 @@ import posdeskapp.utils.POSHelper;
  */
 public class Invoice {
 
-    private final SimpleStringProperty invoiceNumber;
-    private final SimpleStringProperty invoiceDateTime;
-    private final SimpleDoubleProperty invoiceTotal;
-    private final SimpleStringProperty buyerTin;
-    private final SimpleDoubleProperty totalVat;
+    private SimpleStringProperty invoiceNumber;
+    private SimpleStringProperty invoiceDateTime;
+    private SimpleDoubleProperty invoiceTotal;
+    private SimpleStringProperty buyerTin;
+    private SimpleDoubleProperty totalVat;
+    private SimpleStringProperty sellerTin;
 
     public Invoice(String invoiceNumber, String invoiceDateTime, Double invoiceTotal, String buyerTin, Double totalVat) {
         this.invoiceNumber = new SimpleStringProperty(invoiceNumber);
@@ -28,6 +29,20 @@ public class Invoice {
         this.buyerTin = new SimpleStringProperty(buyerTin);
         this.totalVat = new SimpleDoubleProperty(totalVat);
     }
+
+    public Invoice(String invoiceNumber, String invoiceDateTime, Double invoiceTotal, String buyerTin, String sellerTin, Double totalVat) {
+        this.invoiceNumber = new SimpleStringProperty(invoiceNumber);
+        this.invoiceDateTime = new SimpleStringProperty(invoiceDateTime);
+        this.invoiceTotal = new SimpleDoubleProperty(invoiceTotal);
+        this.buyerTin = new SimpleStringProperty(buyerTin);
+        this.sellerTin = new SimpleStringProperty(sellerTin);
+        this.totalVat = new SimpleDoubleProperty(totalVat);
+    }
+
+    public String getSellerTin() {
+        return sellerTin.get();
+    }
+    
 
     public String getInvoiceNumber() {
         return invoiceNumber.get();
