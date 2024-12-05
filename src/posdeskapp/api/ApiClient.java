@@ -26,8 +26,7 @@ import posdeskapp.utils.DbHelper;
 public class ApiClient {
 
     public static HttpResponseResult pingServer(String bearerToken) {
-        String jsonBody = "";
-        return sendHttpPostRequest(ApiConfig.PING_SERVER, jsonBody, false, "");
+        return sendHttpPostRequest(ApiConfig.PING_SERVER, "", false, "");
     }
 
     public static HttpResponseResult submitSalesTransaction(String invoicePayload) {
@@ -44,6 +43,10 @@ public class ApiClient {
 
     public static HttpResponseResult getTaxpayerTerminalSiteProducts(String payLoad) {
         return sendHttpPostRequest(ApiConfig.GET_TERMINAL_SITE_PRODUCTS, payLoad, true, "");
+    }
+
+    public static HttpResponseResult getLastOnlineTransaction() {
+        return sendHttpPostRequest(ApiConfig.GET_LAST_SUBMITTED_ONLINE_TRANSACTION, "", true, "");
     }
 
     public static HttpResponseResult sendHttpPostRequest(String uri, String jsonBody, boolean includeAuthorization, String xSignature) {
