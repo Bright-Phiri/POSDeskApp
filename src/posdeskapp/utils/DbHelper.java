@@ -22,13 +22,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.commons.codec.digest.DigestUtils;
 import posdeskapp.controllers.SuspendedSalesController;
 import posdeskapp.models.ActivatedTerminal;
 import posdeskapp.models.Invoice;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
-import posdeskapp.models.Product;
 import posdeskapp.models.TaxBreakDown;
 import posdeskapp.models.TaxConfiguration;
 import posdeskapp.models.TaxRate;
@@ -625,7 +625,7 @@ public class DbHelper {
             resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 USERNAME = resultSet.getString(4);
-                USERTYPE = resultSet.getString(9);
+                USERTYPE = resultSet.getString(8);
                 return Boolean.TRUE;
             }
         } catch (SQLException ex) {
@@ -906,7 +906,7 @@ public class DbHelper {
 
     public static boolean saveProductsFromJson(String jsonResponse) {
         Gson gson = new Gson();
-        Connection connection = null; 
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
 
         try {
@@ -1002,6 +1002,7 @@ public class DbHelper {
         PreparedStatement terminalKeysStmt = null;
         PreparedStatement taxRatesStmt = null;
         PreparedStatement globalConfigStmt = null;
+        PreparedStatement defaultUserStmt = null;
 
         try {
             Connection connection = DbConnection.createConnection();
@@ -1062,17 +1063,29 @@ public class DbHelper {
             // Insert GlobalConfiguration
             String globalConfigSQL = "INSERT INTO GlobalConfiguration (Id, VersionNo) VALUES (?, ?)";
             globalConfigStmt = connection.prepareStatement(globalConfigSQL);
-            globalConfigStmt.setInt(1, 1); // Assuming a fixed ID for global configuration
+            globalConfigStmt.setInt(1, 1);
             globalConfigStmt.setInt(2, globalConfiguration.getVersionNo());
             globalConfigStmt.executeUpdate();
+
+            String defaultUserSQL = "INSERT INTO Users (FirstName, LastName, UserName, PhoneNumber, EmailAddress, Address, Role, Password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            defaultUserStmt = connection.prepareStatement(defaultUserSQL);
+            defaultUserStmt.setString(1, "ADMIN");
+            defaultUserStmt.setString(2, "ADMIN");
+            defaultUserStmt.setString(3, "ADMIN");
+            defaultUserStmt.setString(4, "");
+            defaultUserStmt.setString(5, "");
+            defaultUserStmt.setString(6, "");
+            defaultUserStmt.setString(7, "ADMIN");
+            defaultUserStmt.setString(8, DigestUtils.shaHex(("12345678")));
+            defaultUserStmt.executeUpdate();
 
             connection.commit(); // Commit the transaction
             isSuccess = true;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             try {
-                if (globalConfigStmt != null) {
-                    globalConfigStmt.getConnection().rollback();
+                if (defaultUserStmt != null) {
+                    defaultUserStmt.getConnection().rollback();
                 }
             } catch (SQLException rollbackEx) {
                 System.err.println("Rollback failed: " + rollbackEx.getMessage());
@@ -1093,6 +1106,9 @@ public class DbHelper {
                 }
                 if (globalConfigStmt != null) {
                     globalConfigStmt.close();
+                }
+                if (defaultUserStmt != null) {
+                    defaultUserStmt.close();
                 }
             } catch (SQLException closeEx) {
                 System.err.println(closeEx.getMessage());
@@ -1393,7 +1409,7 @@ public class DbHelper {
         private double minimumStockLevel;
         private String taxRateId;
         private String barcode;
-        
+
         // Getters and setters
         public String getProductCode() {
             return productCode;
