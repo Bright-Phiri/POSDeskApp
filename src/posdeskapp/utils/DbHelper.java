@@ -26,6 +26,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import posdeskapp.controllers.SuspendedSalesController;
 import posdeskapp.models.ActivatedTerminal;
 import posdeskapp.models.Invoice;
+import posdeskapp.models.InvoiceDetails;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.LineItem;
 import posdeskapp.models.PausedTransaction;
@@ -323,6 +324,47 @@ public class DbHelper {
         return isActivated;
     }
 
+    public static InvoiceDetails getLastInvoiceDetails() {
+        String getLastInvoiceQuery = "SELECT InvoiceNumber, InvoiceDateTime FROM Invoices ORDER BY InvoiceDateTime DESC LIMIT 1";
+
+        InvoiceDetails invoiceDetails = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DbConnection.createConnection();
+            stmt = conn.prepareStatement(getLastInvoiceQuery);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                invoiceDetails = new InvoiceDetails();
+                invoiceDetails.setInvoiceNumber(rs.getString("InvoiceNumber"));
+                invoiceDetails.setInvoiceDateTime(rs.getTimestamp("InvoiceDateTime").toLocalDateTime());
+            } else {
+                System.out.println("No records found in Invoices.");
+            }
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while fetching the last invoice details: " + ex.getMessage());
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return invoiceDetails;
+    }
+
     public static ObservableList<LineItem> getLineSuspendedTransactionLineItems(int pauseId) {
         String query = "SELECT * FROM PausedLineItems WHERE PauseId = ?";
         ObservableList<LineItem> lineItems = FXCollections.observableArrayList();
@@ -385,7 +427,7 @@ public class DbHelper {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5),rs.getString(4), rs.getDouble(6));
+                Invoice invoice = new Invoice(rs.getString(1), rs.getString(2), rs.getDouble(3), rs.getString(5), rs.getString(4), rs.getDouble(6));
                 invoices.add(invoice);
             }
         } catch (SQLException e) {
@@ -724,7 +766,7 @@ public class DbHelper {
 
         return lineItems;
     }
-    
+
     public static double fetchOfflineTransactionThreshold() {
         double maxCummulativeAmount = 0.0;
         String query = "SELECT MaxCummulativeAmount FROM TerminalConfiguration LIMIT 1";

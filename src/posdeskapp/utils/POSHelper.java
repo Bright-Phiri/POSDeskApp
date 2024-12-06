@@ -93,6 +93,54 @@ public class POSHelper {
         }
     }
 
+    public static int convertSequentialToBase10(String sequentialString) {
+        final String base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+        // Split and get the last part
+        String[] parts = sequentialString.split("-");
+        String base64Value = parts[parts.length - 1];
+
+        // Handle special case for zero
+        if ("A".equals(base64Value)) {
+            return 0;
+        }
+
+        int result = 0;
+        for (int i = 0; i < base64Value.length(); i++) {
+            char c = base64Value.charAt(i);
+            int digitValue = base64Chars.indexOf(c);
+
+            if (digitValue == -1) {
+                throw new IllegalArgumentException("Invalid Base64 character: " + c);
+            }
+
+            result = result * 64 + digitValue;
+        }
+
+        return result;
+    }
+
+    public static long convertInvoiceNumberToBase10(String invoiceNumber) {
+        String[] parts = invoiceNumber.split("-");
+        long result = 0;
+
+        for (String part : parts) {
+            try {
+                byte[] bytes = java.util.Base64.getDecoder().decode(part);
+                // Ensure the byte array is exactly 8 bytes for conversion
+                byte[] paddedBytes = new byte[8];
+                System.arraycopy(bytes, 0, paddedBytes, 0, Math.min(bytes.length, 8));
+                long partValue = java.nio.ByteBuffer.wrap(paddedBytes).getLong();
+
+                result = (result << 32) | (partValue & 0xFFFFFFFFL);
+            } catch (IllegalArgumentException ex) {
+                System.err.println("Error processing part '" + part + "': " + ex.getMessage());
+            }
+        }
+
+        return result;
+    }
+
     public void showUserStage(Node node, String fxmlUrl) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource(fxmlUrl));
