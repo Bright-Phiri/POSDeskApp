@@ -11,7 +11,7 @@ package posdeskapp.api;
  */
 public class ApiConfig {
 
-    public static final String BASE_URL = "https://dev-eis-api.mra.mw/api/v1/";
+    public static final String BASE_URL = "https://localhost:7162/api/v1/";
 
     //End-points
     public static final String SUBMIT_SALES_TRANSACTION = BASE_URL + "sales/submit-sales-transaction";

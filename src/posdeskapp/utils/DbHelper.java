@@ -1384,7 +1384,6 @@ public class DbHelper {
             } catch (SQLException ex) {
                 System.err.println("Error rolling back transaction: " + ex.getMessage());
             }
-            System.err.println("Error while saving transaction: " + e.getMessage());
             return false;
         } finally {
             try {
