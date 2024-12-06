@@ -23,7 +23,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.api.SalesResponse;
-import posdeskapp.models.InvoiceLineItem;
 import posdeskapp.models.LineItem;
 import posdeskapp.utils.POSHelper;
 
