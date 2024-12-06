@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.octicons.OctIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -36,16 +38,30 @@
             </TableView>
          </center>
          <top>
-            <HBox prefHeight="31.0" prefWidth="1286.0" BorderPane.alignment="CENTER">
+            <HBox prefHeight="51.0" prefWidth="1286.0" BorderPane.alignment="CENTER">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Invoice Line Items">
                      <font>
-                        <Font size="17.0" />
+                        <Font size="21.0" />
                      </font>
                      <HBox.margin>
                         <Insets left="1.0" />
                      </HBox.margin>
                   </Text>
+                  <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <OctIconView glyphName="SEARCH" size="30">
+                     <HBox.margin>
+                        <Insets right="6.0" top="2.0" />
+                     </HBox.margin>
+                  </OctIconView>
+                  <TextField fx:id="searchTextField" onKeyTyped="#searchLineItem" prefHeight="32.0" prefWidth="329.0" promptText="Search Line Item" style="-fx-background-radius: 0;">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="1.0" />
+                     </HBox.margin>
+                  </TextField>
                </children>
             </HBox>
          </top>

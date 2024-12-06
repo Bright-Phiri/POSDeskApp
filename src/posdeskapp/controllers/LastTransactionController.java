@@ -7,15 +7,20 @@ package posdeskapp.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.api.SalesResponse;
 import posdeskapp.models.InvoiceLineItem;
@@ -61,6 +66,8 @@ public class LastTransactionController implements Initializable {
     private Text taxableAmountText;
     @FXML
     private Text transactionType;
+    @FXML
+    private TextField searchTextField;
     private SalesResponse salesResponse;
     ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -97,7 +104,6 @@ public class LastTransactionController implements Initializable {
         siteIdText.setText(salesResponse.getInvoiceHeader().getSiteId());
 
         // Populate Line Items Table
-        ObservableList<LineItem> data = FXCollections.observableArrayList();
         for (InvoiceLineItem invoiceLineItem : salesResponse.getInvoiceLineItems()) {
             LineItem lineItem = new LineItem();
             lineItem.setProductCode(invoiceLineItem.getProductCode());
@@ -122,6 +128,37 @@ public class LastTransactionController implements Initializable {
         priceCol.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
         quantityCol.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         taxRateCol.setCellValueFactory(new PropertyValueFactory<>("taxRateId"));
+    }
+
+    @FXML
+    private void searchLineItem(KeyEvent event) {
+        FilteredList<LineItem> filteredList = new FilteredList<>(data, p -> true);
+        searchTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredList.setPredicate((Predicate<? super LineItem>) item -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterToLowerCase = newValue.toLowerCase();
+                if (item.getProductCode().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getDescription().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getUnitPrice().toString().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getTaxRateId().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                lineItemsTable.setPlaceholder(new Text("No record match your search"));
+                return false;
+            });
+
+            SortedList<LineItem> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(lineItemsTable.comparatorProperty());
+            lineItemsTable.setItems(sortedList);
+        }));
     }
 
 }
