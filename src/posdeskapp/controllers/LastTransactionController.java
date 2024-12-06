@@ -7,15 +7,20 @@ package posdeskapp.controllers;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Predicate;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.api.SalesResponse;
 import posdeskapp.models.InvoiceLineItem;
@@ -61,6 +66,9 @@ public class LastTransactionController implements Initializable {
     private Text taxableAmountText;
     @FXML
     private Text transactionType;
+    @FXML
+    private TextField searchTextField;
+
     private SalesResponse salesResponse;
     ObservableList<LineItem> data = FXCollections.observableArrayList();
 
@@ -82,6 +90,37 @@ public class LastTransactionController implements Initializable {
         this.salesResponse = salesResponse;
     }
 
+    @FXML
+    private void searchLineItem(KeyEvent event) {
+        FilteredList<LineItem> filteredList = new FilteredList<>(data, p -> true);
+        searchTextField.textProperty().addListener(((observable, oldValue, newValue) -> {
+            filteredList.setPredicate((Predicate<? super LineItem>) item -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String filterToLowerCase = newValue.toLowerCase();
+                if (item.getProductCode().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getDescription().toLowerCase().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getUnitPrice().toString().contains(filterToLowerCase)) {
+                    return true;
+                }
+                if (item.getTaxRateId().contains(filterToLowerCase)) {
+                    return true;
+                }
+                lineItemsTable.setPlaceholder(new Text("No record match your search"));
+                return false;
+            });
+
+            SortedList<LineItem> sortedList = new SortedList<>(filteredList);
+            sortedList.comparatorProperty().bind(lineItemsTable.comparatorProperty());
+            lineItemsTable.setItems(sortedList);
+        }));
+    }
+
     public void populateInvoiceDetails(SalesResponse salesResponse) {
         if (salesResponse.getInvoiceSummary().getOfflineSignature() != null) {
             transactionType.setText("Last Offline Transaction Details");
@@ -97,16 +136,17 @@ public class LastTransactionController implements Initializable {
         siteIdText.setText(salesResponse.getInvoiceHeader().getSiteId());
 
         // Populate Line Items Table
-        ObservableList<LineItem> data = FXCollections.observableArrayList();
-        for (InvoiceLineItem invoiceLineItem : salesResponse.getInvoiceLineItems()) {
+        salesResponse.getInvoiceLineItems().stream().map((invoiceLineItem) -> {
             LineItem lineItem = new LineItem();
             lineItem.setProductCode(invoiceLineItem.getProductCode());
             lineItem.setDescription(invoiceLineItem.getDescription());
             lineItem.setUnitPrice(invoiceLineItem.getUnitPrice());
             lineItem.setQuantity(invoiceLineItem.getQuantity());
             lineItem.setTaxRateId(invoiceLineItem.getTaxRateId());
+            return lineItem;
+        }).forEachOrdered((lineItem) -> {
             data.add(lineItem);
-        }
+        });
         lineItemsTable.setItems(data);
 
         // Set Invoice Summary Information
