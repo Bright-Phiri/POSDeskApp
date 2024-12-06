@@ -45,6 +45,7 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.rmi.CORBA.Util;
 import posdeskapp.controllers.MainController;
+import posdeskapp.models.InvoiceGenerationRequest;
 import posdeskapp.models.InvoiceHeader;
 import posdeskapp.models.InvoiceLineItem;
 import posdeskapp.models.InvoiceSummary;
@@ -118,6 +119,63 @@ public class POSHelper {
         }
 
         return result;
+    }
+
+    public static String base10ToBase64(long number) {
+        if (number == 0) {
+            return "A";
+        }
+
+        final String base64Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        StringBuilder result = new StringBuilder();
+
+        while (number > 0) {
+            int remainder = (int) (number % 64);
+            result.append(base64Chars.charAt(remainder));
+            number /= 64;
+        }
+
+        return result.reverse().toString();
+    }
+
+    public static String generateInvoiceNumber(InvoiceGenerationRequest invoiceGenerationRequest) {
+
+        long julianDate = convertToJulianDate(invoiceGenerationRequest.getTransactionDate());
+
+        String combinedString = generateCombinedString(invoiceGenerationRequest.getBusinessId(),
+                invoiceGenerationRequest.getTerminalPosition(),
+                julianDate,
+                invoiceGenerationRequest.getTransactionCount());
+        return combinedString;
+    }
+
+    public static String generateCombinedString(long taxpayerId, int position, long julianDate, long transactionCount) {
+        String base64TaxpayerNumber = base10ToBase64(taxpayerId);
+        String base64Position = base10ToBase64(position);
+        String julianDateBase64 = base10ToBase64(julianDate);
+        String serialNumberBase64 = base10ToBase64(transactionCount);
+
+        return base64TaxpayerNumber + "-" + base64Position + "-" + julianDateBase64 + "-" + serialNumberBase64;
+    }
+
+    public static int convertToJulianDate(LocalDateTime dateTime) {
+        int year = dateTime.getYear();
+        int month = dateTime.getMonthValue();
+        int day = dateTime.getDayOfMonth();
+
+        if (month <= 2) {
+            year -= 1;
+            month += 12;
+        }
+
+        int A = year / 100;
+        int B = 2 - A + (A / 4);
+
+        int JD = (int) (Math.floor(365.25 * (year + 4716))
+                + Math.floor(30.6001 * (month + 1))
+                + day + B - 1524);
+
+        return JD;
     }
 
     public static long convertInvoiceNumberToBase10(String invoiceNumber) {

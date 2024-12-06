@@ -47,7 +47,7 @@ public class DbConnection {
     public static void initializeDatabase() {
         Map<String, String> tables = new HashMap<>();
 
-        
+       
 
         tables.entrySet().forEach((entry) -> {
             checkTable(entry.getKey(), entry.getValue());

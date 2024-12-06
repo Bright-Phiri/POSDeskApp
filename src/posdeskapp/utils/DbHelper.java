@@ -15,6 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Savepoint;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -901,6 +902,78 @@ public class DbHelper {
         }
 
         return tin;
+    }
+
+    public static int getTerminalPosition() {
+        int terminalPosition = 0;
+        String query = "SELECT TerminalPosition FROM TerminalConfiguration";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                terminalPosition = resultSet.getInt("TerminalPosition");
+            }
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while fetching Terminal Position: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return terminalPosition;
+    }
+
+    public static int getTaxpayerId() {
+        int taxpayerId = 0;
+        String query = "SELECT TaxpayerId FROM TaxpayerConfiguration";
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            connection = DbConnection.createConnection();
+            statement = connection.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                taxpayerId = resultSet.getInt("TaxpayerId");
+            }
+        } catch (SQLException ex) {
+            System.err.println("An error occurred while fetching Taxpayer Id: " + ex.getMessage());
+        } finally {
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (statement != null) {
+                    statement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                System.err.println("Error closing resources: " + ex.getMessage());
+            }
+        }
+
+        return taxpayerId;
     }
 
     public static String fetchTerminalId() {

@@ -71,6 +71,8 @@ import posdeskapp.api.ApiClient;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.InvoiceResponse;
 import posdeskapp.api.SalesResponse;
+import posdeskapp.models.InvoiceDetails;
+import posdeskapp.models.InvoiceGenerationRequest;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
@@ -303,6 +305,7 @@ public class MainController implements Initializable {
         }
     }
 
+    //TODO: Refactor me please
     @FXML
     private void checkOut(ActionEvent event) {
         if (data.isEmpty()) {
@@ -318,18 +321,29 @@ public class MainController implements Initializable {
             return;
         }
 
+        int lastSequentialNumber = 0;
         LocalDateTime now = LocalDateTime.now();
         String invoiceDate = POSHelper.formatDate(now);
+        InvoiceDetails invoiceDetails = DbHelper.getLastInvoiceDetails();
+        int taxpayerId = DbHelper.getTaxpayerId();
+        int terminalPosition = DbHelper.getTerminalPosition();
+        double totalQuantity = data.stream().mapToDouble(LineItem::getQuantity).sum();
 
-        String terminalSite = DbHelper.fetchTerminalSiteId();
-        String sellerTIN = DbHelper.getTaxPayerTIN();
-
-        InvoiceHeader invoice = new InvoiceHeader(UUID.randomUUID().toString(), invoiceDate, sellerTIN, buyerTINTextField.getText(), "", terminalSite, 1, 1, 1);
-
-        List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
+        if (invoiceDetails != null) {
+            lastSequentialNumber = POSHelper.convertSequentialToBase10(invoiceDetails.getInvoiceNumber());
+        }
 
         double invoiceTotal = POSHelper.parseFormattedValue(totalLabel.getText());
         double totalVAT = POSHelper.parseFormattedValue(vatLabel.getText());
+
+        InvoiceGenerationRequest request = new InvoiceGenerationRequest(taxpayerId, terminalPosition, lastSequentialNumber + 1, now, (int) totalQuantity, totalVAT, invoiceTotal);
+        String invoiceNumber = POSHelper.generateInvoiceNumber(request);
+        String terminalSite = DbHelper.fetchTerminalSiteId();
+        String sellerTIN = DbHelper.getTaxPayerTIN();
+
+        InvoiceHeader invoice = new InvoiceHeader(invoiceNumber, invoiceDate, sellerTIN, buyerTINTextField.getText(), "", terminalSite, 1, 1, 1);
+
+        List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
 
         SalesInvoice invoiceRequest = POSHelper.createInvoiceRequest(invoice, data, invoiceTotal, totalVAT);
 
@@ -738,7 +752,12 @@ public class MainController implements Initializable {
                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                Notification notification = new Notification("Error", "Make sure there is internet connection", 3);
+                if (isOnline) {
+                    Notification notification = new Notification("Information", "Last online transaction not found", 3);
+                } else {
+                    Notification notification = new Notification("Information", "Last offline transaction not found", 3);
+                }
+
             }
         });
 
