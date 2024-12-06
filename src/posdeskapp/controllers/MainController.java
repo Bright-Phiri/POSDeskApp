@@ -7,8 +7,6 @@ package posdeskapp.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -73,7 +71,6 @@ import posdeskapp.api.ApiClient;
 import posdeskapp.api.ApiResponse;
 import posdeskapp.api.InvoiceResponse;
 import posdeskapp.api.SalesResponse;
-import posdeskapp.services.TransmissionService;
 import posdeskapp.utils.Notification;
 import posdeskapp.utils.POSHelper;
 
@@ -750,6 +747,8 @@ public class MainController implements Initializable {
                 } catch (IOException ex) {
                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+            } else{
+                Notification notification = new Notification("Error", "Make sure there is internet connection", 3);
             }
         });
 

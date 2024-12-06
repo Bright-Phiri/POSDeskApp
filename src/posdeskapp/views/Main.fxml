@@ -31,8 +31,8 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#viewAllTransactions" text="View All Sales" />
               <MenuItem mnemonicParsing="false" onAction="#viewSuspendedSales" text="View Suspended Sales" />
-                  <MenuItem mnemonicParsing="false" onAction="#viewLastSubmittedOnlineTransaction" text="Last Submitted Online Transaction" />
-                  <MenuItem mnemonicParsing="false" onAction="#viewLastSubmittedOfflineTransaction" text="Last Submitted Offline Transaction" />
+                  <MenuItem mnemonicParsing="false" onAction="#viewLastSubmittedOnlineTransaction" text="View Last Submitted Online Transaction" />
+                  <MenuItem mnemonicParsing="false" onAction="#viewLastSubmittedOfflineTransaction" text="View Last Submitted Offline Transaction" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Terminal Site Products">
