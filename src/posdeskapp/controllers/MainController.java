@@ -147,11 +147,6 @@ public class MainController implements Initializable {
     public static Text totalVAText;
     public static ObservableList<LineItem> suspendedLineItems;
 
-    static {
-
-    }
-    ;
-
     ObservableList<LineItem> data = FXCollections.observableArrayList();
 
     /**
@@ -163,7 +158,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
-        initializeDatabase();
         initializeColumns();
 
         Platform.runLater(() -> {
@@ -556,10 +550,6 @@ public class MainController implements Initializable {
         POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
     }
 
-    private void initializeDatabase() {
-        TABLE_DEFINITIONS.forEach(DbConnection::checkTable);
-    }
-
     private void initializeColumns() {
         barcodeCol.setCellValueFactory(new PropertyValueFactory<>("productCode"));
         descriptionCol.setCellValueFactory(new PropertyValueFactory<>("description"));
@@ -747,7 +737,7 @@ public class MainController implements Initializable {
                 } catch (IOException ex) {
                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else{
+            } else {
                 Notification notification = new Notification("Error", "Make sure there is internet connection", 3);
             }
         });

@@ -23,7 +23,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import posdeskapp.api.SalesResponse;
-import posdeskapp.models.InvoiceLineItem;
 import posdeskapp.models.LineItem;
 import posdeskapp.utils.POSHelper;
 
@@ -104,15 +103,17 @@ public class LastTransactionController implements Initializable {
         siteIdText.setText(salesResponse.getInvoiceHeader().getSiteId());
 
         // Populate Line Items Table
-        for (InvoiceLineItem invoiceLineItem : salesResponse.getInvoiceLineItems()) {
+        salesResponse.getInvoiceLineItems().stream().map((invoiceLineItem) -> {
             LineItem lineItem = new LineItem();
             lineItem.setProductCode(invoiceLineItem.getProductCode());
             lineItem.setDescription(invoiceLineItem.getDescription());
             lineItem.setUnitPrice(invoiceLineItem.getUnitPrice());
             lineItem.setQuantity(invoiceLineItem.getQuantity());
             lineItem.setTaxRateId(invoiceLineItem.getTaxRateId());
+            return lineItem;
+        }).forEachOrdered((lineItem) -> {
             data.add(lineItem);
-        }
+        });
         lineItemsTable.setItems(data);
 
         // Set Invoice Summary Information

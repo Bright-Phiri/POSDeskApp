@@ -85,7 +85,7 @@ public class TerminalActivationController implements Initializable {
         String terminalActionCode = terminalActivationCodeTextField.getText().trim();
 
         if (terminalActionCode.isEmpty()) {
-            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.WARNING, "Terminal Activation", "Please enter the terminal action code");
+            Alert alert = new Alert(javafx.scene.control.Alert.AlertType.WARNING, "Terminal Activation", "Please enter the terminal activation code");
             return;
         }
 
@@ -110,7 +110,8 @@ public class TerminalActivationController implements Initializable {
         if (httpResponseResult.getStatusCode() == 200) {
             processApiResponse(httpResponseResult.getResponseBody(), terminalActivationCodeTextField.getText().trim());
         } else {
-            Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "An error occurred while activating terminal" );
+            System.out.println(httpResponseResult.getStatusCode());
+            Alert error = new Alert(javafx.scene.control.Alert.AlertType.ERROR, "Terminal Activation", "An error occurred while activating terminal, make sure you have internet connection" );
         }
     }
 

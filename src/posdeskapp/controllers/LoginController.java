@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import posdeskapp.utils.DbConnection;
 import posdeskapp.utils.DbHelper;
 
 /**
@@ -47,6 +48,7 @@ public class LoginController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         root = rootPane;
+        DbConnection.initializeDatabase();
         try {
             if (DbHelper.doesTerminalKeyExist()) {
                 if (!DbHelper.isTerminalFullyActivated()) {

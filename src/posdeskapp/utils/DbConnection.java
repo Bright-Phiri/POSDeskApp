@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 import org.sqlite.SQLiteConfig;
 
 /**
@@ -40,6 +42,16 @@ public class DbConnection {
             System.err.println(e);
             return null;
         }
+    }
+
+    public static void initializeDatabase() {
+        Map<String, String> tables = new HashMap<>();
+
+        
+
+        tables.entrySet().forEach((entry) -> {
+            checkTable(entry.getKey(), entry.getValue());
+        });
     }
 
     public static void checkTable(String tableName, String query) {
