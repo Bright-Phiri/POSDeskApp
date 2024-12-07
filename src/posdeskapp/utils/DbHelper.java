@@ -17,6 +17,8 @@ import java.sql.SQLException;
 import java.sql.Savepoint;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -337,11 +339,11 @@ public class DbHelper {
             conn = DbConnection.createConnection();
             stmt = conn.prepareStatement(getLastInvoiceQuery);
             rs = stmt.executeQuery();
-
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
             if (rs.next()) {
                 invoiceDetails = new InvoiceDetails();
                 invoiceDetails.setInvoiceNumber(rs.getString("InvoiceNumber"));
-                invoiceDetails.setInvoiceDateTime(rs.getTimestamp("InvoiceDateTime").toLocalDateTime());
+                invoiceDetails.setInvoiceDateTime(LocalDateTime.parse(rs.getString("InvoiceDateTime"), formatter ));
             } else {
                 System.out.println("No records found in Invoices.");
             }
@@ -1383,7 +1385,7 @@ public class DbHelper {
         return count > 0;
     }
 
-    public static boolean processTransaction(InvoiceHeader invoice, List<LineItem> lineItems, List<TaxBreakDown> taxBreakdowns, double total, double totalVAT) {
+    public static boolean processTransaction(InvoiceHeader invoice, List<LineItem> lineItems, List<TaxBreakDown> taxBreakdowns, double total, double totalVAT, boolean isB2BTransaction) {
         String insertInvoiceQuery = "INSERT INTO Invoices (InvoiceNumber, InvoiceDateTime, InvoiceTotal, SellerTin, BuyerTin, TotalVAT, TransmissionState) VALUES (?, ?, ?, ?, ?, ?, ?)";
         String insertLineItemQuery = "INSERT INTO LineItems (ProductCode, Description, UnitPrice, Quantity, InvoiceNumber, TaxRateID, Discount, TotalVAT) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
         String insertTaxBreakdownQuery = "INSERT INTO InvoiceTaxBreakDown (InvoiceNumber, RateID, TaxableAmount, TaxAmount) VALUES (?, ?, ?, ?)";
@@ -1409,7 +1411,7 @@ public class DbHelper {
             invoiceStmt.setString(4, invoice.getSellerTIN());
             invoiceStmt.setString(5, invoice.getBuyerTIN());
             invoiceStmt.setDouble(6, totalVAT);
-            invoiceStmt.setInt(7, 0);
+            invoiceStmt.setInt(7, isB2BTransaction ? 1 : 0);
             invoiceStmt.executeUpdate();
 
             // Save line items and update Product quantity
