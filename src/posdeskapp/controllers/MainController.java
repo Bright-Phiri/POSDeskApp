@@ -148,6 +148,7 @@ public class MainController implements Initializable {
     public static Text invoiceTotalText;
     public static Text totalVAText;
     public static ObservableList<LineItem> suspendedLineItems;
+    boolean showConnectionError = false;
 
     ObservableList<LineItem> data = FXCollections.observableArrayList();
     @FXML
@@ -343,7 +344,7 @@ public class MainController implements Initializable {
         String terminalSite = DbHelper.fetchTerminalSiteId();
         String sellerTIN = DbHelper.getTaxPayerTIN();
 
-        InvoiceHeader invoice = new InvoiceHeader(invoiceNumber, invoiceDate, sellerTIN, buyerTINTextField.getText(), "", terminalSite, 1, 1, 1);
+        InvoiceHeader invoice = new InvoiceHeader(invoiceNumber, invoiceDate, sellerTIN, buyerTINTextField.getText(), purchaseAuthorizationCodeTextField.getText(), terminalSite, 1, 1, 1);
 
         List<TaxBreakDown> taxBreakdowns = POSHelper.generateTaxSummary(data);
 
@@ -353,7 +354,52 @@ public class MainController implements Initializable {
 
         String invoicePayload = gson.toJson(invoiceRequest);
 
-        boolean isProcessed = DbHelper.processTransaction(invoice, data, taxBreakdowns, invoiceTotal, totalVAT);
+        if (!buyerTINTextField.getText().trim().isEmpty()) {
+            Task<HttpResponseResult> task = new Task<HttpResponseResult>() {
+                @Override
+                protected HttpResponseResult call() throws Exception {
+                    return ApiClient.submitSalesTransaction(invoicePayload);
+                }
+            };
+
+            task.setOnSucceeded(e -> {
+                HttpResponseResult result = task.getValue();
+                Gson gSon = new Gson();
+                Type apiResponseType = new TypeToken<ApiResponse<InvoiceResponse>>() {
+                }.getType();
+                switch (result.getStatusCode()) {
+                    case 200: {
+                        ApiResponse<InvoiceResponse> apiResponse = gSon.fromJson(result.getResponseBody(), apiResponseType);
+                        switch (apiResponse.getStatusCode()) {
+                            case 1:
+                                posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Business to Business Transaction", apiResponse.getRemark());
+                                if (!DbHelper.processTransaction(invoice, data, taxBreakdowns, invoiceTotal, totalVAT, true)) {
+                                    Notification notification = new Notification("Error", "Failed to save the transaction on the terminal", 3);
+                                }
+                                clearFields();
+                                break;
+                            case -2:
+                                posdeskapp.utils.Alert errAlert = new posdeskapp.utils.Alert(Alert.AlertType.ERROR, "Business to Business Transaction", apiResponse.getRemark());
+                                break;
+                        }
+                        break;
+                    }
+                    case 400: {
+                        ApiResponse<InvoiceResponse> apiResponse = gSon.fromJson(result.getResponseBody(), apiResponseType);
+                        posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.ERROR, "Business to Business Transaction", apiResponse.getRemark());
+                        break;
+                    }
+                    default:
+                        Notification notification = new Notification("Error", "Check your internet connection and try again", 3);
+                        break;
+                }
+            });
+
+            new Thread(task).start();
+            return;
+        }
+
+        boolean isProcessed = DbHelper.processTransaction(invoice, data, taxBreakdowns, invoiceTotal, totalVAT, false);
 
         if (isProcessed) {
             posdeskapp.utils.Alert alert = new posdeskapp.utils.Alert(Alert.AlertType.INFORMATION, "Transaction", "Transaction completed successfully");
@@ -373,17 +419,10 @@ public class MainController implements Initializable {
                     ApiResponse<InvoiceResponse> apiResponse = gSon.fromJson(result.getResponseBody(), apiResponseType);
                     DbHelper.markInvoiceAsProcessed(invoice.getInvoiceNumber());
                     // Generate receipt with validation URL as QR code
-                    data.clear();
-                    POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
-                    productsTable.refresh();
-                    tenderedAmountTextField.clear();
                 } else {
                     // Offline mode
-                    data.clear();
-                    POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
-                    productsTable.refresh();
-                    tenderedAmountTextField.clear();
                 }
+                clearFields();
             });
 
             new Thread(task).start();
@@ -680,7 +719,7 @@ public class MainController implements Initializable {
                         }
                     } else {
                         Platform.runLater(() -> {
-                            Notification notification = new Notification("Error", "Failed to fetch products from the API. Please check your connection and try again.", 4);
+                            Notification notification = new Notification("Error", "Failed to download products from MRA. Check your internet connection and try again.", 3);
                         });
                     }
                     return null;
@@ -709,6 +748,7 @@ public class MainController implements Initializable {
     private void viewLastSubmittedTransaction(ActionEvent event, boolean isOnline) {
         // Create a Task to run the blocking API call in the background
         final String transactionType = "";
+
         Task<SalesResponse> task = new Task<SalesResponse>() {
             @Override
             protected SalesResponse call() throws Exception {
@@ -725,6 +765,9 @@ public class MainController implements Initializable {
                     JsonObject responseObject = gson.fromJson(httpResponseResult.getResponseBody(), JsonObject.class);
                     JsonElement dataElement = responseObject.get("data");
                     return gson.fromJson(dataElement, SalesResponse.class);
+                }
+                if (httpResponseResult.getStatusCode() == -1) {
+                    showConnectionError = true;
                 }
                 return null;
             }
@@ -754,6 +797,10 @@ public class MainController implements Initializable {
                     Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
+                if (showConnectionError) {
+                    Notification notification = new Notification("Error", "Check your internet connection and try again.", 3);
+                    return;
+                }
                 if (isOnline) {
                     Notification notification = new Notification("Information", "Last online transaction not found", 3);
                 } else {
@@ -767,6 +814,16 @@ public class MainController implements Initializable {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private void clearFields() {
+        data.clear();
+        POSHelper.updateInvoiceSummary(data, invoiceTotalText, subTotalLabel, totalVAText, totalNoOfItems);
+        productsTable.refresh();
+        tenderedAmountTextField.clear();
+        buyerTINTextField.clear();
+        purchaseAuthorizationCodeTextField.clear();
+        changeLabel.setText("0.00");
     }
 
 }
