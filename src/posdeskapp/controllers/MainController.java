@@ -150,6 +150,8 @@ public class MainController implements Initializable {
     public static ObservableList<LineItem> suspendedLineItems;
 
     ObservableList<LineItem> data = FXCollections.observableArrayList();
+    @FXML
+    private TextField purchaseAuthorizationCodeTextField;
 
     /**
      * Initializes the controller class.
